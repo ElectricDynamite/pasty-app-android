@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, PastyActivity!</string>
+    <string name="app_name">Pasty</string>
+    <string name="app_label">Pasty - the cloud clipboard</string>
+    <string name="title_CopyActivity">Copy from Cloud</string>
+    <string name="title_PastyActivity">Pasty to Cloud</string>
+    <string name="password1">dHRunxgwh6-MCsJ</string><string name="password_2">G1LktPN{=c;z/&lt;Rg</string>
+    <string name="pasty_server_url">https://mario.blafaselblub.net:4444/</string>
+    
+    <string name="helptext_PastyActivity_pasty">Paste clip to cloud.</string>
+    <string name="helptext_PastyActivity_copy">Touch a clip to copy.</string>
+    <string name="helptext_PastyActivity_loading">Loading clips from cloud&#8230;</string>
+    <string name="NewClip_hint">Paste new clip here</string>
+    <string name="PastyButton_label">Send to cloud!</string>
+    <string name="copied_clip">Copied text to local clipboard.</string>
+    <string name="added_clip">Added text to cloud clipboard.</string>
+    
+    <string name="button_ok">Okay</string>
+    <string name="button_noes">Oh noes!</string>
+    
+    <string name="error_badanswer">Bad answer from server.\nTry again later.</string>
+    <string name="error_notsupported">This feature is not supported yet.</string>
+    <string name="error_loginfailed">Login failed.</string>
+    
+    <string name="settings">Settings</string>
+	<string name="about">About</string>
+	<string name="login">Login</string>
+	
+	<string name="pref_username_title">Username</string>
+	<string name="pref_username_sum">Enter your Pasty username.</string>
+	<string name="pref_username_default"></string>
+	
+	
+	<string name="pref_password_title">Password</string>
+	<string name="pref_password_sum">Enter your Pasty password.</string>
+	<string name="pref_password_default"></string>
+	
+	<string name="pref_usehttps_title">Use HTTPS</string>
+	<string name="pref_usehttps_sum">Use secure protocol. Uncheck if you have trouble connecting to server.</string>
+	<string name="pref_username">Username</string>
+	
+	<string name="app_logo">App Logo</string>
+	
+
+</resources>

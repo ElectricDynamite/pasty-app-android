@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="@string/login">
+		        <EditTextPreference
+		                android:name="pref_username"
+		                android:summary="@string/pref_username_sum"
+		                android:defaultValue="@string/pref_username_default"
+		                android:title="@string/pref_username_title"
+		                android:singleLine="true"
+		                android:key="pref_username" />
+		        <EditTextPreference
+		                android:name="pref_password"
+		                android:summary="@string/pref_password_sum"
+		                android:defaultValue="@string/pref_password_default"
+		                android:title="@string/pref_password_title"
+		                android:singleLine="true"
+						android:password="true"
+		                android:key="pref_password" />
+                <CheckBoxPreference
+                        android:title="@string/pref_usehttps_title"
+                        android:defaultValue="true"
+                        android:summary="@string/pref_usehttps_sum"
+                        android:key="pref_usehttps" />
+        </PreferenceCategory>
+</PreferenceScreen>
