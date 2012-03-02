@@ -16,10 +16,7 @@ public final class R {
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
         public static final int ic_menu_info_details=0x7f020001;
-        public static final int ic_menu_light=0x7f020002;
-        public static final int ic_menu_options=0x7f020003;
-        public static final int ic_menu_preferences=0x7f020004;
-        public static final int ic_menu_settings=0x7f020005;
+        public static final int ic_menu_preferences=0x7f020002;
     }
     public static final class id {
         public static final int NewClip=0x7f080005;

@@ -7,14 +7,6 @@
 	    <item>THIS SOFTWARE IS IN AN REALLY EARLY STAGE!</item>
 	    <item>For details see http://pastyapp.org</item>
 	    <item>That is also where you can <b>create an account</b>.</item>
-	    <item>Pasty was created using the following technologies:</item>
-	    <item>Java on Android</item>
-	    <item>node.js on the Appserver</item>
-	    <item>node.js to power the WebApp</item>
-	    <item>mongodb as storage backend</item>
-	    <item>nginx to proxy the node.js instances</item>
-	    <item>Ubuntu Linux powering the server</item>
-	    <item>Thank you for using Pasty! Any suggestions or comments? pastyapp.org</item>
 	</string-array>
 	
 	
@@ -24,15 +16,7 @@
 	   <i>THIS SOFTWARE IS IN AN REALLY EARLY STAGE!</i>\n\n
 	    For details see http://pastyapp.org\n
 	    That is also where you can <b>create an account</b>.\n\n
-	    Pasty was created using the following technologies:\n
-	    	\tJava on Android\n
-	    	\tnode.js on the Appserver\n
-	    	\tnode.js to power the WebApp\n
-	    	\tmongodb as storage backend\n
-	    	\tnginx to proxy the node.js instances\n
-	    	\tUbuntu Linux powering the server\n
-	    \n
-	    Thank you for using Pasty! Any suggestions or comments? pastyapp.org
+	    Thank you for using Pasty, you\'re awesome!
 	</string>
 	
 </resources>

@@ -274,8 +274,8 @@ public class PastyActivity extends Activity {
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
 	        if(jsonAnswerObject.has("clips")) {
 		        ClipArray = jsonAnswerObject.getJSONArray("clips");
-				Log.i(PastyActivity.class.getName(),
-						"Received " + ClipArray.length()+" clips:");
+				Log.d(PastyActivity.class.getName(),
+						"Received " + ClipArray.length()+" clips.");
 				for (int i = 0; i < ClipArray.length(); i++) {
 					JSONObject Clip = ClipArray.getJSONObject(i);
 					 /* Create a new row to be added. */
@@ -298,7 +298,6 @@ public class PastyActivity extends Activity {
 			        spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			        spacer.setBackgroundColor(0xFFFF0000);
 			        tr.addView(spacer);*/
-					Log.i(PastyActivity.class.getName(), Clip.getString("c"));
 					setProgressBarIndeterminateVisibility(false);
 				}
 	        }
@@ -370,7 +369,12 @@ public class PastyActivity extends Activity {
     }
     
     private void addClip() {
-		
+    	EditText NewClip 		= (EditText)findViewById(R.id.NewClip);
+    	String clip				= NewClip.getText().toString();
+    	if(clip != null && clip.length() == 0) {
+    		Log.d(PastyActivity.class.toString(), "Clip ist empty. Bailing out!");
+    		return;
+    	}
 		new Thread() {
 		    public void run() {
 		    	EditText NewClip 		= (EditText)findViewById(R.id.NewClip);
