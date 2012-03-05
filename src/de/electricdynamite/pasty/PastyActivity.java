@@ -53,9 +53,12 @@ public class PastyActivity extends Activity {
     static final String PREF_USER				= "pref_username";  
     static final String PREF_PASSWORD			= "pref_password"; 
     static final String PREF_HTTPS				= "pref_usehttps";
+    static final String PREF_SERVER				= "pref_server";
     
-    static final String URL_HTTP				= "http://mario.blafaselblub.net:8080/";
-    static final String URL_HTTPS				= "https://mario.blafaselblub.net:4444/";
+    static final String PREF_SERVER_DEFAULT		= "pastyapp.org";
+    
+    static final String PORT_HTTP				= "8080";
+    static final String PORT_HTTPS				= "4444";
     
     private String URL							= "";   
     private String user							= "";
@@ -72,7 +75,7 @@ public class PastyActivity extends Activity {
 				.getDefaultSharedPreferences(getBaseContext());
 	    setUser(prefs.getString(PREF_USER,""));
 	    setPassword(prefs.getString(PREF_PASSWORD,""));
-	    setURL(prefs.getBoolean(PREF_HTTPS, true));
+	    setURL(prefs.getString(PREF_SERVER, PREF_SERVER_DEFAULT), prefs.getBoolean(PREF_HTTPS, true));
 	    setContentView(R.layout.main);
 		setProgressBarIndeterminateVisibility(true);
 		Button PastyButton		= (Button) findViewById(R.id.PastyButton);
@@ -126,13 +129,26 @@ public class PastyActivity extends Activity {
     	PastyActivity.this.password = password;
     }
     
-    private void setURL(Boolean usehttps) {
-    	Log.d(PastyActivity.class.getName(),"usehttps is"+usehttps.toString());
+    private void setURL(String server, Boolean usehttps) {    	
+    	String proto	= "";
+    	String port		= "";
+    	
     	if(usehttps) {
-    		PastyActivity.this.URL = URL_HTTPS;
+    		proto	= "https://";
+    		port		= PORT_HTTPS;
     	} else {
-    		PastyActivity.this.URL = URL_HTTP;
+    		proto	= "http://";
+    		port		= PORT_HTTP;
     	}
+    	
+    	String url = proto + server + ":" + port + "/";
+    	Log.d(PastyActivity.class.getName(), "URL set to "+url);
+    	PastyActivity.this.URL = url;
+    	proto		= null;
+    	port		= null;
+    	server		= null;
+    	usehttps	= null;
+    	url			= null;    		
     }
     
     private String getUser() {
