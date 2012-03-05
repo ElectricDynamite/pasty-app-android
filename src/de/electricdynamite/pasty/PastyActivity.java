@@ -80,7 +80,7 @@ public class PastyActivity extends Activity {
 	    setContentView(R.layout.main);
 		setProgressBarIndeterminateVisibility(true);
 		Button PastyButton		= (Button) findViewById(R.id.PastyButton);
-		TextView tv				= (TextView) findViewById(R.id.textview);
+		TextView tv				= (TextView) findViewById(R.id.tvPasty);
 		tv.setFocusableInTouchMode(true);
 		tv.requestFocus();
 		// set click event listener for button
@@ -290,7 +290,7 @@ public class PastyActivity extends Activity {
     	JSONArray ClipArray = new JSONArray();
 		try {
 	        /* Find TableLayout defined in main.xml */
-	        TableLayout tl = (TableLayout)findViewById(R.id.myTableLayout);
+	        TableLayout tl = (TableLayout)findViewById(R.id.tableClips);
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
 	        if(jsonAnswerObject.has("clips")) {
 		        ClipArray = jsonAnswerObject.getJSONArray("clips");
