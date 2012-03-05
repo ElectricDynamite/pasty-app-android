@@ -37,6 +37,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -264,7 +265,10 @@ public class PastyActivity extends Activity {
 
     private void listClips(Bundle clips) {
 		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
+		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+		
 		tvLoading.setVisibility(View.GONE);
+		pbLoading.setVisibility(View.GONE);
 		tvLoading = null;
     	String JsonAnswer = clips.getString("response");
     	JSONArray ClipArray = new JSONArray();
