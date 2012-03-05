@@ -10,6 +10,8 @@ package de.electricdynamite.pasty;
 public final class R {
     public static final class array {
         public static final int about_array=0x7f060000;
+        public static final int pref_server_entrytitles=0x7f060001;
+        public static final int pref_server_entryvalues=0x7f060002;
     }
     public static final class attr {
     }
@@ -47,7 +49,7 @@ public final class R {
         public static final int about_title=0x7f050000;
         public static final int added_clip=0x7f050010;
         public static final int app_label=0x7f050004;
-        public static final int app_logo=0x7f050022;
+        public static final int app_logo=0x7f050024;
         public static final int app_name=0x7f050003;
         public static final int button_noes=0x7f050012;
         public static final int button_ok=0x7f050011;
@@ -66,6 +68,8 @@ public final class R {
         public static final int pref_password_default=0x7f05001e;
         public static final int pref_password_sum=0x7f05001d;
         public static final int pref_password_title=0x7f05001c;
+        public static final int pref_server_sum=0x7f050023;
+        public static final int pref_server_title=0x7f050022;
         public static final int pref_usehttps_sum=0x7f050020;
         public static final int pref_usehttps_title=0x7f05001f;
         public static final int pref_username=0x7f050021;
