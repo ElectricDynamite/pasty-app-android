@@ -310,40 +310,8 @@ public class PastyActivity extends Activity {
 				for (int i = 0; i < ClipArray.length(); i++) {
 					JSONObject Clip = ClipArray.getJSONObject(i);
 					ClipStringArray[i] = Clip.getString("c");
-					 /* Create a new row to be added. */
-		           //  TableRow tr = new TableRow(this);
-		           //  tr.setLayoutParams(new LayoutParams(
-		           //                 LayoutParams.FILL_PARENT));
-		            /* Create a TextView to be the row-content. */
-		            /*TextView tv = new TextView(this);
-		            tv.setId(i);
-		            tv.setOnClickListener(clickListener);
-		            tv.setSingleLine(false);
-		            tv.setText(Clip.getString("c"));
-		            tv.setTextSize(18);
-		            tv.setAutoLinkMask(Linkify.ALL);
-		            tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-		                    LayoutParams.WRAP_CONTENT, 1f));
-		            tr.addView(tv);  
-			        /* Add row to TableLayout. */
-			        //tl.addView(tr);
-			        /*View spacer = new View(this);
-			        spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-			        spacer.setBackgroundColor(0xFFFF0000);
-			        tr.addView(spacer);*/
 				}
 				
-				/*String[] ClipStringArray = new String[] { "Android", "iPhone", "WindowsMobile",
-						"Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-						"Linux", "OS/2" };*/
-				
-				Log.d(PastyActivity.class.getName(),
-						"Array containing " + ClipStringArray.length+" clips.");
-				
-				for(int i = 0; i < ClipStringArray.length;i++) {
-					Log.d(PastyActivity.class.getName(),
-							"ClipStringArray[ " + i +"]: "+ClipStringArray[i]);	
-				}
 				// First paramenter - Context
 				// Second parameter - Layout for the row
 				// Third parameter - ID of the View to which the data is written
@@ -356,11 +324,17 @@ public class PastyActivity extends Activity {
 				
 				listView.setOnItemClickListener(new OnItemClickListener() {
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-						Toast.makeText(getApplicationContext(),
-							"Click ListItem Number " + position, Toast.LENGTH_LONG)
-							.show();
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				    	Object o = parent.getAdapter().getItem(position);
+						String Clip = o.toString();
+				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				    	clipboard.setText(Clip);
+				    	Context context = getApplicationContext();
+				    	CharSequence text = getString(R.string.copied_clip);
+				    	int duration = Toast.LENGTH_SHORT;
+				    	Toast toast = Toast.makeText(context, text, duration);
+				    	toast.show();
+				    	PastyActivity.this.finish();
 					}
 				});
 	        }
@@ -487,22 +461,5 @@ public class PastyActivity extends Activity {
 		    }
 		    
 		}.start();
-    }
-    
-    OnClickListener clickListener=new OnClickListener() {
-    	public void onClick(View v) {
-	    	int id=v.getId();
-	    	TextView tv = (TextView)findViewById(v.getId());
-	    	CharSequence Clip = tv.getText();
-	    	Log.d(PastyActivity.class.getName(), "Clicked on: " + id + ". This is \"" + Clip + "\"");
-	    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-	    	clipboard.setText(Clip);
-	    	Context context = getApplicationContext();
-	    	CharSequence text = getString(R.string.copied_clip);
-	    	int duration = Toast.LENGTH_SHORT;
-	    	Toast toast = Toast.makeText(context, text, duration);
-	    	toast.show();
-	    	PastyActivity.this.finish();
-    	}
-    }; 
+    } 
 }
