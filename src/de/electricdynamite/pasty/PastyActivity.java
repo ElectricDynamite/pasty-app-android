@@ -35,9 +35,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -276,7 +280,7 @@ public class PastyActivity extends Activity {
 	        else {
 	        	// answer is invalid
 	        }
-
+			setProgressBarIndeterminateVisibility(false);
 		}
     };
 
@@ -292,20 +296,26 @@ public class PastyActivity extends Activity {
     	JSONArray ClipArray = new JSONArray();
 		try {
 	        /* Find TableLayout defined in main.xml */
-	        TableLayout tl = (TableLayout)findViewById(R.id.tableClips);
+	        //TableLayout tl = (TableLayout)findViewById(R.id.tableClips);
+			ListView listView = (ListView) findViewById(R.id.listClips);
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
 	        if(jsonAnswerObject.has("clips")) {
 		        ClipArray = jsonAnswerObject.getJSONArray("clips");
+				String[] ClipStringArray = new String[ClipArray.length()];
 				Log.d(PastyActivity.class.getName(),
 						"Received " + ClipArray.length()+" clips.");
+				if(ClipArray.length() > 10) {
+					throw new Exception();
+				}
 				for (int i = 0; i < ClipArray.length(); i++) {
 					JSONObject Clip = ClipArray.getJSONObject(i);
+					ClipStringArray[i] = Clip.getString("c");
 					 /* Create a new row to be added. */
-		             TableRow tr = new TableRow(this);
-		             tr.setLayoutParams(new LayoutParams(
-		                            LayoutParams.FILL_PARENT));
+		           //  TableRow tr = new TableRow(this);
+		           //  tr.setLayoutParams(new LayoutParams(
+		           //                 LayoutParams.FILL_PARENT));
 		            /* Create a TextView to be the row-content. */
-		            TextView tv = new TextView(this);
+		            /*TextView tv = new TextView(this);
 		            tv.setId(i);
 		            tv.setOnClickListener(clickListener);
 		            tv.setSingleLine(false);
@@ -316,13 +326,43 @@ public class PastyActivity extends Activity {
 		                    LayoutParams.WRAP_CONTENT, 1f));
 		            tr.addView(tv);  
 			        /* Add row to TableLayout. */
-			        tl.addView(tr);
+			        //tl.addView(tr);
 			        /*View spacer = new View(this);
 			        spacer.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 			        spacer.setBackgroundColor(0xFFFF0000);
 			        tr.addView(spacer);*/
-					setProgressBarIndeterminateVisibility(false);
 				}
+				
+				/*String[] ClipStringArray = new String[] { "Android", "iPhone", "WindowsMobile",
+						"Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+						"Linux", "OS/2" };*/
+				
+				Log.d(PastyActivity.class.getName(),
+						"Array containing " + ClipStringArray.length+" clips.");
+				
+				for(int i = 0; i < ClipStringArray.length;i++) {
+					Log.d(PastyActivity.class.getName(),
+							"ClipStringArray[ " + i +"]: "+ClipStringArray[i]);	
+				}
+				// First paramenter - Context
+				// Second parameter - Layout for the row
+				// Third parameter - ID of the View to which the data is written
+				// Forth - the Array of data
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+						android.R.layout.simple_list_item_1, android.R.id.text1, ClipStringArray);
+				
+				// Assign adapter to ListView
+				listView.setAdapter(adapter);
+				
+				listView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+						Toast.makeText(getApplicationContext(),
+							"Click ListItem Number " + position, Toast.LENGTH_LONG)
+							.show();
+					}
+				});
 	        }
 			else if (jsonAnswerObject.has("error")){
 				JSONObject ErrorObject = jsonAnswerObject.getJSONObject("error");
@@ -337,6 +377,7 @@ public class PastyActivity extends Activity {
 			    	Log.i(PastyActivity.class.getName()," Unknown error received from PastyServer: ERRCODE " + ErrorObject.getString("code") + ": " + ErrorObject.getString("message"));
 				}
 			}
+			setProgressBarIndeterminateVisibility(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -398,6 +439,7 @@ public class PastyActivity extends Activity {
     		Log.d(PastyActivity.class.toString(), "Clip ist empty. Bailing out!");
     		return;
     	}
+		setProgressBarIndeterminateVisibility(true);
 		new Thread() {
 		    public void run() {
 		    	EditText NewClip 		= (EditText)findViewById(R.id.NewClip);

@@ -25,8 +25,8 @@
 			android:id="@+id/PastyButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:paddingLeft="40dp"
-			android:paddingRight="40dp"
+			android:paddingLeft="50dp"
+			android:paddingRight="50dp"
 			android:text="@string/PastyButton_label"
 			android:layout_centerHorizontal="true"
 			android:layout_below="@+id/NewClip" />
@@ -56,16 +56,11 @@
 			android:layout_below="@+id/tv_loading"
 			android:layout_centerHorizontal="true"
 			android:layout_marginTop="40dp" />
-		<ScrollView
+		<ListView
+       		android:id="@+id/listClips"
 			android:layout_below="@+id/tvCopy"
 			android:layout_centerHorizontal="true"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<TableLayout
-				android:id="@+id/tableClips"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
-			</TableLayout>
-		</ScrollView>
+        	android:layout_width="fill_parent"
+       		android:layout_height="wrap_content" >
+    	</ListView>
 	</RelativeLayout>
