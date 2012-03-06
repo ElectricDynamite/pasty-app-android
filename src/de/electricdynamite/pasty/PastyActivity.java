@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -286,6 +287,7 @@ public class PastyActivity extends Activity {
 		tvLoading.setVisibility(View.GONE);
 		pbLoading.setVisibility(View.GONE);
 		tvLoading = null;
+		pbLoading = null;
     	String JsonAnswer = clips.getString("response");
     	JSONArray ClipArray = new JSONArray();
 		try {
@@ -308,7 +310,8 @@ public class PastyActivity extends Activity {
 		            tv.setOnClickListener(clickListener);
 		            tv.setSingleLine(false);
 		            tv.setText(Clip.getString("c"));
-		            tv.setTextSize(5,3);
+		            tv.setTextSize(18);
+		            tv.setAutoLinkMask(Linkify.ALL);
 		            tv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 		                    LayoutParams.WRAP_CONTENT, 1f));
 		            tr.addView(tv);  
