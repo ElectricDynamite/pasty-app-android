@@ -4,10 +4,13 @@
     <string name="hello">Hello World, PastyActivity!</string>
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - the cloud clipboard</string>
+	<string name="app_logo">App Logo</string>
     <string name="title_CopyActivity">Copy from Cloud</string>
     <string name="title_PastyActivity">Pasty to Cloud</string>
     <string name="password1">dHRunxgwh6-MCsJ</string><string name="password_2">G1LktPN{=c;z/&lt;Rg</string>
     <string name="pasty_server_url">https://mario.blafaselblub.net:4444/</string>
+    
+    <string name="copy">Copy</string>
     
     <string name="helptext_PastyActivity_pasty">Paste clip to cloud.</string>
     <string name="helptext_PastyActivity_copy">Touch a clip to copy.</string>
@@ -53,8 +56,6 @@
 	    <item>mario.blafaselblub.net</item>
 	    <item>pastyapp.org</item>
 	</string-array>
-	
-	<string name="app_logo">App Logo</string>
 	
 
 </resources>

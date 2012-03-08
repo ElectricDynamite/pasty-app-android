@@ -317,15 +317,22 @@ public class PastyActivity extends Activity {
 				// Third parameter - ID of the View to which the data is written
 				// Forth - the Array of data
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						android.R.layout.simple_list_item_1, android.R.id.text1, ClipStringArray);
+						R.layout.listitem, R.id.myListitem, ClipStringArray); //android.R.layout.simple_list_item_1
+				/*
+				View mItemView = adapter.getView(0, null, null);
+		        TextView infoText = (TextView) mItemView.findViewById(R.id.myListitem);
+		        Linkify.addLinks(infoText, Linkify.ALL);*/
 				
 				// Assign adapter to ListView
 				listView.setAdapter(adapter);
 				
+				
 				listView.setOnItemClickListener(new OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						Log.d(PastyActivity.class.toString(), "TEST");
 				    	Object o = parent.getAdapter().getItem(position);
+				    	Log.d(PastyActivity.class.toString(), o.toString());
 						String Clip = o.toString();
 				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 				    	clipboard.setText(Clip);
