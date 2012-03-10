@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -327,7 +329,7 @@ public class PastyActivity extends Activity {
 				listView.setAdapter(adapter);
 				
 				
-				listView.setOnItemClickListener(new OnItemClickListener() {
+				listView.setOnItemClickListener(new OnItemClickListener() { // Bug: Does not get called on first item 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						Log.d(PastyActivity.class.toString(), "TEST");
@@ -344,6 +346,28 @@ public class PastyActivity extends Activity {
 				    	PastyActivity.this.finish();
 					}
 				});
+				
+
+				
+				listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+						Log.d(PastyActivity.class.toString(), "TEST");
+				    	Object o = parent.getAdapter().getItem(position);
+				    	Log.d(PastyActivity.class.toString(), o.toString());
+						String Clip = o.toString();
+				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				    	clipboard.setText(Clip);
+				    	Context context = getApplicationContext();
+				    	CharSequence text = getString(R.string.copied_clip);
+				    	int duration = Toast.LENGTH_SHORT;
+				    	Toast toast = Toast.makeText(context, text, duration);
+				    	toast.show();
+				    	PastyActivity.this.finish();
+						return false;
+					}
+				});
+				
 	        }
 			else if (jsonAnswerObject.has("error")){
 				JSONObject ErrorObject = jsonAnswerObject.getJSONObject("error");
@@ -435,11 +459,10 @@ public class PastyActivity extends Activity {
 				HttpPost httpPost		= new HttpPost(url);
 				String params			= "u="+user+"&p="+password+"&c="+clip;
 		    	try {
-
-		        	httpPost.setEntity(new StringEntity(params, "UTF8"));
+		        	httpPost.setEntity(new StringEntity(params, "UTF-8"));  // Bug: make sure this really uses UTF-8. Does not work right now.
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
-		        	Log.d(PastyActivity.class.toString(), "Trying to send clip to PastyServer at " + url);
+		        	Log.d(PastyActivity.class.toString(), "Trying to send "+params+" to PastyServer at " + url);
 		        	HttpResponse response = client.execute(httpPost);
 		        	StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();

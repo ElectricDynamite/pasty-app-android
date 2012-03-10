@@ -7,8 +7,8 @@
  <ImageView 
     android:id="@+id/myListimage"
  	android:contentDescription="@string/copy"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
     android:layout_marginRight="10dp"
     android:src="@drawable/ic_content_copy" />
   <TextView
