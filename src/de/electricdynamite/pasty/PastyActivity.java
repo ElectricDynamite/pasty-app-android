@@ -11,7 +11,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,13 +27,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -45,10 +42,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.TableRow.LayoutParams;
 import android.widget.Toast;
 
 public class PastyActivity extends Activity {
@@ -77,20 +71,12 @@ public class PastyActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		// Restore preferences
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-	    setUser(prefs.getString(PREF_USER,""));
-	    setPassword(prefs.getString(PREF_PASSWORD,""));
-	    setURL(prefs.getString(PREF_SERVER, PREF_SERVER_DEFAULT), prefs.getBoolean(PREF_HTTPS, true));
+		// Request features
+    	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    	// Let's get preferences
 	    setContentView(R.layout.main);
-		setProgressBarIndeterminateVisibility(true);
-		Button PastyButton		= (Button) findViewById(R.id.PastyButton);
-		TextView tv				= (TextView) findViewById(R.id.tvPasty);
-		tv.setFocusableInTouchMode(true);
-		tv.requestFocus();
 		// set click event listener for button
+		Button PastyButton		= (Button) findViewById(R.id.PastyButton);
 		PastyButton.setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -99,10 +85,26 @@ public class PastyActivity extends Activity {
 					}
 				}
 		);
-		
-		Log.d(PastyActivity.class.getName(), "Trying to fetch clips for user: "+getUser());
-		getClipList();
+		TextView tv				= (TextView) findViewById(R.id.tvPasty);
+		tv.setFocusableInTouchMode(true);
+		tv.requestFocus();
 	}
+    
+    public void onResume() {
+    	super.onResume();
+    	Log.i(PastyActivity.class.getName(),"onResume(): Reloading clips.");
+    	// Let's get preferences
+		loadPreferences();
+		getClipList();
+    }
+    
+    public void loadPreferences() {
+    	// Restore preferences
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    	setUser(prefs.getString(PREF_USER,""));
+    	setPassword(prefs.getString(PREF_PASSWORD,""));
+    	setURL(prefs.getString(PREF_SERVER, PREF_SERVER_DEFAULT), prefs.getBoolean(PREF_HTTPS, true));
+    }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,7 +183,7 @@ public class PastyActivity extends Activity {
         		.setCancelable(false)
         		.setPositiveButton(getString(R.string.button_noes), new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
-        				PastyActivity.this.finish();
+        				//PastyActivity.this.finish();
         			}
         		});
 			    /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -250,6 +252,7 @@ public class PastyActivity extends Activity {
 	        	catch (JSONException e) {
 	        		e.printStackTrace();
 	        	}
+	        	break;
 	        }
         }
 
@@ -286,15 +289,13 @@ public class PastyActivity extends Activity {
 		}
     };
 
-    private void listClips(Bundle clips) {
+    private void listClips(Bundle data) {
 		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
 		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
-		
 		tvLoading.setVisibility(View.GONE);
 		pbLoading.setVisibility(View.GONE);
-		tvLoading = null;
-		pbLoading = null;
-    	String JsonAnswer = clips.getString("response");
+    	
+		String JsonAnswer = data.getString("response");
     	JSONArray ClipArray = new JSONArray();
 		try {
 	        /* Find TableLayout defined in main.xml */
@@ -332,8 +333,8 @@ public class PastyActivity extends Activity {
 				listView.setOnItemClickListener(new OnItemClickListener() { // Bug: Does not get called on first item 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						Log.d(PastyActivity.class.toString(), "TEST");
-				    	Object o = parent.getAdapter().getItem(position);
+						Log.d(PastyActivity.class.toString(), "TEST ITEMCLICK");
+				    	Object o = parent.getItemAtPosition(position);
 				    	Log.d(PastyActivity.class.toString(), o.toString());
 						String Clip = o.toString();
 				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -352,7 +353,7 @@ public class PastyActivity extends Activity {
 				listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 					@Override
 					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-						Log.d(PastyActivity.class.toString(), "TEST");
+						Log.d(PastyActivity.class.toString(), "TEST ITEMLONGCLICK");
 				    	Object o = parent.getAdapter().getItem(position);
 				    	Log.d(PastyActivity.class.toString(), o.toString());
 						String Clip = o.toString();
@@ -393,6 +394,16 @@ public class PastyActivity extends Activity {
     	final String url				= getURL()+"list";
     	final String user				= getUser();
     	final String password			= getPassword();
+
+    	// Let's look busy
+		setProgressBarIndeterminateVisibility(true);
+		
+		/*
+		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
+		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+		tvLoading.setVisibility(View.VISIBLE);
+		pbLoading.setVisibility(View.VISIBLE); */
+		
 		new Thread() {
 		    public void run() {
 				StringBuilder builder = new StringBuilder();
@@ -424,14 +435,20 @@ public class PastyActivity extends Activity {
 				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					}
 				} catch (ClientProtocolException e) {
+			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
+					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
+			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
+					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 				}
-		    	Bundle b = new Bundle();
-		    	b.putString("response", builder.toString());
-		    	msg.setData(b);
-		    	messageHandler.sendMessage(msg);
+		    	finally {
+			    	Bundle b = new Bundle();
+			    	b.putString("response", builder.toString());
+			    	msg.setData(b);
+			    	messageHandler.sendMessage(msg);
+		    	}
 		    }
 		    
 		}.start();

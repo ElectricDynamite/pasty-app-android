@@ -13,7 +13,7 @@
     <string name="copy">Copy</string>
     
     <string name="helptext_PastyActivity_pasty">Paste clip to cloud.</string>
-    <string name="helptext_PastyActivity_copy">Touch a clip to copy.</string>
+    <string name="helptext_PastyActivity_copy">Hold a clip to copy.</string>
     <string name="helptext_PastyActivity_loading">Loading clips from cloud&#8230;</string>
     <string name="NewClip_hint">Paste new clip here</string>
     <string name="PastyButton_label">Send to cloud!</string>
@@ -23,7 +23,7 @@
     <string name="button_ok">Okay</string>
     <string name="button_noes">Oh noes!</string>
     
-    <string name="error_badanswer">Bad answer from server.\nTry again later.</string>
+    <string name="error_badanswer">Problem talking to server.\nTry again later.</string>
     <string name="error_notsupported">This feature is not supported yet.</string>
     <string name="error_loginfailed">Login failed.</string>
     
@@ -40,7 +40,7 @@
 	<string name="pref_password_sum">Enter your Pasty password.</string>
 	<string name="pref_password_default"></string>
 	
-	<string name="pref_usehttps_title">Use Transport Encryption</string>
+	<string name="pref_usehttps_title">Transport Encryption</string>
 	<string name="pref_usehttps_sum">Encrypt network traffic. Uncheck if you have trouble connecting to server.</string>
 	<string name="pref_username">Username</string>
 	
