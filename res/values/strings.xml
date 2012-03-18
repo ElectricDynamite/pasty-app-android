@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, PastyActivity!</string>
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - the cloud clipboard</string>
 	<string name="app_logo">App Logo</string>
@@ -12,13 +11,13 @@
     
     <string name="copy">Copy</string>
     
-    <string name="helptext_PastyActivity_pasty">Paste clip to cloud.</string>
-    <string name="helptext_PastyActivity_copy">Hold a clip to copy.</string>
-    <string name="helptext_PastyActivity_loading">Loading clips from cloud&#8230;</string>
-    <string name="NewClip_hint">Paste new clip here</string>
+    <string name="helptext_PastyActivity_pasty">Paste item to cloud.</string>
+    <string name="helptext_PastyActivity_copy">Hold an item to copy.</string>
+    <string name="helptext_PastyActivity_loading">Loading items from cloud&#8230;</string>
+    <string name="NewItem_hint">Paste new item here</string>
     <string name="PastyButton_label">Send to cloud!</string>
-    <string name="copied_clip">Copied text to local clipboard.</string>
-    <string name="added_clip">Added text to cloud clipboard.</string>
+    <string name="copied_item">Copied text to local clipboard.</string>
+    <string name="added_item">Added text to cloud clipboard.</string>
     
     <string name="button_ok">Okay</string>
     <string name="button_noes">Oh noes!</string>

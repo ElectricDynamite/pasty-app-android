@@ -9,6 +9,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
@@ -81,7 +82,7 @@ public class PastyActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						addClip();
+						addItem();
 					}
 				}
 		);
@@ -92,10 +93,10 @@ public class PastyActivity extends Activity {
     
     public void onResume() {
     	super.onResume();
-    	Log.i(PastyActivity.class.getName(),"onResume(): Reloading clips.");
+    	Log.i(PastyActivity.class.getName(),"onResume(): Reloading items.");
     	// Let's get preferences
 		loadPreferences();
-		getClipList();
+		getItemList();
     }
     
     public void loadPreferences() {
@@ -243,11 +244,11 @@ public class PastyActivity extends Activity {
 	        super.handleMessage(msg);
 	        switch (msg.what) {
 	        case 1:
-	        	listClips(msg.getData());
+	        	listItems(msg.getData());
 	        	break;
 	        case 2:
 	        	try {
-	        		confirmAddClip(msg.getData());
+	        		confirmAddItem(msg.getData());
 	        	}
 	        	catch (JSONException e) {
 	        		e.printStackTrace();
@@ -256,22 +257,22 @@ public class PastyActivity extends Activity {
 	        }
         }
 
-		private void confirmAddClip(Bundle data) throws JSONException {
+		private void confirmAddItem(Bundle data) throws JSONException {
 			String JsonAnswer		= data.getString("response");
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
 	        if(jsonAnswerObject.has("success")) {
 	        	// answer is valid
 				if(jsonAnswerObject.getBoolean("success") == true) {
-					// clip was added
+					// item was added
 					int duration = Toast.LENGTH_SHORT;
 					Context context = getApplicationContext();
-				   	CharSequence text = getString(R.string.added_clip);
+				   	CharSequence text = getString(R.string.added_item);
 				   	Toast toast = Toast.makeText(context, text, duration);
 				   	toast.show();
 				   	PastyActivity.this.finish();
 				}
 				else {
-					// clip was not added
+					// item was not added
 					JSONObject jsonError = jsonAnswerObject.getJSONObject("error");
 					switch (jsonError.getInt("code")) {
 					case 401:
@@ -289,30 +290,30 @@ public class PastyActivity extends Activity {
 		}
     };
 
-    private void listClips(Bundle data) {
+    private void listItems(Bundle data) {
 		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
 		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
 		tvLoading.setVisibility(View.GONE);
 		pbLoading.setVisibility(View.GONE);
     	
 		String JsonAnswer = data.getString("response");
-    	JSONArray ClipArray = new JSONArray();
+    	JSONArray ItemArray = new JSONArray();
 		try {
 	        /* Find TableLayout defined in main.xml */
-	        //TableLayout tl = (TableLayout)findViewById(R.id.tableClips);
-			ListView listView = (ListView) findViewById(R.id.listClips);
+	        //TableLayout tl = (TableLayout)findViewById(R.id.tableItems);
+			ListView listView = (ListView) findViewById(R.id.listItems);
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
-	        if(jsonAnswerObject.has("clips")) {
-		        ClipArray = jsonAnswerObject.getJSONArray("clips");
-				String[] ClipStringArray = new String[ClipArray.length()];
+	        if(jsonAnswerObject.has("items")) {
+		        ItemArray = jsonAnswerObject.getJSONArray("items");
+				String[] ItemStringArray = new String[ItemArray.length()];
 				Log.d(PastyActivity.class.getName(),
-						"Received " + ClipArray.length()+" clips.");
-				if(ClipArray.length() > 10) {
+						"Received " + ItemArray.length()+" items.");
+				if(ItemArray.length() > 10) {
 					throw new Exception();
 				}
-				for (int i = 0; i < ClipArray.length(); i++) {
-					JSONObject Clip = ClipArray.getJSONObject(i);
-					ClipStringArray[i] = Clip.getString("c");
+				for (int i = 0; i < ItemArray.length(); i++) {
+					JSONObject Item = ItemArray.getJSONObject(i);
+					ItemStringArray[i] = Item.getString("i");
 				}
 				
 				// First paramenter - Context
@@ -320,7 +321,7 @@ public class PastyActivity extends Activity {
 				// Third parameter - ID of the View to which the data is written
 				// Forth - the Array of data
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						R.layout.listitem, R.id.myListitem, ClipStringArray); //android.R.layout.simple_list_item_1
+						R.layout.listitem, R.id.myListitem, ItemStringArray); //android.R.layout.simple_list_item_1
 				/*
 				View mItemView = adapter.getView(0, null, null);
 		        TextView infoText = (TextView) mItemView.findViewById(R.id.myListitem);
@@ -336,11 +337,11 @@ public class PastyActivity extends Activity {
 						Log.d(PastyActivity.class.toString(), "TEST ITEMCLICK");
 				    	Object o = parent.getItemAtPosition(position);
 				    	Log.d(PastyActivity.class.toString(), o.toString());
-						String Clip = o.toString();
+						String Item = o.toString();
 				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-				    	clipboard.setText(Clip);
+				    	clipboard.setText(Item);
 				    	Context context = getApplicationContext();
-				    	CharSequence text = getString(R.string.copied_clip);
+				    	CharSequence text = getString(R.string.copied_item);
 				    	int duration = Toast.LENGTH_SHORT;
 				    	Toast toast = Toast.makeText(context, text, duration);
 				    	toast.show();
@@ -356,11 +357,11 @@ public class PastyActivity extends Activity {
 						Log.d(PastyActivity.class.toString(), "TEST ITEMLONGCLICK");
 				    	Object o = parent.getAdapter().getItem(position);
 				    	Log.d(PastyActivity.class.toString(), o.toString());
-						String Clip = o.toString();
+						String Item = o.toString();
 				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-				    	clipboard.setText(Clip);
+				    	clipboard.setText(Item);
 				    	Context context = getApplicationContext();
-				    	CharSequence text = getString(R.string.copied_clip);
+				    	CharSequence text = getString(R.string.copied_item);
 				    	int duration = Toast.LENGTH_SHORT;
 				    	Toast toast = Toast.makeText(context, text, duration);
 				    	toast.show();
@@ -389,7 +390,7 @@ public class PastyActivity extends Activity {
 		}
     }
     
-    private void getClipList() {
+    private void getItemList() {
 
     	final String url				= getURL()+"list";
     	final String user				= getUser();
@@ -411,10 +412,11 @@ public class PastyActivity extends Activity {
 				Message msg = Message.obtain();
 				msg.what=1;
 				HttpPost httpPost = new HttpPost(url);
-				String params = "u="+user+"&p="+password;
+				String params = "{ \"u\": \""+user+"\", \"p\": \""+password+"\" }";
 		    	try {
 
-		        	httpPost.setEntity(new StringEntity(params, "UTF8"));
+		        	httpPost.setEntity(new ByteArrayEntity(
+		        		    params.toString().getBytes("UTF8")));
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
 		        	Log.i(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + getURL());
@@ -454,29 +456,30 @@ public class PastyActivity extends Activity {
 		}.start();
     }
     
-    private void addClip() {
-    	EditText NewClip 		= (EditText)findViewById(R.id.NewClip);
-    	String clip				= NewClip.getText().toString();
-    	if(clip != null && clip.length() == 0) {
-    		Log.d(PastyActivity.class.toString(), "Clip ist empty. Bailing out!");
+    private void addItem() {
+    	EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
+    	String item				= NewItem.getText().toString();
+    	if(item != null && item.length() == 0) {
+    		Log.d(PastyActivity.class.toString(), "Item ist empty. Bailing out!");
     		return;
     	}
 		setProgressBarIndeterminateVisibility(true);
 		new Thread() {
 		    public void run() {
-		    	EditText NewClip 		= (EditText)findViewById(R.id.NewClip);
+		    	EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
 		    	String url				= URL+"add";
 		    	String user				= getUser();
 		    	String password			= getPassword();
-		    	String clip				= NewClip.getText().toString();
+		    	String item				= NewItem.getText().toString();
 				StringBuilder builder	= new StringBuilder();
 				HttpClient client 		= new DefaultHttpClient();
 				Message msg 			= Message.obtain();
 				msg.what				= 2;
 				HttpPost httpPost		= new HttpPost(url);
-				String params			= "u="+user+"&p="+password+"&c="+clip;
+				String params			= "{ \"u\": \""+user+"\", \"p\": \""+password+"\", \"i\": \""+item+"\" }";
 		    	try {
-		        	httpPost.setEntity(new StringEntity(params, "UTF-8"));  // Bug: make sure this really uses UTF-8. Does not work right now.
+		        	httpPost.setEntity(new ByteArrayEntity(
+		        		    params.toString().getBytes("UTF8")));  // Bug: make sure this really uses UTF-8. Does not work right now.
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
 		        	Log.d(PastyActivity.class.toString(), "Trying to send "+params+" to PastyServer at " + url);
@@ -493,7 +496,7 @@ public class PastyActivity extends Activity {
 							builder.append(line);
 						}
 					} else {
-						Log.i(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
+						Log.d(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
 				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					}
 				} catch (ClientProtocolException e) {
