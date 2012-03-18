@@ -412,9 +412,10 @@ public class PastyActivity extends Activity {
 				Message msg = Message.obtain();
 				msg.what=1;
 				HttpPost httpPost = new HttpPost(url);
-				String params = "{ \"u\": \""+user+"\", \"p\": \""+password+"\" }";
+				JSONObject params = new JSONObject();
 		    	try {
-
+					params.put("u", user);
+					params.put("p", password);
 		        	httpPost.setEntity(new ByteArrayEntity(
 		        		    params.toString().getBytes("UTF8")));
 		        	httpPost.setHeader("Content-type", "application/json");
@@ -437,13 +438,17 @@ public class PastyActivity extends Activity {
 				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					}
 				} catch (ClientProtocolException e) {
-			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 					e.printStackTrace();
+			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 				} catch (IOException e) {
+					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 					e.printStackTrace();
 			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
-					Log.e(PastyActivity.class.toString(), "Error while talking to server");
+				} catch (JSONException e) {
+					Log.e(PastyActivity.class.toString(), "Error while creating JSON Object");	
+					e.printStackTrace();
+			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 				}
 		    	finally {
 			    	Bundle b = new Bundle();
@@ -476,8 +481,11 @@ public class PastyActivity extends Activity {
 				Message msg 			= Message.obtain();
 				msg.what				= 2;
 				HttpPost httpPost		= new HttpPost(url);
-				String params			= "{ \"u\": \""+user+"\", \"p\": \""+password+"\", \"i\": \""+item+"\" }";
+				JSONObject params		= new JSONObject();
 		    	try {
+		    		params.put("u", user);
+		    		params.put("p", password);
+		    		params.put("i", item);
 		        	httpPost.setEntity(new ByteArrayEntity(
 		        		    params.toString().getBytes("UTF8")));  // Bug: make sure this really uses UTF-8. Does not work right now.
 		        	httpPost.setHeader("Content-type", "application/json");
@@ -502,6 +510,8 @@ public class PastyActivity extends Activity {
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 		    	Bundle b = new Bundle();
