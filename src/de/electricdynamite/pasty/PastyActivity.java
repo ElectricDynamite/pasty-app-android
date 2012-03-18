@@ -3,6 +3,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -10,7 +13,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,19 +30,23 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -305,7 +311,7 @@ public class PastyActivity extends Activity {
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
 	        if(jsonAnswerObject.has("items")) {
 		        ItemArray = jsonAnswerObject.getJSONArray("items");
-				String[] ItemStringArray = new String[ItemArray.length()];
+				List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
 				Log.d(PastyActivity.class.getName(),
 						"Received " + ItemArray.length()+" items.");
 				if(ItemArray.length() > 10) {
@@ -313,19 +319,22 @@ public class PastyActivity extends Activity {
 				}
 				for (int i = 0; i < ItemArray.length(); i++) {
 					JSONObject Item = ItemArray.getJSONObject(i);
-					ItemStringArray[i] = Item.getString("i");
+					ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("i"));
+					ItemList.add(cbItem);
 				}
 				
 				// First paramenter - Context
 				// Second parameter - Layout for the row
 				// Third parameter - ID of the View to which the data is written
 				// Forth - the Array of data
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						R.layout.listitem, R.id.myListitem, ItemStringArray); //android.R.layout.simple_list_item_1
+				/*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+						R.layout.listitem, R.id.myListitem, ItemStringArray); //android.R.layout.simple_list_item_1*/
 				/*
 				View mItemView = adapter.getView(0, null, null);
 		        TextView infoText = (TextView) mItemView.findViewById(R.id.myListitem);
 		        Linkify.addLinks(infoText, Linkify.ALL);*/
+				
+				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(ItemList, this);
 				
 				// Assign adapter to ListView
 				listView.setAdapter(adapter);
@@ -416,6 +425,7 @@ public class PastyActivity extends Activity {
 		    	try {
 					params.put("u", user);
 					params.put("p", password);
+					params.put("wid", true);
 		        	httpPost.setEntity(new ByteArrayEntity(
 		        		    params.toString().getBytes("UTF8")));
 		        	httpPost.setHeader("Content-type", "application/json");
@@ -487,7 +497,7 @@ public class PastyActivity extends Activity {
 		    		params.put("p", password);
 		    		params.put("i", item);
 		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));  // Bug: make sure this really uses UTF-8. Does not work right now.
+		        		    params.toString().getBytes("UTF8")));  
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
 		        	Log.d(PastyActivity.class.toString(), "Trying to send "+params+" to PastyServer at " + url);
@@ -521,5 +531,48 @@ public class PastyActivity extends Activity {
 		    }
 		    
 		}.start();
-    } 
+    }
+    
+    public class ClipboardItemListAdapter extends BaseAdapter {
+    	 
+        private List<ClipboardItem> itemList;
+     
+        private Context context;
+     
+        public ClipboardItemListAdapter(List<ClipboardItem> itemList, Context context) {
+            this.itemList = itemList;
+            this.context = context;
+        }
+     
+        public int getCount() {
+            return itemList.size();
+        }
+     
+        public ClipboardItem getItem(int position) {
+            return itemList.get(position);
+        }
+        
+        public long getItemId(int position) {
+            return position;
+        }
+        
+        public String getClipboardItemId(int position) {
+        	return itemList.get(position).getId();
+        }
+
+		@Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LinearLayout itemLayout;
+            ClipboardItem Item = itemList.get(position);
+     
+            itemLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.listitem, parent, false);
+     
+            TextView tvListItem = (TextView) itemLayout.findViewById(R.id.myListitem);
+            tvListItem.setText(Item.getText());
+            Linkify.addLinks(tvListItem, Linkify.ALL);
+     
+     
+            return itemLayout;
+        }
+    }
 }

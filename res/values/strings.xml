@@ -12,7 +12,7 @@
     <string name="copy">Copy</string>
     
     <string name="helptext_PastyActivity_pasty">Paste item to cloud.</string>
-    <string name="helptext_PastyActivity_copy">Hold an item to copy.</string>
+    <string name="helptext_PastyActivity_copy">Touch an item to copy.</string>
     <string name="helptext_PastyActivity_loading">Loading items from cloud&#8230;</string>
     <string name="NewItem_hint">Paste new item here</string>
     <string name="PastyButton_label">Send to cloud!</string>
