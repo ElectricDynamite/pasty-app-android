@@ -26,6 +26,7 @@
     <string name="error_badanswer">Problem talking to server.\nTry again later.</string>
     <string name="error_notsupported">This feature is not supported yet.</string>
     <string name="error_loginfailed">Login failed.</string>
+    <string name="error_unknown">An unknown error occured. Please try again later or check for an App update.</string>
     
     <string name="settings">Settings</string>
 	<string name="about">About</string>

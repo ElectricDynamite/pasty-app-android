@@ -54,9 +54,13 @@ import android.widget.Toast;
 
 public class PastyActivity extends Activity {
   
+	// Error Dialog IDs
     static final int DIALOG_CONNECTION_ERROR_ID	= 1;
     static final int DIALOG_AUTH_ERROR_ID		= 2;
-    static final int DIALOG_ABOUT_ID			= 10;
+    static final int DIALOG_UNKNOWN_ERROR_ID	= 99;   		
+
+    // Other Dialog IDs
+    static final int DIALOG_ABOUT_ID			= 101;
     static final int DIALOG_NOT_SUPPORTED_ID	= 127;
     
     static final String PREF_USER				= "pref_username";  
@@ -210,6 +214,17 @@ public class PastyActivity extends Activity {
         	        	Intent settingsActivity = new Intent(getBaseContext(),
         	                    PastyPreferencesActivity.class);
         	            startActivity(settingsActivity);
+        			}
+        		});
+				alert = builder.create();
+				alert.show();
+				break;
+        case DIALOG_UNKNOWN_ERROR_ID: 
+        	builder = new AlertDialog.Builder(this);  	
+        	builder.setMessage(getString(R.string.error_unknown))
+        		.setCancelable(false)
+        		.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int id) {
         			}
         		});
 				alert = builder.create();
@@ -381,6 +396,7 @@ public class PastyActivity extends Activity {
 			    	break;
 			    default:
 			    	Log.i(PastyActivity.class.getName()," Unknown error received from PastyServer: ERRCODE " + ErrorObject.getString("code") + ": " + ErrorObject.getString("message"));
+			    	showDialog(DIALOG_UNKNOWN_ERROR_ID);
 				}
 			}
 			setProgressBarIndeterminateVisibility(false);
