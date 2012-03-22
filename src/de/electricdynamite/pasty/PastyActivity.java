@@ -323,16 +323,6 @@ public class PastyActivity extends Activity {
 					ItemList.add(cbItem);
 				}
 				
-				// First paramenter - Context
-				// Second parameter - Layout for the row
-				// Third parameter - ID of the View to which the data is written
-				// Forth - the Array of data
-				/*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						R.layout.listitem, R.id.myListitem, ItemStringArray); //android.R.layout.simple_list_item_1*/
-				/*
-				View mItemView = adapter.getView(0, null, null);
-		        TextView infoText = (TextView) mItemView.findViewById(R.id.myListitem);
-		        Linkify.addLinks(infoText, Linkify.ALL);*/
 				
 				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(ItemList, this);
 				
@@ -476,6 +466,9 @@ public class PastyActivity extends Activity {
     	String item				= NewItem.getText().toString();
     	if(item != null && item.length() == 0) {
     		Log.d(PastyActivity.class.toString(), "Item ist empty. Bailing out!");
+		   	CharSequence text = getString(R.string.empty_item);
+		   	Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+		   	toast.show();
     		return;
     	}
 		setProgressBarIndeterminateVisibility(true);

@@ -18,6 +18,7 @@
     <string name="PastyButton_label">Send to cloud!</string>
     <string name="copied_item">Copied text to local clipboard.</string>
     <string name="added_item">Added text to cloud clipboard.</string>
+    <string name="empty_item">Cannot add empty item.</string>
     
     <string name="button_ok">Okay</string>
     <string name="button_noes">Oh noes!</string>
