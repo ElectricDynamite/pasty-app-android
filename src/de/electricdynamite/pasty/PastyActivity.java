@@ -366,9 +366,7 @@ public class PastyActivity extends Activity {
 				listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 					@Override
 					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-						Log.d(PastyActivity.class.toString(), "TEST ITEMLONGCLICK");
 				    	Object o = parent.getAdapter().getItem(position);
-				    	Log.d(PastyActivity.class.toString(), o.toString());
 						String Item = o.toString();
 				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 				    	clipboard.setText(Item);
