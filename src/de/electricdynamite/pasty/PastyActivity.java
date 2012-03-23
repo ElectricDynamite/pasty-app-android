@@ -109,6 +109,12 @@ public class PastyActivity extends Activity {
 		getItemList();
     }
     
+    public void onStop() {
+    	super.onStop();
+    	// Let's clean up a little
+    	
+    }
+    
     public void loadPreferences() {
     	// Restore preferences
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -290,6 +296,8 @@ public class PastyActivity extends Activity {
 				   	CharSequence text = getString(R.string.added_item);
 				   	Toast toast = Toast.makeText(context, text, duration);
 				   	toast.show();
+				   	toast = null;
+				   	context = null;
 				   	PastyActivity.this.finish();
 				}
 				else {
@@ -357,6 +365,8 @@ public class PastyActivity extends Activity {
 				    	int duration = Toast.LENGTH_SHORT;
 				    	Toast toast = Toast.makeText(context, text, duration);
 				    	toast.show();
+				    	toast = null;
+				    	context = null;
 				    	PastyActivity.this.finish();
 					}
 				});
@@ -375,6 +385,8 @@ public class PastyActivity extends Activity {
 				    	int duration = Toast.LENGTH_SHORT;
 				    	Toast toast = Toast.makeText(context, text, duration);
 				    	toast.show();
+				    	toast = null;
+				    	context = null;
 				    	PastyActivity.this.finish();
 						return false;
 					}
@@ -528,10 +540,15 @@ public class PastyActivity extends Activity {
 						while ((line = reader.readLine()) != null) {
 							builder.append(line);
 						}
+				    	entity		= null;
+				    	content		= null;
+				    	reader		= null;
 					} else {
 						Log.d(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
 				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					}
+			    	response	= null;
+			    	statusLine	= null;
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -543,6 +560,11 @@ public class PastyActivity extends Activity {
 		    	b.putString("response", builder.toString());
 		    	msg.setData(b);
 		    	messageHandler.sendMessage(msg);
+		    	builder 	= null;
+		    	client 		= null;
+		    	httpPost	= null;
+		    	params		= null;
+		    	msg			= null;
 		    }
 		    
 		}.start();
