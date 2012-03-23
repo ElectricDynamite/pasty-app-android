@@ -445,10 +445,15 @@ public class PastyActivity extends Activity {
 						while ((line = reader.readLine()) != null) {
 							builder.append(line);
 						}
+				    	entity		= null;
+				    	content		= null;
+				    	reader		= null;
 					} else {
 						Log.i(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
 				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					}
+			    	response	= null;
+			    	statusLine	= null;
 				} catch (ClientProtocolException e) {
 					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 					e.printStackTrace();
@@ -467,6 +472,11 @@ public class PastyActivity extends Activity {
 			    	b.putString("response", builder.toString());
 			    	msg.setData(b);
 			    	messageHandler.sendMessage(msg);
+			    	builder 	= null;
+			    	client 		= null;
+			    	httpPost	= null;
+			    	params		= null;
+			    	msg			= null;
 		    	}
 		    }
 		    
