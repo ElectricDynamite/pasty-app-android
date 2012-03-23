@@ -348,9 +348,7 @@ public class PastyActivity extends Activity {
 				listView.setOnItemClickListener(new OnItemClickListener() { // Bug: Does not get called on first item 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						Log.d(PastyActivity.class.toString(), "TEST ITEMCLICK");
 				    	Object o = parent.getItemAtPosition(position);
-				    	Log.d(PastyActivity.class.toString(), o.toString());
 						String Item = o.toString();
 				    	ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 				    	clipboard.setText(Item);
