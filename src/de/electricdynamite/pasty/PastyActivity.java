@@ -73,6 +73,9 @@ public class PastyActivity extends Activity {
     static final String PORT_HTTP				= "8080";
     static final String PORT_HTTPS				= "4444";
     
+    static final String PASTY_URL_ITEM_ADD		= "clipboard/item/add";
+    static final String PASTY_URL_CLIPBOARD_LIST= "clipboard/list";
+
     private String URL							= "";   
     private String user							= "";
     private String password						= "";
@@ -415,7 +418,7 @@ public class PastyActivity extends Activity {
     
     private void getItemList() {
 
-    	final String url				= getURL()+"list";
+    	final String url				= getURL()+PASTY_URL_CLIPBOARD_LIST;
     	final String user				= getUser();
     	final String password			= getPassword();
 
@@ -444,7 +447,7 @@ public class PastyActivity extends Activity {
 		        		    params.toString().getBytes("UTF8")));
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
-		        	Log.i(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + getURL());
+		        	Log.i(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
 		        	HttpResponse response = client.execute(httpPost);
 		        	StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();
@@ -461,6 +464,7 @@ public class PastyActivity extends Activity {
 				    	content		= null;
 				    	reader		= null;
 					} else {
+						Log.e(PastyActivity.class.toString(), statusLine.toString());
 						Log.i(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
 				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 					}
@@ -509,7 +513,7 @@ public class PastyActivity extends Activity {
 		new Thread() {
 		    public void run() {
 		    	EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
-		    	String url				= URL+"add";
+		    	String url				= getURL()+PASTY_URL_ITEM_ADD;
 		    	String user				= getUser();
 		    	String password			= getPassword();
 		    	String item				= NewItem.getText().toString();
