@@ -3,6 +3,8 @@ package de.electricdynamite.pasty;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.ClipboardManager;
+
 public class ClipboardItem {
 	public String Id = "";
 	public String ItemText = "";
@@ -27,4 +29,7 @@ public class ClipboardItem {
 		return jsItem;
 	}
 	
+	public void copyToClipboard(ClipboardManager clipboard) {
+    	clipboard.setText(this.getText());
+	}
 }
