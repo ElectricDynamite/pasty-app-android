@@ -16,8 +16,9 @@
     <string name="helptext_PastyActivity_loading">Loading items from cloud&#8230;</string>
     <string name="NewItem_hint">Paste new item here</string>
     <string name="PastyButton_label">Send to cloud!</string>
-    <string name="copied_item">Copied text to local clipboard.</string>
-    <string name="added_item">Added text to cloud clipboard.</string>
+    <string name="item_copied">Copied text to local clipboard.</string>
+    <string name="item_added">Added text to cloud clipboard.</string>
+    <string name="item_deleted">Item deleted from Pasty Clipboard</string>
     <string name="empty_item">Cannot add empty item.</string>
     
     <string name="button_ok">Okay</string>
@@ -47,6 +48,11 @@
 	
 	<string name="pref_server_title">Pasty Server</string>
 	<string name="pref_server_sum">Choose which Pasty Server to use (dev-setting)</string>
+	<string name="itemContextMenuTitle">Clipboard Item</string>
+	<string-array name="itemContextMenu">
+	    <item>Copy without exiting</item>
+	    <item>Delete</item>
+	</string-array>
 	<string-array name="pref_server_entrytitles">
 	    <item>Local Dev Server</item>
 	    <item>Internet Test Server</item>

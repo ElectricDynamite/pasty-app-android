@@ -118,6 +118,10 @@ public class PastyActivity extends Activity {
     	Log.i(PastyActivity.class.getName(),"onResume(): Reloading items.");
     	// Let's get preferences
 		loadPreferences();
+		if(PastyActivity.this.ClipboardListAdapter != null) {
+			PastyActivity.this.ClipboardListAdapter.removeAll();
+			PastyActivity.this.ClipboardListAdapter.notifyDataSetChanged();
+		}
 		getItemList();
     }
     
@@ -160,6 +164,7 @@ public class PastyActivity extends Activity {
         }
     }
     
+	@SuppressWarnings("unused")
 	private void refreshClipboardList() {
 		// TODO: everything
 	}
@@ -704,6 +709,10 @@ public class PastyActivity extends Activity {
         
         public void remove(int position) {
         	this.itemList.remove(position);
+        }
+        
+        public void removeAll() {
+        	this.itemList.clear();
         }
 
 		@Override
