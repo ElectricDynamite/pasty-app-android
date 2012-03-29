@@ -32,6 +32,7 @@
     <string name="settings">Settings</string>
 	<string name="about">About</string>
 	<string name="login">Login</string>
+	<string name="network">Network</string>
 	
 	<string name="pref_username_title">Username</string>
 	<string name="pref_username_sum">Enter your Pasty username.</string>

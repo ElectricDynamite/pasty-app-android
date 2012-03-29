@@ -82,7 +82,7 @@ public class PastyActivity extends Activity {
     static final String PASTY_URL_ITEM_DELETE	= "clipboard/item/delete/";
     static final String PASTY_URL_CLIPBOARD_LIST= "clipboard/list";
     
-    private String URL							= "";   
+    private String URL							= "";
     private String user							= "";
     private String password						= "";
 

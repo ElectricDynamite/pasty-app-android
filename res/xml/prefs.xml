@@ -17,6 +17,9 @@
 		                android:singleLine="true"
 						android:password="true"
 		                android:key="pref_password" />
+        </PreferenceCategory>
+        <PreferenceCategory
+                android:title="@string/network">
 		       	<ListPreference
 		                android:key="pref_server"
 		                android:title="@string/pref_server_title"

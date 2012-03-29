@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_title">Über Pasty</string>
+	<string name="about_text">
+		<b><u>Pasty - das Cloud Clipboard\n</u></b>
+	    Copyright &#169; 2012 Philipp Geschke\n\n
+	   <i>DIESE SOFTWARE IST IN EINEM SEHR FRÜHEN STADIUM!</i>\n\n
+	    Details findest du auf http://pastyapp.org\n
+	    Hier kannst du dir auch einen <b>Account anlegen</b>.\n\n
+	    Danke, dass du Pasty benutzt, du bist spitze!
+	</string>
+</resources>

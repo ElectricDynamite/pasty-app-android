@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources>	
     <string name="about_title">About Pasty</string>
-	<string-array name="about_array">
-	    <item>Pasty - the cloud clipboard</item>
-	    <item>Copyright &#169; 2012 by Philipp Geschke</item>
-	    <item>THIS SOFTWARE IS IN AN REALLY EARLY STAGE!</item>
-	    <item>For details see http://pastyapp.org</item>
-	    <item>That is also where you can <b>create an account</b>.</item>
-	</string-array>
-	
-	
 	<string name="about_text">
 		<b><u>Pasty - the cloud clipboard\n</u></b>
 	    Copyright &#169; 2012 by Philipp Geschke\n\n
@@ -18,5 +9,4 @@
 	    That is also where you can <b>create an account</b>.\n\n
 	    Thank you for using Pasty, you\'re awesome!
 	</string>
-	
 </resources>
