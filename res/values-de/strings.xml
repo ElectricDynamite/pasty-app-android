@@ -52,14 +52,4 @@
 	    <item>Kopiere ohne zu beenden</item>
 	    <item>Löschen</item>
 	</string-array>
-	<string-array name="pref_server_entrytitles">
-	    <item>Local Dev Server</item>
-	    <item>Internet Test Server</item>
-	    <item>Public Production Server</item>
-	</string-array>
-	<string-array name="pref_server_entryvalues">
-	    <item>192.168.1.26</item>
-	    <item>mario.blafaselblub.net</item>
-	    <item>pastyapp.org</item>
-	</string-array>
 </resources>

@@ -18,7 +18,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Window;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -35,12 +42,8 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -53,7 +56,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PastyActivity extends Activity {
+public class PastyActivity extends SherlockActivity {
   
 	// Error Dialog IDs
     static final int DIALOG_CONNECTION_ERROR_ID	= 1;
@@ -139,14 +142,14 @@ public class PastyActivity extends Activity {
     	setURL(prefs.getString(PREF_SERVER, PREF_SERVER_DEFAULT), prefs.getBoolean(PREF_HTTPS, true));
     }
     
-    @Override
+   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
-
+    
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -303,7 +306,7 @@ public class PastyActivity extends Activity {
 	        	}
 	        	break;
 	        case 3:
-	        	setProgressBarIndeterminateVisibility(false);
+	        	setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 				try {
 					confirmDeleteItem(msg.getData());
 				} catch (JSONException e) {
@@ -345,7 +348,7 @@ public class PastyActivity extends Activity {
         else {
         	// answer is invalid
         }
-		setProgressBarIndeterminateVisibility(false);
+		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
 	private void confirmDeleteItem(Bundle data) throws JSONException {
@@ -378,7 +381,7 @@ public class PastyActivity extends Activity {
         else {
         	// answer is invalid
         }
-		setProgressBarIndeterminateVisibility(false);
+		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
     private void listItems(Bundle data) {
@@ -448,7 +451,7 @@ public class PastyActivity extends Activity {
 			    	showDialog(DIALOG_UNKNOWN_ERROR_ID);
 				}
 			}
-			setProgressBarIndeterminateVisibility(false);
+			setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -461,7 +464,7 @@ public class PastyActivity extends Activity {
     	final String password			= getPassword();
 
     	// Let's look busy
-		setProgressBarIndeterminateVisibility(true);
+		setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		
 		/*
 		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
@@ -485,7 +488,7 @@ public class PastyActivity extends Activity {
 		        		    params.toString().getBytes("UTF8")));
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
-		        	Log.i(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
+		        	Log.d(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
 		        	HttpResponse response = client.execute(httpPost);
 		        	StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();
@@ -547,7 +550,7 @@ public class PastyActivity extends Activity {
 		   	toast.show();
     		return;
     	}
-		setProgressBarIndeterminateVisibility(true);
+    	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		new Thread() {
 		    public void run() {
 		    	EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
@@ -614,7 +617,7 @@ public class PastyActivity extends Activity {
     
 
     private void deleteItem(final ClipboardItem item, final int position) {
-    	setProgressBarIndeterminateVisibility(true);
+    	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
     	Log.d(PastyActivity.this.toString(), "Test");
 		new Thread() {
 		    public void run() {
@@ -632,7 +635,7 @@ public class PastyActivity extends Activity {
 		    		params.put("u", user);
 		    		params.put("p", password);
 		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));  
+		        		    params.toString().getBytes("UTF8")));
 		        	httpPost.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
 		        	HttpResponse response = client.execute(httpPost);
@@ -743,8 +746,7 @@ public class PastyActivity extends Activity {
       }      
     }
     
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(android.view.MenuItem item) {
       AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
       int menuItemIndex = item.getItemId();
       ClipboardItem Item = this.ItemList.get(info.position);
