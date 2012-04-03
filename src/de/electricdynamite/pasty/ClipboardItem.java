@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.text.ClipboardManager;
 
+@SuppressWarnings("deprecation")
 public class ClipboardItem {
 	public String Id = "";
 	public String ItemText = "";
@@ -29,6 +30,7 @@ public class ClipboardItem {
 		return jsItem;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void copyToClipboard(ClipboardManager clipboard) {
     	clipboard.setText(this.getText());
 	}

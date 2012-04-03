@@ -798,8 +798,9 @@ containing a value of this type.
         public static final int abs__tab_unselected_pressed_holo=0x7f02005c;
         public static final int ic_content_copy=0x7f02005d;
         public static final int ic_launcher=0x7f02005e;
-        public static final int ic_menu_info_details=0x7f02005f;
-        public static final int ic_menu_preferences=0x7f020060;
+        public static final int ic_menu_add=0x7f02005f;
+        public static final int ic_menu_info_details=0x7f020060;
+        public static final int ic_menu_preferences=0x7f020061;
     }
     public static final class id {
         public static final int NewItem=0x7f05002f;
@@ -840,8 +841,9 @@ containing a value of this type.
         public static final int listItems=0x7f050036;
         public static final int listMode=0x7f050002;
         public static final int listlayout=0x7f05002a;
-        public static final int menu_about=0x7f050038;
-        public static final int menu_settings=0x7f050037;
+        public static final int menu_about=0x7f050039;
+        public static final int menu_add=0x7f050037;
+        public static final int menu_settings=0x7f050038;
         public static final int myListimage=0x7f05002b;
         public static final int myListitem=0x7f05002c;
         public static final int myTableLayout=0x7f050032;
@@ -929,6 +931,7 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0a0009;
+        public static final int add=0x7f0a0026;
         public static final int app_label=0x7f0a000d;
         public static final int app_logo=0x7f0a000e;
         public static final int app_name=0x7f0a000c;
@@ -943,26 +946,29 @@ containing a value of this type.
         public static final int helptext_PastyActivity_copy=0x7f0a0016;
         public static final int helptext_PastyActivity_loading=0x7f0a0017;
         public static final int helptext_PastyActivity_pasty=0x7f0a0015;
-        public static final int itemContextMenuTitle=0x7f0a0033;
+        public static final int itemContextMenuTitle=0x7f0a0035;
         public static final int item_added=0x7f0a001b;
         public static final int item_copied=0x7f0a001a;
         public static final int item_deleted=0x7f0a001c;
-        public static final int login=0x7f0a0026;
-        public static final int network=0x7f0a0027;
+        public static final int login=0x7f0a0027;
+        public static final int misc=0x7f0a0029;
+        public static final int network=0x7f0a0028;
         public static final int password1=0x7f0a0011;
         public static final int password_2=0x7f0a0012;
         public static final int pasty_server_url=0x7f0a0013;
-        public static final int pref_password_default=0x7f0a002d;
-        public static final int pref_password_sum=0x7f0a002c;
-        public static final int pref_password_title=0x7f0a002b;
-        public static final int pref_server_sum=0x7f0a0032;
-        public static final int pref_server_title=0x7f0a0031;
-        public static final int pref_usehttps_sum=0x7f0a002f;
-        public static final int pref_usehttps_title=0x7f0a002e;
-        public static final int pref_username=0x7f0a0030;
-        public static final int pref_username_default=0x7f0a002a;
-        public static final int pref_username_sum=0x7f0a0029;
-        public static final int pref_username_title=0x7f0a0028;
+        public static final int pref_password_default=0x7f0a002f;
+        public static final int pref_password_sum=0x7f0a002e;
+        public static final int pref_password_title=0x7f0a002d;
+        public static final int pref_server_sum=0x7f0a0034;
+        public static final int pref_server_title=0x7f0a0033;
+        public static final int pref_usehttps_sum=0x7f0a0031;
+        public static final int pref_usehttps_title=0x7f0a0030;
+        public static final int pref_username=0x7f0a0032;
+        public static final int pref_username_default=0x7f0a002c;
+        public static final int pref_username_sum=0x7f0a002b;
+        public static final int pref_username_title=0x7f0a002a;
+        public static final int pref_version_sum=0x7f0a0037;
+        public static final int pref_version_title=0x7f0a0036;
         public static final int settings=0x7f0a0024;
         public static final int title_CopyActivity=0x7f0a000f;
         public static final int title_PastyActivity=0x7f0a0010;

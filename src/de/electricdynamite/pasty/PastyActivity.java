@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,6 +57,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressWarnings("deprecation")
 public class PastyActivity extends SherlockActivity {
   
 	// Error Dialog IDs
@@ -97,6 +99,15 @@ public class PastyActivity extends SherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Get our own version name and code
+		try {
+			@SuppressWarnings("unused")
+			String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			@SuppressWarnings("unused")
+			String versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
 		// Request features
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     	// Let's get preferences
@@ -154,6 +165,9 @@ public class PastyActivity extends SherlockActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+        case R.id.menu_add:
+        	showDialog(DIALOG_NOT_SUPPORTED_ID);
+	        return true;
         case R.id.menu_settings:
         	Intent settingsActivity = new Intent(getBaseContext(),
                     PastyPreferencesActivity.class);
@@ -421,6 +435,7 @@ public class PastyActivity extends SherlockActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
+						@SuppressWarnings("deprecation")
 						ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 						Item.copyToClipboard(clipboard);
 				    	Context context = getApplicationContext();

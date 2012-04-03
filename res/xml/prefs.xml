@@ -33,4 +33,11 @@
                         android:summary="@string/pref_usehttps_sum"
                         android:key="pref_usehttps" />
         </PreferenceCategory>
+        <PreferenceCategory
+                android:title="@string/about">
+                <Preference 
+		                android:key="pref_version"
+		                android:title="@string/pref_version_title"
+		                android:summary="@string/pref_version_sum"/>
+        </PreferenceCategory>
 </PreferenceScreen>

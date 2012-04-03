@@ -9,10 +9,10 @@
     
     <string name="copy">Kopieren</string>
     
-    <string name="helptext_PastyActivity_pasty">Füge etwas in die Cloud ein.</string>
-    <string name="helptext_PastyActivity_copy">Berühre etwas, um es zu kopieren.</string>
+    <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
+    <string name="helptext_PastyActivity_copy">Eintrag zum kopieren berühren.</string>
     <string name="helptext_PastyActivity_loading">Lade dein Cloud Clipboard&#8230;</string>
-    <string name="NewItem_hint">Füge hier etwas ein</string>
+    <string name="NewItem_hint">Hier einfügen oder schreiben</string>
     <string name="PastyButton_label">Ab in die Cloud damit!</string>
     <string name="item_copied">Text ins lokale Clipboard kopiert.</string>
     <string name="item_added">Text ins Cloud Clipboard kopiert.</string>
@@ -20,7 +20,7 @@
     <string name="empty_item">Kann keinen leeren Text hinzufügen.</string>
     
     <string name="button_ok">Okay</string>
-    <string name="button_noes">Och nö!</string>
+    <string name="button_noes">Schade eigentlich</string>
     
     <string name="error_badanswer">Ich konnte nicht mit dem Server reden.\nVersuch es später noch mal.</string>
     <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
@@ -31,6 +31,7 @@
 	<string name="about">Über Pasty</string>
 	<string name="login">Login</string>
 	<string name="network">Netzwerk</string>
+	<string name="misc">Sonstiges</string>
 	
 	<string name="pref_username_title">Benutzername</string>
 	<string name="pref_username_sum">Trage deinen Pasty Benutzernamen ein.</string>
@@ -41,13 +42,11 @@
 	<string name="pref_password_sum">Trage dein Pasty Passwort ein.</string>
 	<string name="pref_password_default"></string>
 	
-	<string name="pref_usehttps_title">Verschlüsselte Übertragung</string>
+	<string name="pref_usehttps_title">Sichere Übertragung</string>
 	<string name="pref_usehttps_sum">Verschlüsselte Netzwerkübertragung. Bei Problemen abschalten.</string>
 	<string name="pref_username">Benutzername</string>
 	
-	<string name="pref_server_title">Pasty Server</string>
-	<string name="pref_server_sum">Choose which Pasty Server to use (dev-setting)</string>
-	<string name="itemContextMenuTitle">Clipboard Inhalt</string>
+	<string name="itemContextMenuTitle">Clipboard Eintrag</string>
 	<string-array name="itemContextMenu">
 	    <item>Kopiere ohne zu beenden</item>
 	    <item>Löschen</item>
