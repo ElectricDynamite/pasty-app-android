@@ -48,7 +48,7 @@
 	
 	<string name="itemContextMenuTitle">Clipboard Eintrag</string>
 	<string-array name="itemContextMenu">
-	    <item>Kopiere ohne zu beenden</item>
+	    <item>Kopieren ohne zu beenden</item>
 	    <item>Löschen</item>
 	</string-array>
 </resources>
