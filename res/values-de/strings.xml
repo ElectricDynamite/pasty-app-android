@@ -10,7 +10,7 @@
     <string name="copy">Kopieren</string>
     
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
-    <string name="helptext_PastyActivity_copy">Eintrag zum kopieren berühren.</string>
+    <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren.</string>
     <string name="helptext_PastyActivity_loading">Lade dein Cloud Clipboard&#8230;</string>
     <string name="NewItem_hint">Hier einfügen oder schreiben</string>
     <string name="PastyButton_label">Ab in die Cloud damit!</string>
