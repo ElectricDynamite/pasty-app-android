@@ -11,6 +11,8 @@
     
     <string name="copy">Copy</string>
     
+    <string name="dialog_item_add_title">Paste new item into cloud.</string>
+    
     <string name="helptext_PastyActivity_pasty">Paste item to cloud.</string>
     <string name="helptext_PastyActivity_copy">Touch an item to copy.</string>
     <string name="helptext_PastyActivity_loading">Loading items from cloud&#8230;</string>
@@ -68,7 +70,7 @@
 	</string-array>
 	
 	<string name="pref_version_title">Version</string>
-	<string name="pref_version_sum">0.3rc4</string>
+	<string name="pref_version_sum">0.3rc5</string>
 	
 
 </resources>

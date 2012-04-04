@@ -19,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Window;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -67,6 +66,7 @@ public class PastyActivity extends SherlockActivity {
 
     // Other Dialog IDs
     static final int DIALOG_ABOUT_ID			= 101;
+    static final int DIALOG_ADD_ID				= 102;
     static final int DIALOG_NOT_SUPPORTED_ID	= 127;
     
     // Item Context Menu IDs
@@ -112,19 +112,9 @@ public class PastyActivity extends SherlockActivity {
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     	// Let's get preferences
 	    setContentView(R.layout.main);
-		// set click event listener for button
-		Button PastyButton		= (Button) findViewById(R.id.PastyButton);
-		PastyButton.setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						addItem();
-					}
-				}
-		);
-		TextView tv				= (TextView) findViewById(R.id.tvPasty);
-		tv.setFocusableInTouchMode(true);
-		tv.requestFocus();
+		//TextView tv				= (TextView) findViewById(R.id.tvPasty);
+		//tv.setFocusableInTouchMode(true);
+		//tv.requestFocus();
 	}
     
     public void onResume() {
@@ -166,7 +156,7 @@ public class PastyActivity extends SherlockActivity {
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.menu_add:
-        	showDialog(DIALOG_NOT_SUPPORTED_ID);
+        	showDialog(DIALOG_ADD_ID);
 	        return true;
         case R.id.menu_settings:
         	Intent settingsActivity = new Intent(getBaseContext(),
@@ -229,6 +219,7 @@ public class PastyActivity extends SherlockActivity {
 	}
     
     protected AlertDialog onCreateDialog(int id) {
+    	// TODO: Start using Fragments, and hence, start using DialogFragments
     	AlertDialog.Builder	builder = null;
 		AlertDialog alert = null;
         switch(id) {
@@ -285,17 +276,39 @@ public class PastyActivity extends SherlockActivity {
 				alert = builder.create();
 				alert.show();
 				break;
+        case DIALOG_ADD_ID:
+	        final Dialog addItemDialog = new Dialog(PastyActivity.this);
+	
+	        addItemDialog.setContentView(R.layout.add_item);
+	        addItemDialog.setTitle(getString(R.string.dialog_item_add_title));
+
+			// set click event listener for button
+	        addItemDialog.show();
+			Button PastyButton		= (Button) addItemDialog.findViewById(R.id.PastyButton);
+			PastyButton.setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							LinearLayout mDialogLayout = (LinearLayout) v.getParent();
+							EditText mNewItemET = (EditText) mDialogLayout.findViewById(R.id.NewItem);
+							String mItem = mNewItemET.getText().toString();
+							addItemDialog.dismiss();
+							addItem(mItem);
+						}
+					}
+			);
+			break;
         case DIALOG_ABOUT_ID: 
-		        Dialog dialog = new Dialog(this);
+		        Dialog aboutDialog = new Dialog(this);
 		
-		        dialog.setContentView(R.layout.about_dialog);
-		        dialog.setTitle(getString(R.string.about_title));
+		        aboutDialog.setContentView(R.layout.about_dialog);
+		        aboutDialog.setTitle(getString(R.string.about_title));
 		
 		        //TextView text = (TextView) dialog.findViewById(R.id.text);
 		        //text.setText(Html.fromHtml(getString(R.string.about_text)));
-		        ImageView image = (ImageView) dialog.findViewById(R.id.image);
-		        image.setImageResource(R.drawable.ic_launcher);
-		        dialog.show();
+		        ImageView aboutImage = (ImageView) aboutDialog.findViewById(R.id.image);
+		        aboutImage.setImageResource(R.drawable.ic_launcher);
+		        aboutDialog.show();
 				break;
         default:
             alert = null;
@@ -555,9 +568,9 @@ public class PastyActivity extends SherlockActivity {
 		}.start();
     }
     
-    private void addItem() {
-    	EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
-    	String item				= NewItem.getText().toString();
+    private void addItem(final String item) {
+    	//EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
+    	//String item				= NewItem.getText().toString();
     	if(item != null && item.length() == 0) {
     		Log.d(PastyActivity.class.toString(), "Item ist empty. Bailing out!");
 		   	CharSequence text = getString(R.string.empty_item);
@@ -568,11 +581,9 @@ public class PastyActivity extends SherlockActivity {
     	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		new Thread() {
 		    public void run() {
-		    	EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
 		    	String url				= getURL()+PASTY_URL_ITEM_ADD;
 		    	String user				= getUser();
 		    	String password			= getPassword();
-		    	String item				= NewItem.getText().toString();
 				StringBuilder builder	= new StringBuilder();
 				HttpClient client 		= new DefaultHttpClient();
 				Message msg 			= Message.obtain();
