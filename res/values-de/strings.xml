@@ -9,6 +9,8 @@
     
     <string name="copy">Kopieren</string>
     
+    <string name="dialog_item_add_title">Neuer Eintrag</string>
+    
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
     <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren.</string>
     <string name="helptext_PastyActivity_loading">Lade dein Cloud Clipboard&#8230;</string>
@@ -30,17 +32,20 @@
     <string name="settings">Einstellungen</string>
 	<string name="about">Über Pasty</string>
 	<string name="login">Login</string>
+	<string name="behaviour">Verhalten</string>
 	<string name="network">Netzwerk</string>
 	<string name="misc">Sonstiges</string>
 	
 	<string name="pref_username_title">Benutzername</string>
 	<string name="pref_username_sum">Trage deinen Pasty Benutzernamen ein.</string>
 	<string name="pref_username_default"></string>
-	
-	
+		
 	<string name="pref_password_title">Passwort</string>
 	<string name="pref_password_sum">Trage dein Pasty Passwort ein.</string>
 	<string name="pref_password_default"></string>
+	
+	<string name="pref_paste_clipboard_title">Autmatisches Einfügen</string>
+	<string name="pref_paste_clipboard_sum">Der Inhalt der Geräte-Zwischenablage wird automatisch beim Hinzufügen eingefügt.</string>
 	
 	<string name="pref_usehttps_title">Sichere Übertragung</string>
 	<string name="pref_usehttps_sum">Verschlüsselte Netzwerkübertragung. Bei Problemen abschalten.</string>

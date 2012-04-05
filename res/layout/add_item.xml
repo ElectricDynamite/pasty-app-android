@@ -5,13 +5,16 @@
     android:orientation="vertical" >
 		<EditText
 			android:id="@+id/NewItem"
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/NewItem_hint"
-			android:textSize="18sp" />
+			android:textSize="18sp"
+			android:lines="5"
+			android:gravity="top"
+			android:inputType="textMultiLine" />
 		<Button
 			android:id="@+id/PastyButton"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingLeft="50dp"
 			android:paddingRight="50dp"

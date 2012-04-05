@@ -19,6 +19,14 @@
 		                android:key="pref_password" />
         </PreferenceCategory>
         <PreferenceCategory
+                android:title="@string/behaviour">			        
+                <CheckBoxPreference
+                        android:title="@string/pref_paste_clipboard_title"
+                        android:defaultValue="true"
+                        android:summary="@string/pref_paste_clipboard_sum"
+                        android:key="pref_paste_clipboard" />
+        </PreferenceCategory>
+        <PreferenceCategory
                 android:title="@string/network">
 		       	<ListPreference
 		                android:key="pref_server"

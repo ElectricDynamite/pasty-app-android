@@ -77,6 +77,7 @@ public class PastyActivity extends SherlockActivity {
     static final String PREF_PASSWORD			= "pref_password"; 
     static final String PREF_HTTPS				= "pref_usehttps";
     static final String PREF_SERVER				= "pref_server";
+    static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     
     static final String PREF_SERVER_DEFAULT		= "pastyapp.org";
     
@@ -90,6 +91,7 @@ public class PastyActivity extends SherlockActivity {
     private String URL							= "";
     private String user							= "";
     private String password						= "";
+    private Boolean PREF_CURR_PASTE_CLIPBOARD	= true;
 
 	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
 	private ClipboardItemListAdapter ClipboardListAdapter;
@@ -141,6 +143,7 @@ public class PastyActivity extends SherlockActivity {
     	setUser(prefs.getString(PREF_USER,""));
     	setPassword(prefs.getString(PREF_PASSWORD,""));
     	setURL(prefs.getString(PREF_SERVER, PREF_SERVER_DEFAULT), prefs.getBoolean(PREF_HTTPS, true));
+    	this.PREF_CURR_PASTE_CLIPBOARD = prefs.getBoolean(PREF_PASTE_CLIPBOARD, true);
     }
     
    @Override
@@ -297,6 +300,16 @@ public class PastyActivity extends SherlockActivity {
 						}
 					}
 			);
+			
+			if(this.PREF_CURR_PASTE_CLIPBOARD) {
+				ClipboardManager clipboard = (ClipboardManager) getSystemService("clipboard");
+				if(clipboard.hasText()) {
+					EditText mNewItemET = (EditText) addItemDialog.findViewById(R.id.NewItem);
+					mNewItemET.setText(clipboard.getText());
+					clipboard = null;
+				}
+			}
+			
 			break;
         case DIALOG_ABOUT_ID: 
 		        Dialog aboutDialog = new Dialog(this);
