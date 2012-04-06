@@ -44,7 +44,7 @@
 	<string name="pref_password_sum">Trage dein Pasty Passwort ein.</string>
 	<string name="pref_password_default"></string>
 	
-	<string name="pref_paste_clipboard_title">Autmatisches Einfügen</string>
+	<string name="pref_paste_clipboard_title">Automatisches Einfügen</string>
 	<string name="pref_paste_clipboard_sum">Der Inhalt der Geräte-Zwischenablage wird automatisch beim Hinzufügen eingefügt.</string>
 	
 	<string name="pref_usehttps_title">Sichere Übertragung</string>
