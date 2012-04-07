@@ -3,9 +3,6 @@
 
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - das Cloud Clipboard</string>
-	<string name="app_logo">App Logo</string>
-    <string name="title_CopyActivity">Aus der Cloud kopieren</string>
-    <string name="title_PastyActivity">In die Cloud einfügen</string>
     
     <string name="copy">Kopieren</string>
     
@@ -14,6 +11,8 @@
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
     <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren.</string>
     <string name="helptext_PastyActivity_loading">Lade dein Cloud Clipboard&#8230;</string>
+    <string name="helptext_PastyActivity_clipboard_empty">Dein Clipboard ist leer!</string>
+    <string name="helptext_PastyActivity_how_to_add">Drücke das Plus-Zeichen zum hinzufügen.</string>
     <string name="NewItem_hint">Hier einfügen oder schreiben</string>
     <string name="PastyButton_label">Ab in die Cloud damit!</string>
     <string name="item_copied">Text ins lokale Clipboard kopiert.</string>

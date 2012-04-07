@@ -4,10 +4,6 @@
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - the cloud clipboard</string>
 	<string name="app_logo">App Logo</string>
-    <string name="title_CopyActivity">Copy from Cloud</string>
-    <string name="title_PastyActivity">Pasty to Cloud</string>
-    <string name="password1">dHRunxgwh6-MCsJ</string><string name="password_2">G1LktPN{=c;z/&lt;Rg</string>
-    <string name="pasty_server_url">https://mario.blafaselblub.net:4444/</string>
     
     <string name="copy">Copy</string>
     
@@ -16,6 +12,8 @@
     <string name="helptext_PastyActivity_pasty">Paste item to cloud.</string>
     <string name="helptext_PastyActivity_copy">Touch an item to copy.</string>
     <string name="helptext_PastyActivity_loading">Loading items from cloud&#8230;</string>
+    <string name="helptext_PastyActivity_clipboard_empty">Your Clipboard is empty!</string>
+    <string name="helptext_PastyActivity_how_to_add">Use the Plus sign to add something.</string>
     <string name="NewItem_hint">Paste new item here</string>
     <string name="PastyButton_label">Send to cloud!</string>
     <string name="item_copied">Copied text to local clipboard.</string>
@@ -73,7 +71,6 @@
 	</string-array>
 	
 	<string name="pref_version_title">Version</string>
-	<string name="pref_version_sum">0.3rc6</string>
+	<string name="pref_version_sum">0.3.0rc7</string>
 	
-
 </resources>

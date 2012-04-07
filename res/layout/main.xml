@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<RelativeLayout
-		android:id="@+id/widget32"
+		android:id="@+id/PastyClipboard"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		xmlns:android="http://schemas.android.com/apk/res/android">
 		<TextView
-			android:id="@+id/tvCopy"
+			android:id="@+id/tvHelpTextBig"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/helptext_PastyActivity_copy"
+			android:text=""
 			android:textSize="18dp"
 			android:textStyle="bold"
-			android:layout_below="@+id/PastyButton"
-			android:layout_centerHorizontal="true"
-			android:layout_alignLeft="@+id/myTableLayout" />
+			android:layout_centerHorizontal="true" />
 		<TextView
-			android:id="@+id/tv_loading"
+			android:id="@+id/tvHelpTextSmall"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/helptext_PastyActivity_loading"
-			android:layout_below="@+id/tvCopy"
-			android:layout_centerHorizontal="true"
-			android:layout_alignLeft="@+id/textview2" />
+			android:text=""
+			android:layout_below="@+id/tvHelpTextBig"
+			android:layout_centerHorizontal="true" />
 		<ProgressBar
 			android:id="@+id/progressbar_downloading"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:indeterminate="true"
-			android:layout_below="@+id/tv_loading"
+			android:layout_below="@+id/tvHelpTextSmall"
 			android:layout_centerHorizontal="true"
 			android:layout_marginTop="40dp" />
 		<ListView
        		android:id="@+id/listItems"
-			android:layout_below="@+id/tvCopy"
+			android:layout_below="@+id/tvHelpTextSmall"
 			android:layout_centerHorizontal="true"
         	android:layout_width="fill_parent"
        		android:layout_height="wrap_content" >

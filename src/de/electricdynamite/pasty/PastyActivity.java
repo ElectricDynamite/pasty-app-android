@@ -32,6 +32,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +42,7 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,6 +132,9 @@ public class PastyActivity extends SherlockActivity {
 			PastyActivity.this.ClipboardListAdapter.removeAll();
 			PastyActivity.this.ClipboardListAdapter.notifyDataSetChanged();
 		}
+    	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
+    	mHelpTextSmall.setText("");
+    	mHelpTextSmall = null;
 		getItemList();
     }
     
@@ -425,58 +432,82 @@ public class PastyActivity extends SherlockActivity {
 	}
 
     private void listItems(Bundle data) {
-		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
 		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
-		tvLoading.setVisibility(View.GONE);
 		pbLoading.setVisibility(View.GONE);
+		pbLoading = null;
+
     	
 		String JsonAnswer = data.getString("response");
     	JSONArray ItemArray = new JSONArray();
 		try {
 	        /* Find TableLayout defined in main.xml */
 	        //TableLayout tl = (TableLayout)findViewById(R.id.tableItems);
-			ListView listView = (ListView) findViewById(R.id.listItems);
 	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
 	        if(jsonAnswerObject.has("items")) {
 		        ItemArray = jsonAnswerObject.getJSONArray("items");
-				Log.d(PastyActivity.class.getName(),
-						"Received " + ItemArray.length()+" items.");
-				if(ItemArray.length() > 10) {
-					throw new Exception();
-				}
-				for (int i = 0; i < ItemArray.length(); i++) {
-					JSONObject Item = ItemArray.getJSONObject(i);
-					ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("i"));
-					this.ItemList.add(cbItem);
-				}
-				
-				
-				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(this.ItemList, this);
-				
-				// Assign adapter to ListView
-				listView.setAdapter(adapter);
-				this.ClipboardListAdapter = adapter;
-				
-				listView.setOnItemClickListener(new OnItemClickListener() { 
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
-						@SuppressWarnings("deprecation")
-						ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-						Item.copyToClipboard(clipboard);
-				    	Context context = getApplicationContext();
-				    	CharSequence text = getString(R.string.item_copied);
-				    	int duration = Toast.LENGTH_SHORT;
-				    	Toast toast = Toast.makeText(context, text, duration);
-				    	toast.show();
-				    	toast = null;
-				    	context = null;
-				    	clipboard = null;
-				    	text = null;
-				    	PastyActivity.this.finish();
+		        if(ItemArray.length() == 0) {
+		        	//Clipboard is empty
+
+		        	TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+		        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
+		        	mHelpTextBig = null;
+		        	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
+		        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
+		        	mHelpTextSmall = null;
+		        	/*RelativeLayout mActivityLayout = (RelativeLayout) findViewById(R.id.PastyClipboard);
+		        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_clipboard_empty);
+		        	mHelpTextSmall.setId(R.string.helptext_PastyActivity_clipboard_empty_id);
+		        	mHelpTextSmall.setGravity(Gravity.CENTER);
+		        	mHelpTextSmall.setPadding(10, 50, 10, 0);
+		        	LayoutParams mActivityLayoutParams = (LayoutParams) mActivityLayout.getLayoutParams();
+		        	//mActivityLayoutParams.addRule(RelativeLayout.BELOW, mHelpTextBig.getId());
+		        	mActivityLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		        	mActivityLayout.addView(mHelpTextSmall);
+
+		        	mActivityLayout  = null;
+		        	mActivityLayoutParams = null;*/
+		        } else {
+					if(ItemArray.length() > 10) {
+						throw new Exception();
 					}
-				});
-				registerForContextMenu(listView);
+					for (int i = 0; i < ItemArray.length(); i++) {
+						JSONObject Item = ItemArray.getJSONObject(i);
+						ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("i"));
+						this.ItemList.add(cbItem);
+					}
+					
+
+		        	TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+		        	mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
+		        	mHelpTextBig = null;
+					
+					ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(this.ItemList, this);
+					
+					// Assign adapter to ListView
+					ListView listView = (ListView) findViewById(R.id.listItems);
+					listView.setAdapter(adapter);
+					this.ClipboardListAdapter = adapter;
+					
+					listView.setOnItemClickListener(new OnItemClickListener() { 
+						@Override
+						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
+							ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+							Item.copyToClipboard(clipboard);
+					    	Context context = getApplicationContext();
+					    	CharSequence text = getString(R.string.item_copied);
+					    	int duration = Toast.LENGTH_SHORT;
+					    	Toast toast = Toast.makeText(context, text, duration);
+					    	toast.show();
+					    	toast = null;
+					    	context = null;
+					    	clipboard = null;
+					    	text = null;
+					    	PastyActivity.this.finish();
+						}
+					});
+					registerForContextMenu(listView);
+		        }
 	        }
 			else if (jsonAnswerObject.has("error")){
 				JSONObject ErrorObject = jsonAnswerObject.getJSONObject("error");
@@ -492,10 +523,10 @@ public class PastyActivity extends SherlockActivity {
 			    	showDialog(DIALOG_UNKNOWN_ERROR_ID);
 				}
 			}
-			setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
     }
     
     private void getItemList() {
@@ -507,11 +538,13 @@ public class PastyActivity extends SherlockActivity {
     	// Let's look busy
 		setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		
-		/*
-		TextView tvLoading				= (TextView) findViewById(R.id.tv_loading);
+
+		TextView mHelpTextBig			= (TextView) findViewById(R.id.tvHelpTextBig);
 		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
-		tvLoading.setVisibility(View.VISIBLE);
-		pbLoading.setVisibility(View.VISIBLE); */
+		mHelpTextBig.setText(R.string.helptext_PastyActivity_loading);
+		pbLoading.setVisibility(View.VISIBLE);
+		mHelpTextBig = null;
+		pbLoading = null;
 		
 		new Thread() {
 		    public void run() {
