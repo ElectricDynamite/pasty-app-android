@@ -71,6 +71,6 @@
 	</string-array>
 	
 	<string name="pref_version_title">Version</string>
-	<string name="pref_version_sum">0.3.0rc7</string>
+	<string name="pref_version_sum">0.3.0rc8</string>
 	
 </resources>
