@@ -37,12 +37,13 @@
 	<string name="network">Network</string>
 	<string name="misc">Misc</string>
 	
+	<string name="pref_account_create_title">Create Account</string>
+	<string name="pref_account_create_sum">Use this if don\'t have an account</string>
+	
 	<string name="pref_username_title">Username</string>
-	<string name="pref_username_sum">Enter your Pasty username</string>
 	<string name="pref_username_default"></string>
 		
 	<string name="pref_password_title">Password</string>
-	<string name="pref_password_sum">Enter your Pasty password</string>
 	<string name="pref_password_default"></string>
 	
 	<string name="pref_paste_clipboard_title">Automatic Pasting</string>
@@ -69,6 +70,9 @@
 	    <item>mario.blafaselblub.net</item>
 	    <item>pastyapp.org</item>
 	</string-array>
+	
+	<string name="pref_tos_title">Terms of Service</string>
+	<string name="pref_privacy_title">Privacy Policy</string>
 	
 	<string name="pref_version_title">Version</string>
 	<string name="pref_version_sum">0.3.0rc9</string>

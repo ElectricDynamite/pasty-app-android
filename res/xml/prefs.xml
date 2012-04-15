@@ -2,16 +2,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
                 android:title="@string/login">
+                <Preference
+		                android:key="pref_account_create"
+                    	android:name="pref_account_create"
+                    	android:title="@string/pref_account_create_title" />
 		        <EditTextPreference
 		                android:name="pref_username"
-		                android:summary="@string/pref_username_sum"
 		                android:defaultValue="@string/pref_username_default"
 		                android:title="@string/pref_username_title"
 		                android:singleLine="true"
 		                android:key="pref_username" />
 		        <EditTextPreference
 		                android:name="pref_password"
-		                android:summary="@string/pref_password_sum"
 		                android:defaultValue="@string/pref_password_default"
 		                android:title="@string/pref_password_title"
 		                android:singleLine="true"
@@ -43,6 +45,12 @@
         </PreferenceCategory>
         <PreferenceCategory
                 android:title="@string/about">
+                <Preference 
+		                android:key="pref_tos"
+		                android:title="@string/pref_tos_title" />
+                <Preference 
+		                android:key="pref_privacy"
+		                android:title="@string/pref_privacy_title" />
                 <Preference 
 		                android:key="pref_version"
 		                android:title="@string/pref_version_title"

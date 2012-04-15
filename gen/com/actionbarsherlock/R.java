@@ -955,21 +955,23 @@ containing a value of this type.
         public static final int login=0x7f0a0025;
         public static final int misc=0x7f0a0028;
         public static final int network=0x7f0a0027;
+        public static final int pref_account_create_sum=0x7f0a002a;
+        public static final int pref_account_create_title=0x7f0a0029;
         public static final int pref_password_default=0x7f0a002e;
-        public static final int pref_password_sum=0x7f0a002d;
-        public static final int pref_password_title=0x7f0a002c;
+        public static final int pref_password_title=0x7f0a002d;
         public static final int pref_paste_clipboard_sum=0x7f0a0030;
         public static final int pref_paste_clipboard_title=0x7f0a002f;
+        public static final int pref_privacy_title=0x7f0a0038;
         public static final int pref_server_sum=0x7f0a0035;
         public static final int pref_server_title=0x7f0a0034;
+        public static final int pref_tos_title=0x7f0a0037;
         public static final int pref_usehttps_sum=0x7f0a0032;
         public static final int pref_usehttps_title=0x7f0a0031;
         public static final int pref_username=0x7f0a0033;
-        public static final int pref_username_default=0x7f0a002b;
-        public static final int pref_username_sum=0x7f0a002a;
-        public static final int pref_username_title=0x7f0a0029;
-        public static final int pref_version_sum=0x7f0a0038;
-        public static final int pref_version_title=0x7f0a0037;
+        public static final int pref_username_default=0x7f0a002c;
+        public static final int pref_username_title=0x7f0a002b;
+        public static final int pref_version_sum=0x7f0a003a;
+        public static final int pref_version_title=0x7f0a0039;
         public static final int settings=0x7f0a0022;
     }
     public static final class style {

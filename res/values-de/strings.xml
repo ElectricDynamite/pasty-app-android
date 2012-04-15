@@ -35,12 +35,12 @@
 	<string name="network">Netzwerk</string>
 	<string name="misc">Sonstiges</string>
 	
+	<string name="pref_account_create_title">Konto erstellen</string>
+	
 	<string name="pref_username_title">Benutzername</string>
-	<string name="pref_username_sum">Trage deinen Pasty Benutzernamen ein</string>
 	<string name="pref_username_default"></string>
 		
 	<string name="pref_password_title">Passwort</string>
-	<string name="pref_password_sum">Trage dein Pasty Passwort ein</string>
 	<string name="pref_password_default"></string>
 	
 	<string name="pref_paste_clipboard_title">Automatisches Einfügen</string>
@@ -55,4 +55,8 @@
 	    <item>Kopieren ohne zu beenden</item>
 	    <item>Löschen</item>
 	</string-array>
+	
+	
+	<string name="pref_tos_title">Nutzungsbedingungen</string>
+	<string name="pref_privacy_title">Datenschutzrichtlinie</string>
 </resources>
