@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -88,9 +89,8 @@ public class PastyActivity extends SherlockActivity {
     static final String PORT_HTTP				= "8080";
     static final String PORT_HTTPS				= "4444";
     
-    static final String PASTY_URL_ITEM_ADD		= "clipboard/item/add";
-    static final String PASTY_URL_ITEM_DELETE	= "clipboard/item/delete/";
-    static final String PASTY_URL_CLIPBOARD_LIST= "clipboard/list";
+    static final String PASTY_REST_URI_ITEM		= "v1/clipboard/item/";
+    static final String PASTY_REST_URI_CLIPBOARD= "v1/clipboard/list.json";
     
     private String URL							= "";
     private String user							= "";
@@ -531,7 +531,7 @@ public class PastyActivity extends SherlockActivity {
     
     private void getItemList() {
 
-    	final String url				= getURL()+PASTY_URL_CLIPBOARD_LIST;
+    	final String url				= getURL()+PASTY_REST_URI_CLIPBOARD;
     	final String user				= getUser();
     	final String password			= getPassword();
 
@@ -627,7 +627,7 @@ public class PastyActivity extends SherlockActivity {
     	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		new Thread() {
 		    public void run() {
-		    	String url				= getURL()+PASTY_URL_ITEM_ADD;
+		    	String url				= getURL()+PASTY_REST_URI_ITEM;
 		    	String user				= getUser();
 		    	String password			= getPassword();
 				StringBuilder builder	= new StringBuilder();
@@ -637,14 +637,13 @@ public class PastyActivity extends SherlockActivity {
 				HttpPost httpPost		= new HttpPost(url);
 				JSONObject params		= new JSONObject();
 		    	try {
-		    		params.put("u", user);
-		    		params.put("p", password);
-		    		params.put("i", item);
+		    		params.put("item", item);
 		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));  
-		        	httpPost.setHeader("Content-type", "application/json");
+		        		    params.toString().getBytes("UTF8")));
+		        	httpPost.setHeader("Content-type", "application/json");  
+		        	httpPost.setHeader("X-Pasty-User", user);  
+		        	httpPost.setHeader("X-Pasty-Password", password);
 		        	System.setProperty("http.keepAlive", "false");
-		        	Log.d(PastyActivity.class.toString(), "Trying to send "+params+" to PastyServer at " + url);
 		        	HttpResponse response = client.execute(httpPost);
 		        	StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();
@@ -694,23 +693,21 @@ public class PastyActivity extends SherlockActivity {
 		new Thread() {
 		    public void run() {
 		    	Log.d(PastyActivity.this.toString(), "Delete Item Run for:" + item.getText());
-		    	String url				= getURL()+PASTY_URL_ITEM_DELETE+item.getId();
+		    	String url				= getURL()+PASTY_REST_URI_ITEM+item.getId();
 		    	String user				= getUser();
 		    	String password			= getPassword();
 				StringBuilder builder	= new StringBuilder();
 				HttpClient client 		= new DefaultHttpClient();
 				Message msg 			= Message.obtain();
 				msg.what				= 3;
-				HttpPost httpPost		= new HttpPost(url);
+				HttpDelete httpDel		= new HttpDelete(url);
 				JSONObject params		= new JSONObject();
 		    	try {
-		    		params.put("u", user);
-		    		params.put("p", password);
-		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));
-		        	httpPost.setHeader("Content-type", "application/json");
+		    		httpDel.setHeader("Content-type", "application/json");
+		    		httpDel.setHeader("X-Pasty-User", user);  
+		    		httpDel.setHeader("X-Pasty-Password", password);
 		        	System.setProperty("http.keepAlive", "false");
-		        	HttpResponse response = client.execute(httpPost);
+		        	HttpResponse response = client.execute(httpDel);
 		        	StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();
 					if (statusCode == 200) {
@@ -735,8 +732,6 @@ public class PastyActivity extends SherlockActivity {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
-				} catch (JSONException e) {
-					e.printStackTrace();
 				}
 		    	Bundle b = new Bundle();
 		    	b.putString("response", builder.toString());
@@ -744,7 +739,7 @@ public class PastyActivity extends SherlockActivity {
 		    	messageHandler.sendMessage(msg);
 		    	builder 	= null;
 		    	client 		= null;
-		    	httpPost	= null;
+		    	httpDel	= null;
 		    	params		= null;
 		    	msg			= null;
 		    }
