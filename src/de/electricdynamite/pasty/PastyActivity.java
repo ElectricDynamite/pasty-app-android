@@ -12,6 +12,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -33,7 +34,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,7 +43,6 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +55,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,8 +86,8 @@ public class PastyActivity extends SherlockActivity {
     static final String PORT_HTTP				= "8080";
     static final String PORT_HTTPS				= "4444";
     
-    static final String PASTY_REST_URI_ITEM		= "v1/clipboard/item/";
-    static final String PASTY_REST_URI_CLIPBOARD= "v1/clipboard/list.json";
+    static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
+    static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";
     
     private String URL							= "";
     private String user							= "";
@@ -118,9 +115,6 @@ public class PastyActivity extends SherlockActivity {
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
     	// Let's get preferences
 	    setContentView(R.layout.main);
-		//TextView tv				= (TextView) findViewById(R.id.tvPasty);
-		//tv.setFocusableInTouchMode(true);
-		//tv.requestFocus();
 	}
     
     public void onResume() {
@@ -128,20 +122,13 @@ public class PastyActivity extends SherlockActivity {
     	Log.i(PastyActivity.class.getName(),"onResume(): Reloading items.");
     	// Let's get preferences
 		loadPreferences();
-		if(PastyActivity.this.ClipboardListAdapter != null) {
-			PastyActivity.this.ClipboardListAdapter.removeAll();
-			PastyActivity.this.ClipboardListAdapter.notifyDataSetChanged();
-		}
-    	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
-    	mHelpTextSmall.setText("");
-    	mHelpTextSmall = null;
-		getItemList();
+		refreshClipboard();
     }
     
     public void onStop() {
     	super.onStop();
     	// Let's clean up a little
-    	
+    	// Nope.avi
     }
     
     public void loadPreferences() {
@@ -181,9 +168,15 @@ public class PastyActivity extends SherlockActivity {
         }
     }
     
-	@SuppressWarnings("unused")
-	private void refreshClipboardList() {
-		// TODO: everything
+	private void refreshClipboard() {
+		if(PastyActivity.this.ClipboardListAdapter != null) {
+			PastyActivity.this.ClipboardListAdapter.removeAll();
+			PastyActivity.this.ClipboardListAdapter.notifyDataSetChanged();
+		}
+    	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
+    	mHelpTextSmall.setText("");
+    	mHelpTextSmall = null;
+		getItemList();
 	}
 	
 	private void setUser(String user) {
@@ -206,7 +199,7 @@ public class PastyActivity extends SherlockActivity {
     		port		= PORT_HTTP;
     	}
     	
-    	String url = proto + server + ":" + port + "/";
+    	String url = proto + server + ":" + port;
     	Log.d(PastyActivity.class.getName(), "URL set to "+url);
     	PastyActivity.this.URL = url;
     	proto		= null;
@@ -472,7 +465,7 @@ public class PastyActivity extends SherlockActivity {
 					}
 					for (int i = 0; i < ItemArray.length(); i++) {
 						JSONObject Item = ItemArray.getJSONObject(i);
-						ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("i"));
+						ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
 						this.ItemList.add(cbItem);
 					}
 					
@@ -552,18 +545,15 @@ public class PastyActivity extends SherlockActivity {
 				HttpClient client = new DefaultHttpClient();
 				Message msg = Message.obtain();
 				msg.what = 1;
-				HttpPost httpPost = new HttpPost(url);
+				HttpGet httpGet = new HttpGet(url);
 				JSONObject params = new JSONObject();
 		    	try {
-					params.put("u", user);
-					params.put("p", password);
-					params.put("wid", true);
-		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));
-		        	httpPost.setHeader("Content-type", "application/json");
+		    		httpGet.setHeader("X-Pasty-User", user);  
+		    		httpGet.setHeader("X-Pasty-Password", password);
+		    		httpGet.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
 		        	Log.d(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
-		        	HttpResponse response = client.execute(httpPost);
+		        	HttpResponse response = client.execute(httpGet);
 		        	StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();
 					if (statusCode == 200) {
@@ -593,10 +583,6 @@ public class PastyActivity extends SherlockActivity {
 					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 					e.printStackTrace();
 			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
-				} catch (JSONException e) {
-					Log.e(PastyActivity.class.toString(), "Error while creating JSON Object");	
-					e.printStackTrace();
-			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 				}
 		    	finally {
 			    	Bundle b = new Bundle();
@@ -605,7 +591,7 @@ public class PastyActivity extends SherlockActivity {
 			    	messageHandler.sendMessage(msg);
 			    	builder 	= null;
 			    	client 		= null;
-			    	httpPost	= null;
+			    	httpGet		= null;
 			    	params		= null;
 			    	msg			= null;
 		    	}
