@@ -9,23 +9,23 @@
     <string name="dialog_item_add_title">Neuer Eintrag</string>
     
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
-    <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren.</string>
-    <string name="helptext_PastyActivity_loading">Lade dein Cloud Clipboard&#8230;</string>
+    <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren</string>
+    <string name="helptext_PastyActivity_loading">Lade dein Pasty Clipboard&#8230;</string>
     <string name="helptext_PastyActivity_clipboard_empty">Dein Clipboard ist leer!</string>
-    <string name="helptext_PastyActivity_how_to_add">Drücke das Plus-Zeichen zum hinzufügen.</string>
+    <string name="helptext_PastyActivity_how_to_add">Drücke das Plus-Zeichen zum Hinzufügen</string>
     <string name="NewItem_hint">Hier einfügen oder schreiben</string>
     <string name="PastyButton_label">Ab in die Cloud damit!</string>
-    <string name="item_copied">Text ins lokale Clipboard kopiert.</string>
-    <string name="item_added">Text ins Cloud Clipboard kopiert.</string>
-    <string name="item_deleted">Text aus dem Cloud Clipboard gelöscht.</string>
-    <string name="empty_item">Kann keinen leeren Text hinzufügen.</string>
+    <string name="item_copied">Text ins lokale Clipboard kopiert</string>
+    <string name="item_added">Text ins Pasty Clipboard kopiert</string>
+    <string name="item_deleted">Text aus dem Pasty Clipboard gelöscht</string>
+    <string name="empty_item">Kann keinen leeren Text hinzufügen</string>
     
     <string name="button_ok">Okay</string>
     <string name="button_noes">Schade eigentlich</string>
     
     <string name="error_badanswer">Fehler in der Serverkommunikation.\nVersuche es später noch einmal.</string>
     <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
-    <string name="error_loginfailed">Login fehlgeschlagen.</string>
+    <string name="error_loginfailed">Login fehlgeschlagen</string>
     <string name="error_unknown">Ein unbekannte Fehler ist aufgetreten. Versuch es später noch mal, oder prüfe nach einem App-Update</string>
     
     <string name="settings">Einstellungen</string>

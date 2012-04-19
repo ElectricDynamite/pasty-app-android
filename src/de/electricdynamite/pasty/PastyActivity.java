@@ -546,7 +546,6 @@ public class PastyActivity extends SherlockActivity {
 				Message msg = Message.obtain();
 				msg.what = 1;
 				HttpGet httpGet = new HttpGet(url);
-				JSONObject params = new JSONObject();
 		    	try {
 		    		httpGet.setHeader("X-Pasty-User", user);  
 		    		httpGet.setHeader("X-Pasty-Password", password);
@@ -592,7 +591,6 @@ public class PastyActivity extends SherlockActivity {
 			    	builder 	= null;
 			    	client 		= null;
 			    	httpGet		= null;
-			    	params		= null;
 			    	msg			= null;
 		    	}
 		    }
