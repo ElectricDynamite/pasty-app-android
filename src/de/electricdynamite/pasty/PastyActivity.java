@@ -64,6 +64,7 @@ public class PastyActivity extends SherlockActivity {
 	// Error Dialog IDs
     static final int DIALOG_CONNECTION_ERROR_ID	= 1;
     static final int DIALOG_AUTH_ERROR_ID		= 2;
+    static final int DIALOG_CREDENTIALS_NOT_SET = 3;
     static final int DIALOG_UNKNOWN_ERROR_ID	= 99;   		
 
     // Other Dialog IDs
@@ -119,10 +120,13 @@ public class PastyActivity extends SherlockActivity {
     
     public void onResume() {
     	super.onResume();
-    	Log.i(PastyActivity.class.getName(),"onResume(): Reloading items.");
     	// Let's get preferences
 		loadPreferences();
-		refreshClipboard();
+		if(!getUser().isEmpty() && !getPassword().isEmpty()) {
+			refreshClipboard();
+		} else {
+			showDialog(DIALOG_CREDENTIALS_NOT_SET);
+		}
     }
     
     public void onStop() {
@@ -248,6 +252,21 @@ public class PastyActivity extends SherlockActivity {
         	builder.setMessage(getString(R.string.error_loginfailed))
         		.setCancelable(false)
         		.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int id) {
+        	        	Intent settingsActivity = new Intent(getBaseContext(),
+        	                    PastyPreferencesActivity.class);
+        	            startActivity(settingsActivity);
+        			}
+        		});
+				alert = builder.create();
+				alert.show();
+				break;
+        case DIALOG_CREDENTIALS_NOT_SET: 
+        	builder = new AlertDialog.Builder(this);  	
+        	builder.setMessage(getString(R.string.error_credentials_not_set))
+        		.setCancelable(true)
+        		.setTitle(R.string.error_credentials_not_set_title)
+        		.setPositiveButton(R.string.button_get_started, new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
         	        	Intent settingsActivity = new Intent(getBaseContext(),
         	                    PastyPreferencesActivity.class);
@@ -553,27 +572,18 @@ public class PastyActivity extends SherlockActivity {
 		        	System.setProperty("http.keepAlive", "false");
 		        	Log.d(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
 		        	HttpResponse response = client.execute(httpGet);
-		        	StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					if (statusCode == 200) {
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(content));
-						String line;
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-						}
-				    	entity		= null;
-				    	content		= null;
-				    	reader		= null;
-					} else {
-						Log.e(PastyActivity.class.toString(), statusLine.toString());
-						Log.i(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
-				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(content));
+					String line;
+					while ((line = reader.readLine()) != null) {
+						builder.append(line);
 					}
+				    entity		= null;
+				    content		= null;
+				    reader		= null;
 			    	response	= null;
-			    	statusLine	= null;
 				} catch (ClientProtocolException e) {
 					Log.e(PastyActivity.class.toString(), "Error while talking to server");
 					e.printStackTrace();
@@ -685,7 +695,6 @@ public class PastyActivity extends SherlockActivity {
 				Message msg 			= Message.obtain();
 				msg.what				= 3;
 				HttpDelete httpDel		= new HttpDelete(url);
-				JSONObject params		= new JSONObject();
 		    	try {
 		    		httpDel.setHeader("Content-type", "application/json");
 		    		httpDel.setHeader("X-Pasty-User", user);  
@@ -723,8 +732,7 @@ public class PastyActivity extends SherlockActivity {
 		    	messageHandler.sendMessage(msg);
 		    	builder 	= null;
 		    	client 		= null;
-		    	httpDel	= null;
-		    	params		= null;
+		    	httpDel		= null;
 		    	msg			= null;
 		    }
 		    
