@@ -23,7 +23,7 @@
     <string name="button_ok">Okay</string>
     <string name="button_noes">Schade eigentlich</string>
     
-    <string name="error_badanswer">Ich konnte nicht mit dem Server reden.\nVersuch es später noch mal.</string>
+    <string name="error_badanswer">Fehler in der Serverkommunikation.\nVersuche es später noch einmal.</string>
     <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
     <string name="error_loginfailed">Login fehlgeschlagen.</string>
     <string name="error_unknown">Ein unbekannte Fehler ist aufgetreten. Versuch es später noch mal, oder prüfe nach einem App-Update</string>
@@ -58,5 +58,5 @@
 	
 	
 	<string name="pref_tos_title">Nutzungsbedingungen</string>
-	<string name="pref_privacy_title">Datenschutzrichtlinie</string>
+	<string name="pref_privacy_title">Datenschutzerklärung</string>
 </resources>

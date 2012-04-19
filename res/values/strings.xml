@@ -75,6 +75,6 @@
 	<string name="pref_privacy_title">Privacy Policy</string>
 	
 	<string name="pref_version_title">Version</string>
-	<string name="pref_version_sum">0.3.0rc9</string>
+	<string name="pref_version_sum">0.3.0rc10</string>
 	
 </resources>
