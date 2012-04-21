@@ -19,9 +19,11 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
 			
 	    public static final String KEY_PREF_USERNAME = "pref_username";
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
+	    public static final String KEY_PREF_VERSION	 = "pref_version";
 
-	    private EditTextPreference prefUsername;
-	    private EditTextPreference prefPassword;
+	    private EditTextPreference	prefUsername;
+	    private EditTextPreference	prefPassword;
+	    private Preference			prefVersion;
 	
 	
         @Override
@@ -31,6 +33,7 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
                 
                 prefUsername = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_USERNAME);
                 prefPassword = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_PASSWORD);
+                prefVersion  = (Preference)getPreferenceScreen().findPreference(KEY_PREF_VERSION);
                 
                 Preference mPrefAccountCreate = findPreference("pref_account_create");
                 mPrefAccountCreate.setOnPreferenceClickListener(
@@ -70,11 +73,13 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
                 	    	    }
                 });
                 mPrefPrivacy = null;
+                
         }
         
         @Override
         protected void onResume() {
             super.onResume();
+            
 
             // Setup the initial values
         	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -82,7 +87,6 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
         	String mSumVal;
             mKeyVal = sharedPreferences.getString(KEY_PREF_USERNAME, "");
             mSumVal = mKeyVal;
-            Log.d(PastyPreferencesActivity.class.getName(),"Username value is: "+mKeyVal);
             if(mKeyVal.isEmpty()) {
             	mSumVal = getString(R.string.pref_username_defsum);
             } 
@@ -90,13 +94,20 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
             
             mKeyVal = sharedPreferences.getString(KEY_PREF_PASSWORD, "");
             mSumVal = getString(R.string.pref_password_defsum);
-            Log.d(PastyPreferencesActivity.class.getName(),"Password value is: "+mKeyVal);
             if(!mKeyVal.isEmpty()) {
             	mSumVal = getString(R.string.pref_password_sum_isset);
             } 
             prefPassword.setSummary(mSumVal);
             mKeyVal = null;
             mSumVal = null;
+            
+            Intent mIntent = getIntent();
+            mKeyVal = sharedPreferences.getString(KEY_PREF_VERSION, "");
+            mSumVal = mIntent.getStringExtra("versionName");
+            prefVersion.setSummary(mSumVal);
+            mKeyVal = null;
+            mSumVal = null;
+            mIntent = null;
 
             // Set up a listener whenever a key changes            
             getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);

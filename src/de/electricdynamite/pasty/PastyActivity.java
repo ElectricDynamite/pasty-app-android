@@ -90,6 +90,9 @@ public class PastyActivity extends SherlockActivity {
     static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
     static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";
     
+    public String versionName;
+    public int versionCode;
+    
     private String URL							= "";
     private String user							= "";
     private String password						= "";
@@ -105,10 +108,8 @@ public class PastyActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		// Get our own version name and code
 		try {
-			@SuppressWarnings("unused")
-			String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-			@SuppressWarnings("unused")
-			String versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			this.versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			this.versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -162,6 +163,8 @@ public class PastyActivity extends SherlockActivity {
         case R.id.menu_settings:
         	Intent settingsActivity = new Intent(getBaseContext(),
                     PastyPreferencesActivity.class);
+        	settingsActivity.putExtra("versionName", this.versionName);
+        	settingsActivity.putExtra("versionCode", this.versionCode);
         	startActivity(settingsActivity);
             return true;
         case R.id.menu_about:
@@ -336,11 +339,13 @@ public class PastyActivity extends SherlockActivity {
 		        aboutDialog.setContentView(R.layout.about_dialog);
 		        aboutDialog.setTitle(getString(R.string.about_title));
 		
-		        //TextView text = (TextView) dialog.findViewById(R.id.text);
-		        //text.setText(Html.fromHtml(getString(R.string.about_text)));
-		        ImageView aboutImage = (ImageView) aboutDialog.findViewById(R.id.image);
+		        TextView mVersionText = (TextView) aboutDialog.findViewById(R.id.about_version);
+		        ImageView aboutImage = (ImageView) aboutDialog.findViewById(R.id.about_image);
 		        aboutImage.setImageResource(R.drawable.ic_launcher);
+		        mVersionText.setText(getString(R.string.app_name) + " Version " + this.versionName + " ("+Integer.toString(this.versionCode)+")");
 		        aboutDialog.show();
+		        mVersionText = null;
+		        aboutImage = null;
 				break;
         default:
             alert = null;
