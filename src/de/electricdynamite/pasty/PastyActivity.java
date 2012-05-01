@@ -207,7 +207,6 @@ public class PastyActivity extends SherlockActivity {
     	}
     	
     	String url = proto + server + ":" + port;
-    	Log.d(PastyActivity.class.getName(), "URL set to "+url);
     	PastyActivity.this.URL = url;
     	proto		= null;
     	port		= null;
@@ -575,7 +574,7 @@ public class PastyActivity extends SherlockActivity {
 		    		httpGet.setHeader("X-Pasty-Password", password);
 		    		httpGet.setHeader("Content-type", "application/json");
 		        	System.setProperty("http.keepAlive", "false");
-		        	Log.d(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
+		        	//Log.d(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
 		        	HttpResponse response = client.execute(httpGet);
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
@@ -617,7 +616,6 @@ public class PastyActivity extends SherlockActivity {
     	//EditText NewItem 		= (EditText)findViewById(R.id.NewItem);
     	//String item				= NewItem.getText().toString();
     	if(item != null && item.length() == 0) {
-    		Log.d(PastyActivity.class.toString(), "Item ist empty. Bailing out!");
 		   	CharSequence text = getString(R.string.empty_item);
 		   	Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
 		   	toast.show();
@@ -688,10 +686,8 @@ public class PastyActivity extends SherlockActivity {
 
     private void deleteItem(final ClipboardItem item, final int position) {
     	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
-    	Log.d(PastyActivity.this.toString(), "Test");
 		new Thread() {
 		    public void run() {
-		    	Log.d(PastyActivity.this.toString(), "Delete Item Run for:" + item.getText());
 		    	String url				= getURL()+PASTY_REST_URI_ITEM+item.getId();
 		    	String user				= getUser();
 		    	String password			= getPassword();

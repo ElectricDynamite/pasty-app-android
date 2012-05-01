@@ -10,7 +10,6 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.util.Log;
  
 public class PastyPreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String URL_ACCOUNT_CREATE	= "https://pastyapp.org/user/create/";
@@ -129,7 +128,6 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
             if (key.equals(KEY_PREF_USERNAME)) {
             	mKeyVal = sharedPreferences.getString(KEY_PREF_USERNAME, "");
             	mSumVal = mKeyVal;
-                Log.d(PastyPreferencesActivity.class.getName(),"Username value is: "+mKeyVal);
             	if(mKeyVal.isEmpty()) {
             		mSumVal = getString(R.string.pref_username_defsum);
             	} 
@@ -138,7 +136,6 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
             else if (key.equals(KEY_PREF_PASSWORD)) {
             	mKeyVal = sharedPreferences.getString(KEY_PREF_PASSWORD, "");
             	mSumVal = getString(R.string.pref_password_defsum);
-                Log.d(PastyPreferencesActivity.class.getName(),"Password value is: "+mKeyVal);
             	if(!mKeyVal.isEmpty()) {
             		mSumVal = getString(R.string.pref_password_sum_isset);
             	} 
