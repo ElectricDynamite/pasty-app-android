@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>	
     <string name="about_title">About Pasty</string>
-	<string name="about_text"><b><u>Pasty - the cloud clipboard\n</u></b>Copyright &#169; 2012 by Philipp Geschke\n\n<i>THIS SOFTWARE IS IN AN REALLY EARLY STAGE!</i>\n\nFor details see https://pastyapp.org\nThat is also where you can <b>create an account</b>.\n\nThank you for using Pasty, you\'re awesome!</string>
+	<string name="about_text"><b><u>Pasty - the cloud clipboard\n</u></b>Copyright &#169; 2012 by Philipp Geschke\n\n<i>THIS SOFTWARE IS IN AN REALLY EARLY STAGE!</i>\n\nFor details see http://www.pastyapp.org/\n\nThank you for using Pasty, you\'re awesome!</string>
 </resources>
