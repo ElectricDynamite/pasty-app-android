@@ -74,7 +74,7 @@
 	<string-array name="pref_server_entryvalues">
 	    <item>192.168.1.26</item>
 	    <item>mario.blafaselblub.net</item>
-	    <item>pastyapp.org</item>
+	    <item>api.pastyapp.org</item>
 	</string-array>
 	
 	<string name="pref_tos_title">Terms of Service</string>

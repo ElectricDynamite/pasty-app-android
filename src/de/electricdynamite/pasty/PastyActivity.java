@@ -82,10 +82,10 @@ public class PastyActivity extends SherlockActivity {
     static final String PREF_SERVER				= "pref_server";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     
-    static final String PREF_SERVER_DEFAULT		= "pastyapp.org";
+    static final String PREF_SERVER_DEFAULT		= "api.pastyapp.org";
     
-    static final String PORT_HTTP				= "8080";
-    static final String PORT_HTTPS				= "4444";
+    static final String PORT_HTTP				= "80";
+    static final String PORT_HTTPS				= "443";
     
     static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
     static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";
@@ -257,7 +257,9 @@ public class PastyActivity extends SherlockActivity {
         			public void onClick(DialogInterface dialog, int id) {
         	        	Intent settingsActivity = new Intent(getBaseContext(),
         	                    PastyPreferencesActivity.class);
-        	            startActivity(settingsActivity);
+        	        	settingsActivity.putExtra("versionName", PastyActivity.this.versionName);
+        	        	settingsActivity.putExtra("versionCode", PastyActivity.this.versionCode);
+        	        	startActivity(settingsActivity);
         			}
         		});
 				alert = builder.create();
@@ -272,7 +274,9 @@ public class PastyActivity extends SherlockActivity {
         			public void onClick(DialogInterface dialog, int id) {
         	        	Intent settingsActivity = new Intent(getBaseContext(),
         	                    PastyPreferencesActivity.class);
-        	            startActivity(settingsActivity);
+        	        	settingsActivity.putExtra("versionName", PastyActivity.this.versionName);
+        	        	settingsActivity.putExtra("versionCode", PastyActivity.this.versionCode);
+        	        	startActivity(settingsActivity);
         			}
         		});
 				alert = builder.create();
