@@ -4,6 +4,8 @@
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - the cloud clipboard</string>
 	<string name="app_logo">App Logo</string>
+	
+	<string name="app_share_via_pasty">Add to Pasty</string>
     
     <string name="copy">Copy</string>
     
