@@ -30,7 +30,6 @@ public class ClipboardItem {
 		return jsItem;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void copyToClipboard(ClipboardManager clipboard) {
     	clipboard.setText(this.getText());
 	}

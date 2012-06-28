@@ -74,7 +74,8 @@ public class PastyActivity extends SherlockActivity {
     
     // Item Context Menu IDs
     static final int ITEM_CONTEXTMENU_COPY_ID	= 0;
-    static final int ITEM_CONTEXTMENU_DELETE_ID	= 1;
+    static final int ITEM_CONTEXTMENU_SHARE_ID	= 1;
+    static final int ITEM_CONTEXTMENU_DELETE_ID	= 2;
     
     static final String PREF_USER				= "pref_username";  
     static final String PREF_PASSWORD			= "pref_password"; 
@@ -828,6 +829,13 @@ public class PastyActivity extends SherlockActivity {
 	    	context = null;
 	    	clipboard = null;
 	    	text = null;
+      		break;
+      	case ITEM_CONTEXTMENU_SHARE_ID:
+      		// Share to another app
+      		Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+      		shareIntent.setType("text/plain");
+      		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, Item.getText());
+      		startActivity(Intent.createChooser(shareIntent, getString(R.string.app_share_from_pasty)));
       		break;
       	case ITEM_CONTEXTMENU_DELETE_ID:
       		// Delete selected

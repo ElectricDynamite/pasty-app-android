@@ -6,6 +6,7 @@
 	<string name="app_logo">App Logo</string>
 	
 	<string name="app_share_via_pasty">Add to Pasty</string>
+	<string name="app_share_from_pasty">Share Clipboard Item</string>
     
     <string name="copy">Copy</string>
     
@@ -66,6 +67,7 @@
 	<string name="itemContextMenuTitle">Clipboard Item</string>
 	<string-array name="itemContextMenu">
 	    <item>Copy without exiting</item>
+	    <item>Share</item>
 	    <item>Delete</item>
 	</string-array>
 	<string-array name="pref_server_entrytitles">
