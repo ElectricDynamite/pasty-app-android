@@ -83,10 +83,10 @@ public class PastyActivity extends SherlockActivity {
     static final String PREF_SERVER				= "pref_server";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     
-    static final String PREF_SERVER_DEFAULT		= "api.pastyapp.org";
+    static final String PREF_SERVER_DEFAULT		= "mario.blafaselblub.net";
     
     static final String PORT_HTTP				= "80";
-    static final String PORT_HTTPS				= "443";
+    static final String PORT_HTTPS				= "4444";
     
     static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
     static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";
@@ -387,6 +387,7 @@ public class PastyActivity extends SherlockActivity {
 
 	private void confirmAddItem(Bundle data) throws JSONException {
 		String JsonAnswer		= data.getString("response");
+		Log.d(PastyActivity.class.getName(),"JsonAnswer is "+JsonAnswer);
         JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
         if(jsonAnswerObject.has("success")) {
         	// answer is valid
@@ -629,59 +630,17 @@ public class PastyActivity extends SherlockActivity {
     	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		new Thread() {
 		    public void run() {
-		    	String url				= getURL()+PASTY_REST_URI_ITEM;
-		    	String user				= getUser();
-		    	String password			= getPassword();
-				StringBuilder builder	= new StringBuilder();
-				HttpClient client 		= new DefaultHttpClient();
+		    	PastyClient client		= new PastyClient(getURL(), true);
+		    	client.setUsername(getUser());
+		    	client.setPassword(getPassword());
 				Message msg 			= Message.obtain();
 				msg.what				= 2;
-				HttpPost httpPost		= new HttpPost(url);
-				JSONObject params		= new JSONObject();
-		    	try {
-		    		params.put("item", item);
-		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));
-		        	httpPost.setHeader("Content-type", "application/json");  
-		        	httpPost.setHeader("X-Pasty-User", user);  
-		        	httpPost.setHeader("X-Pasty-Password", password);
-		        	System.setProperty("http.keepAlive", "false");
-		        	HttpResponse response = client.execute(httpPost);
-		        	StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					if (statusCode == 200) {
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(content));
-						String line;
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-						}
-				    	entity		= null;
-				    	content		= null;
-				    	reader		= null;
-					} else {
-						Log.d(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
-				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
-					}
-			    	response	= null;
-			    	statusLine	= null;
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-		    	Bundle b = new Bundle();
-		    	b.putString("response", builder.toString());
-		    	msg.setData(b);
+				
+				Bundle b = client.addItem(item);
+				
+				msg.setData(b);
 		    	messageHandler.sendMessage(msg);
-		    	builder 	= null;
 		    	client 		= null;
-		    	httpPost	= null;
-		    	params		= null;
 		    	msg			= null;
 		    }
 		    

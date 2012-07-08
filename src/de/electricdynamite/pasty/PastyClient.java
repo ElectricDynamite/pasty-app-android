@@ -53,64 +53,60 @@ public class PastyClient {
 		return true;
 	}
 	
-	public void addItem(final String Item) {
-		new Thread() {
-		    public void run() {
-				String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
-				StringBuilder builder	= new StringBuilder();
-				HttpClient client 		= new DefaultHttpClient();
-				Message msg 			= Message.obtain();
-				msg.what				= 2;
-				HttpPost httpPost		= new HttpPost(url);
-				JSONObject params		= new JSONObject();
-				String basicAuthInfo	= username+":"+password; 
-		    	try {
-		    		httpPost.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
-		    		params.put("item", Item);
-		        	httpPost.setEntity(new ByteArrayEntity(
-		        		    params.toString().getBytes("UTF8")));
-		        	httpPost.setHeader("Content-type", "application/json");  
-		        	System.setProperty("http.keepAlive", "false");
-		        	HttpResponse response = client.execute(httpPost);
-		        	StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					if (statusCode == 200) {
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(content));
-						String line;
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-						}
-				    	entity		= null;
-				    	content		= null;
-				    	reader		= null;
-					} else {
-					}
-			    	response	= null;
-			    	statusLine	= null;
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (JSONException e) {
-					e.printStackTrace();
+	public String addItem(final String Item) throws PastyException {
+		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
+		Log.d(PastyClient.class.toString(),"url is "+url);
+		StringBuilder builder	= new StringBuilder();
+		HttpClient client 		= new DefaultHttpClient();
+		HttpPost httpPost		= new HttpPost(url);
+		JSONObject params		= new JSONObject();
+		String basicAuthInfo	= username+":"+password; 
+		try {
+			httpPost.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
+		    params.put("item", Item);
+		    httpPost.setEntity(new ByteArrayEntity(
+		        params.toString().getBytes("UTF8")));
+		    httpPost.setHeader("Content-type", "application/json");  
+		    System.setProperty("http.keepAlive", "false");
+		    HttpResponse response = client.execute(httpPost);
+		    StatusLine statusLine = response.getStatusLine();
+		    int statusCode = statusLine.getStatusCode();
+		    if (statusCode == 201) {
+		    	HttpEntity entity = response.getEntity();
+		    	InputStream content = entity.getContent();
+		    	BufferedReader reader = new BufferedReader(
+				new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
 				}
-		    	Bundle b = new Bundle();
-		    	b.putString("response", builder.toString());
-		    	msg.setData(b);
-		    	//messageHandler.sendMessage(msg);
-		    	builder 	= null;
-		    	client 		= null;
-		    	httpPost	= null;
-		    	params		= null;
-		    	msg			= null;
-		    }
-		    
-		}.start();
-		
-	}
-	
+				entity		= null;
+				content		= null;
+				reader		= null;
+				JSONObject jsonAnswerObject = new JSONObject(builder.toString());
+				// TODO: Get stuff from json object
+				String ItemId = new String();
+				ItemId 		= builder.toString();
+				builder 	= null;
+				client 		= null;
+				httpPost	= null;
+				params		= null;
+				response	= null;
+				statusLine	= null;
+				return ItemId;
+			} else {
+				throw new PastyException("Bad HTTP return code");
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			throw new PastyException("Protocolexception");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new PastyException("IO Exception");
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new PastyException("Bad JSON received");
+		}
+	}	
 	
 }
