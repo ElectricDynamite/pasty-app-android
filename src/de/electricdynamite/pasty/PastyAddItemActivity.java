@@ -18,7 +18,7 @@ public class PastyAddItemActivity extends Activity {
 		if (extras == null) {
 			return;
 		}
-		Log.i(PastyAddItemActivity.class.getName(),"Intent Data URI: "+extras.getString(Intent.EXTRA_TEXT));
+		Log.d(PastyAddItemActivity.class.getName(),"Intent Data URI: "+extras.getString(Intent.EXTRA_TEXT));
 	}
 
 	public void onClick(View view) {

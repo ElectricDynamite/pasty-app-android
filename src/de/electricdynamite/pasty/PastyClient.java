@@ -4,15 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +56,58 @@ public class PastyClient {
 		return true;
 	}
 	
+	public JSONArray getClipboard() throws PastyException {
+		JSONObject Clipboard = null;
+		String url 				= REST_SERVER_BASE_URL+REST_URI_CLIPBOARD;
+		Log.d(PastyClient.class.toString(),"url is "+url);
+		StringBuilder builder	= new StringBuilder();
+		HttpClient client 		= new DefaultHttpClient();
+		HttpGet httpGet			= new HttpGet(url);
+		String basicAuthInfo	= username+":"+password; 
+		
+		try {
+			httpGet.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
+		    httpGet.setHeader("Content-type", "application/json");  
+		    System.setProperty("http.keepAlive", "false");
+		    HttpResponse response = client.execute(httpGet);
+		    StatusLine statusLine = response.getStatusLine();
+		    int statusCode = statusLine.getStatusCode();
+		    if (statusCode == 200) {
+		    	HttpEntity entity = response.getEntity();
+		    	InputStream content = entity.getContent();
+		    	BufferedReader reader = new BufferedReader(
+				new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+				entity		= null;
+				content		= null;
+				reader		= null;
+				JSONObject jsonResponse = new JSONObject(builder.toString());
+				JSONObject jsonPayload = jsonResponse.getJSONObject("payload");
+				JSONArray jsonClipboard = jsonPayload.getJSONArray("items");
+				builder 	= null;
+				client 		= null;
+				httpGet		= null;
+				response	= null;
+				statusLine	= null;
+				return jsonClipboard;
+			} else {
+				throw new PastyException("Bad HTTP return code");
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			throw new PastyException("Protocolexception");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new PastyException("IO Exception");
+		} catch (JSONException e) {
+			e.printStackTrace();
+			throw new PastyException("Bad JSON received");
+		}
+	}
+	
 	public String addItem(final String Item) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
 		Log.d(PastyClient.class.toString(),"url is "+url);
@@ -83,10 +138,9 @@ public class PastyClient {
 				entity		= null;
 				content		= null;
 				reader		= null;
-				JSONObject jsonAnswerObject = new JSONObject(builder.toString());
-				// TODO: Get stuff from json object
-				String ItemId = new String();
-				ItemId 		= builder.toString();
+				JSONObject jsonResponse = new JSONObject(builder.toString());
+				JSONObject jsonPayload = jsonResponse.getJSONObject("payload");
+				String ItemId = jsonPayload.getString("_id");
 				builder 	= null;
 				client 		= null;
 				httpPost	= null;

@@ -101,6 +101,7 @@ public class PastyActivity extends SherlockActivity {
 
 	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
 	private ClipboardItemListAdapter ClipboardListAdapter;
+	private PastyClient client;
     
 	
 	 /** Called when the activity is first created. */
@@ -116,6 +117,7 @@ public class PastyActivity extends SherlockActivity {
 		}
 		// Request features
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+    	
     	// Let's get preferences
 	    setContentView(R.layout.main);
 	}
@@ -124,6 +126,10 @@ public class PastyActivity extends SherlockActivity {
     	super.onResume();
     	// Let's get preferences
 		loadPreferences();
+    	// Create a PastyClient
+    	client = new PastyClient(getURL(), true);
+    	client.setUsername(getUser());
+    	client.setPassword(getPassword());
 		if(!getUser().isEmpty() && !getPassword().isEmpty()) {
 			refreshClipboard();
 		} else {
@@ -366,12 +372,7 @@ public class PastyActivity extends SherlockActivity {
 	        	listItems(msg.getData());
 	        	break;
 	        case 2:
-	        	try {
-	        		confirmAddItem(msg.getData());
-	        	}
-	        	catch (JSONException e) {
-	        		e.printStackTrace();
-	        	}
+	        	confirmAddItem(msg.getData());
 	        	break;
 	        case 3:
 	        	setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
@@ -385,39 +386,20 @@ public class PastyActivity extends SherlockActivity {
         }
     };
 
-	private void confirmAddItem(Bundle data) throws JSONException {
-		String JsonAnswer		= data.getString("response");
-		Log.d(PastyActivity.class.getName(),"JsonAnswer is "+JsonAnswer);
-        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
-        if(jsonAnswerObject.has("success")) {
-        	// answer is valid
-			if(jsonAnswerObject.getBoolean("success") == true) {
-				// item was added
-				int duration = Toast.LENGTH_SHORT;
-				Context context = getApplicationContext();
-			   	CharSequence text = getString(R.string.item_added);
-			   	Toast toast = Toast.makeText(context, text, duration);
-			   	toast.show();
-			   	toast = null;
-			   	context = null;
-			   	PastyActivity.this.finish();
-			}
-			else {
-				// item was not added
-				JSONObject jsonError = jsonAnswerObject.getJSONObject("error");
-				switch (jsonError.getInt("code")) {
-				case 401:
-			    	showDialog(DIALOG_AUTH_ERROR_ID);
-			    	break;
-				default:
-				   	Log.i(PastyActivity.class.getName()," Unknown error received from PastyServer: ERRCODE " + jsonError.getString("code") + ": " + jsonError.getString("message"));		
-				}
-			}
-        }
-        else {
-        	// answer is invalid
-        }
+	private void confirmAddItem(Bundle BundleItemId) {
+		String ItemId = new String(BundleItemId.getString("ItemId"));
+		Log.d(PastyActivity.class.getName(),"ItemId is "+ItemId); 
+		
+		// item was added
+		int duration = Toast.LENGTH_SHORT;
+		Context context = getApplicationContext();
+		CharSequence text = getString(R.string.item_added);
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		toast = null;
+		context = null;
 		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+		PastyActivity.this.finish();
 	}
 
 	private void confirmDeleteItem(Bundle data) throws JSONException {
@@ -630,15 +612,20 @@ public class PastyActivity extends SherlockActivity {
     	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		new Thread() {
 		    public void run() {
-		    	PastyClient client		= new PastyClient(getURL(), true);
-		    	client.setUsername(getUser());
-		    	client.setPassword(getPassword());
 				Message msg 			= Message.obtain();
 				msg.what				= 2;
 				
-				Bundle b = client.addItem(item);
+				String ItemId = null;
+				try {
+					ItemId = client.addItem(item);
+				} catch (PastyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Bundle ItemIdBundle = new Bundle ();
+				ItemIdBundle.putString("ItemId", ItemId);
 				
-				msg.setData(b);
+				msg.setData(ItemIdBundle);
 		    	messageHandler.sendMessage(msg);
 		    	client 		= null;
 		    	msg			= null;
