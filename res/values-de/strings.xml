@@ -4,6 +4,9 @@
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - das Cloud Clipboard</string>
     
+	<string name="app_share_via_pasty">An Pasty schicken</string>
+	<string name="app_share_from_pasty">Teilen</string>
+    
     <string name="copy">Kopieren</string>
     
     <string name="dialog_item_add_title">Neuer Eintrag</string>
