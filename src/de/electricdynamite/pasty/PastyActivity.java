@@ -435,98 +435,67 @@ public class PastyActivity extends SherlockActivity {
 		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
-    private void listItems(Bundle data) {
+    private void listItems(Bundle ClipboardBundle) {
+		JSONArray Clipboard = null;
+		try {
+			Clipboard = new JSONArray(ClipboardBundle.getString("Clipboard"));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
 		pbLoading.setVisibility(View.GONE);
 		pbLoading = null;
 
-    	
-		String JsonAnswer = data.getString("response");
-    	JSONArray ItemArray = new JSONArray();
 		try {
-	        /* Find TableLayout defined in main.xml */
-	        //TableLayout tl = (TableLayout)findViewById(R.id.tableItems);
-	        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
-	        if(jsonAnswerObject.has("items")) {
-		        ItemArray = jsonAnswerObject.getJSONArray("items");
-		        if(ItemArray.length() == 0) {
-		        	//Clipboard is empty
-
-		        	TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
-		        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
-		        	mHelpTextBig = null;
-		        	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
-		        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
-		        	mHelpTextSmall = null;
-		        	/*RelativeLayout mActivityLayout = (RelativeLayout) findViewById(R.id.PastyClipboard);
-		        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_clipboard_empty);
-		        	mHelpTextSmall.setId(R.string.helptext_PastyActivity_clipboard_empty_id);
-		        	mHelpTextSmall.setGravity(Gravity.CENTER);
-		        	mHelpTextSmall.setPadding(10, 50, 10, 0);
-		        	LayoutParams mActivityLayoutParams = (LayoutParams) mActivityLayout.getLayoutParams();
-		        	//mActivityLayoutParams.addRule(RelativeLayout.BELOW, mHelpTextBig.getId());
-		        	mActivityLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		        	mActivityLayout.addView(mHelpTextSmall);
-
-		        	mActivityLayout  = null;
-		        	mActivityLayoutParams = null;*/
-		        } else {
-					if(ItemArray.length() > 10) {
-						throw new Exception();
-					}
-					for (int i = 0; i < ItemArray.length(); i++) {
-						JSONObject Item = ItemArray.getJSONObject(i);
-						ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
-						this.ItemList.add(cbItem);
-					}
-					
-
-		        	TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
-		        	mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
-		        	mHelpTextBig = null;
-					
-					ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(this.ItemList, this);
-					
-					// Assign adapter to ListView
-					ListView listView = (ListView) findViewById(R.id.listItems);
-					listView.setAdapter(adapter);
-					this.ClipboardListAdapter = adapter;
-					
-					listView.setOnItemClickListener(new OnItemClickListener() { 
-						@Override
-						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
-							ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-							Item.copyToClipboard(clipboard);
-					    	Context context = getApplicationContext();
-					    	CharSequence text = getString(R.string.item_copied);
-					    	int duration = Toast.LENGTH_SHORT;
-					    	Toast toast = Toast.makeText(context, text, duration);
-					    	toast.show();
-					    	toast = null;
-					    	context = null;
-					    	clipboard = null;
-					    	text = null;
-					    	PastyActivity.this.finish();
-						}
-					});
-					registerForContextMenu(listView);
-		        }
-	        }
-			else if (jsonAnswerObject.has("error")){
-				JSONObject ErrorObject = jsonAnswerObject.getJSONObject("error");
-				switch (ErrorObject.getInt("code")) {
-				case 001:
-					showDialog(DIALOG_CONNECTION_ERROR_ID);
-					break;
-				case 401:
-			    	showDialog(DIALOG_AUTH_ERROR_ID);
-			    	break;
-			    default:
-			    	Log.i(PastyActivity.class.getName()," Unknown error received from PastyServer: ERRCODE " + ErrorObject.getString("code") + ": " + ErrorObject.getString("message"));
-			    	showDialog(DIALOG_UNKNOWN_ERROR_ID);
+		    if(Clipboard.length() == 0) {
+		       //Clipboard is empty
+	        	TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+	        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
+	        	mHelpTextBig = null;
+	        	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
+	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
+	        	mHelpTextSmall = null;
+	        } else {
+				if(Clipboard.length() > 15) {
+					throw new Exception();
 				}
-			}
+				for (int i = 0; i < Clipboard.length(); i++) {
+					JSONObject Item = Clipboard.getJSONObject(i);
+					ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
+					this.ItemList.add(cbItem);
+				}
+			
+				TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
+				mHelpTextBig = null;
+			
+				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(this.ItemList, this);
+				//Assign adapter to ListView
+				ListView listView = (ListView) findViewById(R.id.listItems);
+				listView.setAdapter(adapter);
+				this.ClipboardListAdapter = adapter;
+					
+				listView.setOnItemClickListener(new OnItemClickListener() { 
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
+						ClipboardManager sysClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+						Item.copyToClipboard(sysClipboard);
+				    	Context context = getApplicationContext();
+				    	CharSequence text = getString(R.string.item_copied);
+				    	int duration = Toast.LENGTH_SHORT;
+				    	Toast toast = Toast.makeText(context, text, duration);
+				    	toast.show();
+				    	toast = null;
+				    	context = null;
+				    	sysClipboard = null;
+				    	text = null;
+					    	PastyActivity.this.finish();
+					}
+				});
+				registerForContextMenu(listView);
+		    }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -534,10 +503,6 @@ public class PastyActivity extends SherlockActivity {
     }
     
     private void getItemList() {
-
-    	final String url				= getURL()+PASTY_REST_URI_CLIPBOARD;
-    	final String user				= getUser();
-    	final String password			= getPassword();
 
     	// Let's look busy
 		setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
@@ -552,51 +517,23 @@ public class PastyActivity extends SherlockActivity {
 		
 		new Thread() {
 		    public void run() {
-				StringBuilder builder = new StringBuilder();
-				HttpClient client = new DefaultHttpClient();
-				Message msg = Message.obtain();
-				msg.what = 1;
-				HttpGet httpGet = new HttpGet(url);
-		    	try {
-		    		httpGet.setHeader("X-Pasty-User", user);  
-		    		httpGet.setHeader("X-Pasty-Password", password);
-		    		httpGet.setHeader("Content-type", "application/json");
-		        	System.setProperty("http.keepAlive", "false");
-		        	//Log.d(PastyActivity.class.toString(), "Trying to connect to PastyServer at " + url);
-		        	HttpResponse response = client.execute(httpGet);
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(content));
-					String line;
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-				    entity		= null;
-				    content		= null;
-				    reader		= null;
-			    	response	= null;
-				} catch (ClientProtocolException e) {
-					Log.e(PastyActivity.class.toString(), "Error while talking to server");
+				Message msg 			= Message.obtain();
+				msg.what				= 1;
+				
+				JSONArray Clipboard = null;
+				try {
+					Clipboard = client.getClipboard();
+				} catch (PastyException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
-			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
-				} catch (IOException e) {
-					Log.e(PastyActivity.class.toString(), "Error while talking to server");
-					e.printStackTrace();
-			    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
 				}
-		    	finally {
-			    	Bundle b = new Bundle();
-			    	b.putString("response", builder.toString());
-			    	msg.setData(b);
-			    	messageHandler.sendMessage(msg);
-			    	builder 	= null;
-			    	client 		= null;
-			    	httpGet		= null;
-			    	msg			= null;
-		    	}
-		    }
-		    
+				Bundle ClipboardBundle = new Bundle ();
+				ClipboardBundle.putString("Clipboard", Clipboard.toString());
+				
+				msg.setData(ClipboardBundle);
+		    	messageHandler.sendMessage(msg);
+		    	msg			= null;
+		    }		    
 		}.start();
     }
     
@@ -615,8 +552,10 @@ public class PastyActivity extends SherlockActivity {
 				Message msg 			= Message.obtain();
 				msg.what				= 2;
 				
-				String ItemId = null;
+				String ItemId = "";
+
 				try {
+					Log.d(PastyClient.class.toString(),"ITEM is "+item);
 					ItemId = client.addItem(item);
 				} catch (PastyException e) {
 					// TODO Auto-generated catch block
@@ -627,7 +566,6 @@ public class PastyActivity extends SherlockActivity {
 				
 				msg.setData(ItemIdBundle);
 		    	messageHandler.sendMessage(msg);
-		    	client 		= null;
 		    	msg			= null;
 		    }
 		    
