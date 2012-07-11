@@ -159,10 +159,9 @@ public class PastyClient {
 		}
 	}	
 	
-	public Boolean deleteItem(ClipboardItem Item) throws PastyException {
+	public void deleteItem(ClipboardItem Item) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
 		Log.d(PastyClient.class.toString(),"url is "+url);
-		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpDelete httpDelete	= new HttpDelete(url);
 		String basicAuthInfo	= username+":"+password; 
@@ -173,27 +172,11 @@ public class PastyClient {
 		    HttpResponse response = client.execute(httpDelete);
 		    StatusLine statusLine = response.getStatusLine();
 		    int statusCode = statusLine.getStatusCode();
-		    if (statusCode == 201) {
-		    	HttpEntity entity = response.getEntity();
-		    	InputStream content = entity.getContent();
-		    	BufferedReader reader = new BufferedReader(
-				new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-				entity		= null;
-				content		= null;
-				reader		= null;
-				JSONObject jsonResponse = new JSONObject(builder.toString());
-				JSONObject jsonPayload = jsonResponse.getJSONObject("payload");
-				String ItemId = jsonPayload.getString("_id");
-				builder 	= null;
+		    if(statusCode == 200) {
 				client 		= null;
 				httpDelete	= null;
 				response	= null;
 				statusLine	= null;
-				return true;
 			} else {
 				throw new PastyException("Bad HTTP return code");
 			}
@@ -203,10 +186,7 @@ public class PastyClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new PastyException("IO Exception");
-		} catch (JSONException e) {
-			e.printStackTrace();
-			throw new PastyException("Bad JSON received");
-		}
+		} 
 	}	
 	
 }
