@@ -62,6 +62,7 @@
 	<string name="itemContextMenuTitle">Clipboard Eintrag</string>
 	<string-array name="itemContextMenu">
 	    <item>Kopieren ohne zu beenden</item>
+	    <item>Teilen</item>
 	    <item>Löschen</item>
 	</string-array>
 	
