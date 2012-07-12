@@ -176,7 +176,7 @@ public class PastyClient {
 	}	
 	
 	public void deleteItem(ClipboardItem Item) throws PastyException {
-		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
+		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM+Item.getId();
 		Log.d(PastyClient.class.toString(),"url is "+url);
 		HttpClient client 		= new DefaultHttpClient();
 		HttpDelete httpDelete	= new HttpDelete(url);

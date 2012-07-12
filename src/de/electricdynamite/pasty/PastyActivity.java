@@ -377,7 +377,7 @@ public class PastyActivity extends SherlockActivity {
 	        case 3:
 	        	setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 				try {
-					confirmDeleteItem(msg.getData());
+					confirmDeleteItem();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -391,7 +391,7 @@ public class PastyActivity extends SherlockActivity {
 		Log.d(PastyActivity.class.getName(),"ItemId is "+ItemId); 
 		
 		// item was added
-		int duration = Toast.LENGTH_SHORT;
+		int duration = Toast.LENGTH_LONG;
 		Context context = getApplicationContext();
 		CharSequence text = getString(R.string.item_added);
 		Toast toast = Toast.makeText(context, text, duration);
@@ -402,36 +402,15 @@ public class PastyActivity extends SherlockActivity {
 		PastyActivity.this.finish();
 	}
 
-	private void confirmDeleteItem(Bundle data) throws JSONException {
-		String JsonAnswer		= data.getString("response");
-        JSONObject jsonAnswerObject = new JSONObject(JsonAnswer);
-        if(jsonAnswerObject.has("success")) {
-        	// answer is valid
-			if(jsonAnswerObject.getBoolean("success") == true) {
-				// item was deleted
-				int duration = Toast.LENGTH_SHORT;
-				Context context = getApplicationContext();
-			   	CharSequence text = getString(R.string.item_deleted);
-			   	Toast toast = Toast.makeText(context, text, duration);
-			   	toast.show();
-			   	toast = null;
-			   	context = null;
-			}
-			else {
-				// item was not deleted
-				JSONObject jsonError = jsonAnswerObject.getJSONObject("error");
-				switch (jsonError.getInt("code")) {
-				case 401:
-			    	showDialog(DIALOG_AUTH_ERROR_ID);
-			    	break;
-				default:
-				   	Log.i(PastyActivity.class.getName()," Unknown error received from PastyServer: ERRCODE " + jsonError.getString("code") + ": " + jsonError.getString("message"));		
-				}
-			}
-        }
-        else {
-        	// answer is invalid
-        }
+	private void confirmDeleteItem() throws JSONException {
+		// item was deleted
+		int duration = Toast.LENGTH_LONG;
+		Context context = getApplicationContext();
+		CharSequence text = getString(R.string.item_deleted);
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		toast = null;
+		context = null;
 		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 	}
 
@@ -484,7 +463,7 @@ public class PastyActivity extends SherlockActivity {
 						Item.copyToClipboard(sysClipboard);
 				    	Context context = getApplicationContext();
 				    	CharSequence text = getString(R.string.item_copied);
-				    	int duration = Toast.LENGTH_SHORT;
+				    	int duration = Toast.LENGTH_LONG;
 				    	Toast toast = Toast.makeText(context, text, duration);
 				    	toast.show();
 				    	toast = null;
@@ -542,7 +521,7 @@ public class PastyActivity extends SherlockActivity {
     	//String item				= NewItem.getText().toString();
     	if(item != null && item.length() == 0) {
 		   	CharSequence text = getString(R.string.empty_item);
-		   	Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+		   	Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
 		   	toast.show();
     		return;
     	}
@@ -577,52 +556,17 @@ public class PastyActivity extends SherlockActivity {
     	setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		new Thread() {
 		    public void run() {
-		    	String url				= getURL()+PASTY_REST_URI_ITEM+item.getId();
-		    	String user				= getUser();
-		    	String password			= getPassword();
-				StringBuilder builder	= new StringBuilder();
-				HttpClient client 		= new DefaultHttpClient();
 				Message msg 			= Message.obtain();
 				msg.what				= 3;
-				HttpDelete httpDel		= new HttpDelete(url);
-		    	try {
-		    		httpDel.setHeader("Content-type", "application/json");
-		    		httpDel.setHeader("X-Pasty-User", user);  
-		    		httpDel.setHeader("X-Pasty-Password", password);
-		        	System.setProperty("http.keepAlive", "false");
-		        	HttpResponse response = client.execute(httpDel);
-		        	StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					if (statusCode == 200) {
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(content));
-						String line;
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-						}
-				    	entity		= null;
-				    	content		= null;
-				    	reader		= null;
-					} else {
-						Log.d(PastyActivity.class.toString(), "Failed to retrieve answer from PastyServer. Bummer.");
-				    	builder.append("{ \"success\": false, \"error\": { \"code\": 001, \"message\": \"Forever Alone.\"} }");
-					}
-			    	response	= null;
-			    	statusLine	= null;
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+
+				try {
+					Log.d(PastyClient.class.toString(),"ITEM is "+item.getText());
+					client.deleteItem(item);
+				} catch (PastyException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		    	Bundle b = new Bundle();
-		    	b.putString("response", builder.toString());
-		    	msg.setData(b);
-		    	messageHandler.sendMessage(msg);
-		    	builder 	= null;
-		    	client 		= null;
-		    	httpDel		= null;
+				messageHandler.sendMessage(msg);
 		    	msg			= null;
 		    }
 		    
@@ -706,7 +650,7 @@ public class PastyActivity extends SherlockActivity {
 			Item.copyToClipboard(clipboard);
 	    	Context context = getApplicationContext();
 	    	CharSequence text = getString(R.string.item_copied);
-	    	int duration = Toast.LENGTH_SHORT;
+	    	int duration = Toast.LENGTH_LONG;
 	    	Toast toast = Toast.makeText(context, text, duration);
 	    	toast.show();
 	    	toast = null;

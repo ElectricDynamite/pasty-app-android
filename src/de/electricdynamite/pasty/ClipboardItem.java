@@ -7,8 +7,8 @@ import android.text.ClipboardManager;
 
 @SuppressWarnings("deprecation")
 public class ClipboardItem {
-	public String Id = "";
-	public String ItemText = "";
+	private String Id = "";
+	private String ItemText = "";
 	
 	public ClipboardItem(String Id, String ItemText) {
 		this.Id = Id;
