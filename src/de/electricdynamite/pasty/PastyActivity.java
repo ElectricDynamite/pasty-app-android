@@ -148,7 +148,7 @@ public class PastyActivity extends SherlockActivity {
         switch(id) {
         case PastySharedStatics.DIALOG_CONNECTION_ERROR_ID:   	
         	builder = new AlertDialog.Builder(this);
-        	builder.setMessage(getString(R.string.error_badanswer))
+        	builder.setMessage(getString(R.string.error_bad_answer))
         		.setCancelable(false)
         		.setPositiveButton(getString(R.string.button_noes), new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
@@ -165,7 +165,7 @@ public class PastyActivity extends SherlockActivity {
 				break;
         case PastySharedStatics.DIALOG_AUTH_ERROR_ID: 
         	builder = new AlertDialog.Builder(this);  	
-        	builder.setMessage(getString(R.string.error_loginfailed))
+        	builder.setMessage(getString(R.string.error_login_failed))
         		.setCancelable(false)
         		.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
@@ -209,7 +209,7 @@ public class PastyActivity extends SherlockActivity {
 				break;
         case PastySharedStatics.DIALOG_NOT_SUPPORTED_ID: 
         	builder = new AlertDialog.Builder(this);  	
-        	builder.setMessage(getString(R.string.error_notsupported))
+        	builder.setMessage(getString(R.string.error_not_supported))
         		.setCancelable(false)
         		.setPositiveButton(getString(R.string.button_noes), new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
@@ -323,6 +323,14 @@ public class PastyActivity extends SherlockActivity {
 
     private void listItems(Bundle ClipboardBundle) {
 		JSONArray Clipboard = null;
+		short ExceptionId = ClipboardBundle.getShort("Exception");
+		switch(ExceptionId) {
+			case PastyException.ERROR_AUTHORIZATION_FAILED:
+				showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+				return;
+			default:
+				break;
+		}
 		try {
 			Clipboard = new JSONArray(ClipboardBundle.getString("Clipboard"));
 		} catch (JSONException e1) {
@@ -405,20 +413,24 @@ public class PastyActivity extends SherlockActivity {
 		    public void run() {
 				Message msg 			= Message.obtain();
 				msg.what				= 1;
+				Bundle ClipboardBundle = new Bundle ();
 				
 				JSONArray Clipboard = null;
 				try {
 					Clipboard = client.getClipboard();
+
+					ClipboardBundle.putString("Clipboard", Clipboard.toString());
 				} catch (PastyException e) {
 					// TODO Auto-generated catch block
+					if(e.errorId == PastyException.ERROR_AUTHORIZATION_FAILED) {
+						ClipboardBundle.putShort("Exception", e.errorId);
+					}
 					e.printStackTrace();
+				} finally {
+					msg.setData(ClipboardBundle);
+			    	messageHandler.sendMessage(msg);
+			    	msg			= null;
 				}
-				Bundle ClipboardBundle = new Bundle ();
-				ClipboardBundle.putString("Clipboard", Clipboard.toString());
-				
-				msg.setData(ClipboardBundle);
-		    	messageHandler.sendMessage(msg);
-		    	msg			= null;
 		    }		    
 		}.start();
     }

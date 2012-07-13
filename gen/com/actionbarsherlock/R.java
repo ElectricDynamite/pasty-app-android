@@ -942,11 +942,14 @@ containing a value of this type.
         public static final int copy=0x7f0a0017;
         public static final int dialog_item_add_title=0x7f0a0018;
         public static final int empty_item=0x7f0a0023;
-        public static final int error_badanswer=0x7f0a000c;
+        public static final int error_bad_answer=0x7f0a000c;
+        public static final int error_badanswer=0x7f0a0042;
         public static final int error_credentials_not_set=0x7f0a0010;
         public static final int error_credentials_not_set_title=0x7f0a000f;
-        public static final int error_loginfailed=0x7f0a000e;
-        public static final int error_notsupported=0x7f0a000d;
+        public static final int error_login_failed=0x7f0a000e;
+        public static final int error_loginfailed=0x7f0a0044;
+        public static final int error_not_supported=0x7f0a000d;
+        public static final int error_notsupported=0x7f0a0043;
         public static final int error_unknown=0x7f0a0011;
         public static final int helptext_PastyActivity_clipboard_empty=0x7f0a001c;
         public static final int helptext_PastyActivity_copy=0x7f0a001a;

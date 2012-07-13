@@ -102,7 +102,7 @@ public class PastyClient {
 				statusLine	= null;
 				return jsonClipboard;
 			} else if(statusCode == 401) {
-				throw new PastyException("Authorization failed");
+				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
 			} else {
 				throw new PastyException("Bad HTTP return code");
 			}
