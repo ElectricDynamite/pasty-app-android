@@ -1,21 +1,7 @@
 package de.electricdynamite.pasty;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +18,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -61,47 +45,14 @@ import android.widget.Toast;
 @SuppressWarnings("deprecation")
 public class PastyActivity extends SherlockActivity {
   
-	// Error Dialog IDs
-    static final int DIALOG_CONNECTION_ERROR_ID	= 1;
-    static final int DIALOG_AUTH_ERROR_ID		= 2;
-    static final int DIALOG_CREDENTIALS_NOT_SET = 3;
-    static final int DIALOG_UNKNOWN_ERROR_ID	= 99;   		
-
-    // Other Dialog IDs
-    static final int DIALOG_ABOUT_ID			= 101;
-    static final int DIALOG_ADD_ID				= 102;
-    static final int DIALOG_NOT_SUPPORTED_ID	= 127;
-    
-    // Item Context Menu IDs
-    static final int ITEM_CONTEXTMENU_COPY_ID	= 0;
-    static final int ITEM_CONTEXTMENU_SHARE_ID	= 1;
-    static final int ITEM_CONTEXTMENU_DELETE_ID	= 2;
-    
-    static final String PREF_USER				= "pref_username";  
-    static final String PREF_PASSWORD			= "pref_password"; 
-    static final String PREF_HTTPS				= "pref_usehttps";
-    static final String PREF_SERVER				= "pref_server";
-    static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
-    
-    static final String PREF_SERVER_DEFAULT		= "mario.blafaselblub.net";
-    
-    static final String PORT_HTTP				= "80";
-    static final String PORT_HTTPS				= "4444";
-    
-    static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
-    static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";
     
     public String versionName;
     public int versionCode;
     
-    private String URL							= "";
-    private String user							= "";
-    private String password						= "";
-    private Boolean PREF_CURR_PASTE_CLIPBOARD	= true;
-
 	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
 	private ClipboardItemListAdapter ClipboardListAdapter;
 	private PastyClient client;
+	private PastyPreferencesProvider prefs;
     
 	
 	 /** Called when the activity is first created. */
@@ -125,15 +76,15 @@ public class PastyActivity extends SherlockActivity {
     public void onResume() {
     	super.onResume();
     	// Let's get preferences
-		loadPreferences();
+		reloadPreferences();
     	// Create a PastyClient
-    	client = new PastyClient(getURL(), true);
-    	client.setUsername(getUser());
-    	client.setPassword(getPassword());
-		if(!getUser().isEmpty() && !getPassword().isEmpty()) {
+    	client = new PastyClient(prefs.getRESTBaseURL(), true);
+    	client.setUsername(prefs.getUsername());
+    	client.setPassword(prefs.getPassword());
+		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
 			refreshClipboard();
 		} else {
-			showDialog(DIALOG_CREDENTIALS_NOT_SET);
+			showDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
 		}
     }
     
@@ -143,13 +94,10 @@ public class PastyActivity extends SherlockActivity {
     	// Nope.avi
     }
     
-    public void loadPreferences() {
+    public void reloadPreferences() {
     	// Restore preferences
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-    	setUser(prefs.getString(PREF_USER,""));
-    	setPassword(prefs.getString(PREF_PASSWORD,""));
-    	setURL(prefs.getString(PREF_SERVER, PREF_SERVER_DEFAULT), prefs.getBoolean(PREF_HTTPS, true));
-    	this.PREF_CURR_PASTE_CLIPBOARD = prefs.getBoolean(PREF_PASTE_CLIPBOARD, true);
+    	 this.prefs = new PastyPreferencesProvider(getBaseContext());
+    	
     }
     
    @Override
@@ -165,7 +113,7 @@ public class PastyActivity extends SherlockActivity {
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.menu_add:
-        	showDialog(DIALOG_ADD_ID);
+        	showDialog(PastySharedStatics.DIALOG_ADD_ID);
 	        return true;
         case R.id.menu_settings:
         	Intent settingsActivity = new Intent(getBaseContext(),
@@ -175,7 +123,7 @@ public class PastyActivity extends SherlockActivity {
         	startActivity(settingsActivity);
             return true;
         case R.id.menu_about:
-        	showDialog(DIALOG_ABOUT_ID);
+        	showDialog(PastySharedStatics.DIALOG_ABOUT_ID);
 	        return true;
         default:
                 return super.onOptionsItemSelected(item);
@@ -192,54 +140,13 @@ public class PastyActivity extends SherlockActivity {
     	mHelpTextSmall = null;
 		getItemList();
 	}
-	
-	private void setUser(String user) {
-    	PastyActivity.this.user = user;
-    }
-    
-    private void setPassword(String password) {
-    	PastyActivity.this.password = password;
-    }
-    
-    private void setURL(String server, Boolean usehttps) {    	
-    	String proto	= "";
-    	String port		= "";
-    	
-    	if(usehttps) {
-    		proto	= "https://";
-    		port		= PORT_HTTPS;
-    	} else {
-    		proto	= "http://";
-    		port		= PORT_HTTP;
-    	}
-    	
-    	String url = proto + server + ":" + port;
-    	PastyActivity.this.URL = url;
-    	proto		= null;
-    	port		= null;
-    	server		= null;
-    	usehttps	= null;
-    	url			= null;    		
-    }
-    
-    private String getUser() {
-		return PastyActivity.this.user;
-    }
-    
-    private String getPassword() {
-		return PastyActivity.this.password;
-    }
-
-	private String getURL() {
-		return PastyActivity.this.URL;
-	}
     
     protected AlertDialog onCreateDialog(int id) {
     	// TODO: Start using Fragments, and hence, start using DialogFragments
     	AlertDialog.Builder	builder = null;
 		AlertDialog alert = null;
         switch(id) {
-        case DIALOG_CONNECTION_ERROR_ID:   	
+        case PastySharedStatics.DIALOG_CONNECTION_ERROR_ID:   	
         	builder = new AlertDialog.Builder(this);
         	builder.setMessage(getString(R.string.error_badanswer))
         		.setCancelable(false)
@@ -256,7 +163,7 @@ public class PastyActivity extends SherlockActivity {
     			alert = builder.create();
     			alert.show();
 				break;
-        case DIALOG_AUTH_ERROR_ID: 
+        case PastySharedStatics.DIALOG_AUTH_ERROR_ID: 
         	builder = new AlertDialog.Builder(this);  	
         	builder.setMessage(getString(R.string.error_loginfailed))
         		.setCancelable(false)
@@ -272,7 +179,7 @@ public class PastyActivity extends SherlockActivity {
 				alert = builder.create();
 				alert.show();
 				break;
-        case DIALOG_CREDENTIALS_NOT_SET: 
+        case PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET: 
         	builder = new AlertDialog.Builder(this);  	
         	builder.setMessage(getString(R.string.error_credentials_not_set))
         		.setCancelable(true)
@@ -289,7 +196,7 @@ public class PastyActivity extends SherlockActivity {
 				alert = builder.create();
 				alert.show();
 				break;
-        case DIALOG_UNKNOWN_ERROR_ID: 
+        case PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID: 
         	builder = new AlertDialog.Builder(this);  	
         	builder.setMessage(getString(R.string.error_unknown))
         		.setCancelable(false)
@@ -300,7 +207,7 @@ public class PastyActivity extends SherlockActivity {
 				alert = builder.create();
 				alert.show();
 				break;
-        case DIALOG_NOT_SUPPORTED_ID: 
+        case PastySharedStatics.DIALOG_NOT_SUPPORTED_ID: 
         	builder = new AlertDialog.Builder(this);  	
         	builder.setMessage(getString(R.string.error_notsupported))
         		.setCancelable(false)
@@ -311,7 +218,7 @@ public class PastyActivity extends SherlockActivity {
 				alert = builder.create();
 				alert.show();
 				break;
-        case DIALOG_ADD_ID:
+        case PastySharedStatics.DIALOG_ADD_ID:
 	        final Dialog addItemDialog = new Dialog(PastyActivity.this);
 	
 	        addItemDialog.setContentView(R.layout.add_item);
@@ -333,7 +240,7 @@ public class PastyActivity extends SherlockActivity {
 					}
 			);
 			
-			if(this.PREF_CURR_PASTE_CLIPBOARD) {
+			if(prefs.getPasteCurrClip()) {
 				ClipboardManager clipboard = (ClipboardManager) getSystemService("clipboard");
 				if(clipboard.hasText()) {
 					EditText mNewItemET = (EditText) addItemDialog.findViewById(R.id.NewItem);
@@ -343,12 +250,12 @@ public class PastyActivity extends SherlockActivity {
 			}
 			
 			break;
-        case DIALOG_ABOUT_ID: 
+        case PastySharedStatics.DIALOG_ABOUT_ID: 
 		        Dialog aboutDialog = new Dialog(this);
 		
 		        aboutDialog.setContentView(R.layout.about_dialog);
 		        aboutDialog.setTitle(getString(R.string.about_title));
-		
+		        
 		        TextView mVersionText = (TextView) aboutDialog.findViewById(R.id.about_version);
 		        ImageView aboutImage = (ImageView) aboutDialog.findViewById(R.id.about_image);
 		        aboutImage.setImageResource(R.drawable.ic_launcher);
@@ -644,7 +551,7 @@ public class PastyActivity extends SherlockActivity {
       int menuItemIndex = item.getItemId();
       ClipboardItem Item = this.ItemList.get(info.position);
       switch (menuItemIndex) {
-      	case ITEM_CONTEXTMENU_COPY_ID:
+      	case PastySharedStatics.ITEM_CONTEXTMENU_COPY_ID:
       		// Copy without exit selected
       		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 			Item.copyToClipboard(clipboard);
@@ -658,14 +565,14 @@ public class PastyActivity extends SherlockActivity {
 	    	clipboard = null;
 	    	text = null;
       		break;
-      	case ITEM_CONTEXTMENU_SHARE_ID:
+      	case PastySharedStatics.ITEM_CONTEXTMENU_SHARE_ID:
       		// Share to another app
       		Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
       		shareIntent.setType("text/plain");
       		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, Item.getText());
       		startActivity(Intent.createChooser(shareIntent, getString(R.string.app_share_from_pasty)));
       		break;
-      	case ITEM_CONTEXTMENU_DELETE_ID:
+      	case PastySharedStatics.ITEM_CONTEXTMENU_DELETE_ID:
       		// Delete selected
       		this.deleteItem(Item, info.position);
       		break;

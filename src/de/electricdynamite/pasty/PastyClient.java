@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -20,8 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Bundle;
-import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
@@ -45,7 +41,7 @@ public class PastyClient {
 
 	public PastyClient(String restServerBaseURL, Boolean tls) {
 		this.REST_SERVER_BASE_URL = restServerBaseURL;
-		this.REST_SERVER_TLS_ENABLE = true;
+		this.REST_SERVER_TLS_ENABLE = tls;
 	}
 	
 	public PastyClient() {
@@ -105,6 +101,8 @@ public class PastyClient {
 				response	= null;
 				statusLine	= null;
 				return jsonClipboard;
+			} else if(statusCode == 401) {
+				throw new PastyException("Authorization failed");
 			} else {
 				throw new PastyException("Bad HTTP return code");
 			}
@@ -160,6 +158,8 @@ public class PastyClient {
 				response	= null;
 				statusLine	= null;
 				return ItemId;
+			} else if (statusCode == 401) {
+				throw new PastyException("Authorization failed");
 			} else {
 				throw new PastyException("Bad HTTP return code");
 			}

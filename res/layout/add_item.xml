@@ -9,7 +9,7 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/NewItem_hint"
 			android:textSize="18sp"
-			android:lines="5"
+			android:lines="4"
 			android:gravity="top"
 			android:inputType="textMultiLine" />
 		<Button

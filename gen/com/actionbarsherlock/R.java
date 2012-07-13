@@ -10,8 +10,6 @@ package com.actionbarsherlock;
 public final class R {
     public static final class array {
         public static final int itemContextMenu=0x7f0c0000;
-        public static final int pref_server_entrytitles=0x7f0c0001;
-        public static final int pref_server_entryvalues=0x7f0c0002;
     }
     public static final class attr {
         /**  Specified if we are forcing an action item overflow menu. 
@@ -896,8 +894,8 @@ containing a value of this type.
         public static final int menu=0x7f0d0000;
     }
     public static final class string {
-        public static final int NewItem_hint=0x7f0a0018;
-        public static final int PastyButton_label=0x7f0a0019;
+        public static final int NewItem_hint=0x7f0a001e;
+        public static final int PastyButton_label=0x7f0a001f;
         public static final int about=0x7f0a0028;
         public static final int about_text=0x7f0a000b;
         public static final int about_title=0x7f0a000a;
@@ -932,33 +930,33 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0a0009;
         public static final int add=0x7f0a0029;
-        public static final int app_label=0x7f0a000d;
-        public static final int app_logo=0x7f0a000e;
-        public static final int app_name=0x7f0a000c;
-        public static final int app_share_from_pasty=0x7f0a0010;
-        public static final int app_share_via_pasty=0x7f0a000f;
+        public static final int app_label=0x7f0a0013;
+        public static final int app_logo=0x7f0a0014;
+        public static final int app_name=0x7f0a0012;
+        public static final int app_share_from_pasty=0x7f0a0016;
+        public static final int app_share_via_pasty=0x7f0a0015;
         public static final int behaviour=0x7f0a002b;
-        public static final int button_get_started=0x7f0a0020;
-        public static final int button_noes=0x7f0a001f;
-        public static final int button_ok=0x7f0a001e;
-        public static final int copy=0x7f0a0011;
-        public static final int dialog_item_add_title=0x7f0a0012;
-        public static final int empty_item=0x7f0a001d;
-        public static final int error_badanswer=0x7f0a0021;
-        public static final int error_credentials_not_set=0x7f0a0025;
-        public static final int error_credentials_not_set_title=0x7f0a0024;
-        public static final int error_loginfailed=0x7f0a0023;
-        public static final int error_notsupported=0x7f0a0022;
-        public static final int error_unknown=0x7f0a0026;
-        public static final int helptext_PastyActivity_clipboard_empty=0x7f0a0016;
-        public static final int helptext_PastyActivity_copy=0x7f0a0014;
-        public static final int helptext_PastyActivity_how_to_add=0x7f0a0017;
-        public static final int helptext_PastyActivity_loading=0x7f0a0015;
-        public static final int helptext_PastyActivity_pasty=0x7f0a0013;
+        public static final int button_get_started=0x7f0a0026;
+        public static final int button_noes=0x7f0a0025;
+        public static final int button_ok=0x7f0a0024;
+        public static final int copy=0x7f0a0017;
+        public static final int dialog_item_add_title=0x7f0a0018;
+        public static final int empty_item=0x7f0a0023;
+        public static final int error_badanswer=0x7f0a000c;
+        public static final int error_credentials_not_set=0x7f0a0010;
+        public static final int error_credentials_not_set_title=0x7f0a000f;
+        public static final int error_loginfailed=0x7f0a000e;
+        public static final int error_notsupported=0x7f0a000d;
+        public static final int error_unknown=0x7f0a0011;
+        public static final int helptext_PastyActivity_clipboard_empty=0x7f0a001c;
+        public static final int helptext_PastyActivity_copy=0x7f0a001a;
+        public static final int helptext_PastyActivity_how_to_add=0x7f0a001d;
+        public static final int helptext_PastyActivity_loading=0x7f0a001b;
+        public static final int helptext_PastyActivity_pasty=0x7f0a0019;
         public static final int itemContextMenuTitle=0x7f0a003e;
-        public static final int item_added=0x7f0a001b;
-        public static final int item_copied=0x7f0a001a;
-        public static final int item_deleted=0x7f0a001c;
+        public static final int item_added=0x7f0a0021;
+        public static final int item_copied=0x7f0a0020;
+        public static final int item_deleted=0x7f0a0022;
         public static final int login=0x7f0a002a;
         public static final int misc=0x7f0a002d;
         public static final int network=0x7f0a002c;

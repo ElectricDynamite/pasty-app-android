@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_badanswer">Problem talking to server.\nTry again later</string>
+    <string name="error_notsupported">This feature is not supported yet</string>
+    <string name="error_loginfailed">Login failed</string>
+    <string name="error_credentials_not_set_title">Welcome!</string>
+    <string name="error_credentials_not_set">You need to provide the login data to your Pasty account</string>
+    <string name="error_unknown">An unknown error occured. Please try again later or check for an App update.</string>
+</resources>
