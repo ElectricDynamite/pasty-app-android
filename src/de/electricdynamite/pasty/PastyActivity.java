@@ -200,6 +200,7 @@ public class PastyActivity extends SherlockActivity {
         	builder = new AlertDialog.Builder(this);  	
         	builder.setMessage(getString(R.string.error_unknown))
         		.setCancelable(false)
+        		.setTitle(R.string.error_unknown_title)
         		.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
         			}
@@ -327,6 +328,16 @@ public class PastyActivity extends SherlockActivity {
 		switch(ExceptionId) {
 			case PastyException.ERROR_AUTHORIZATION_FAILED:
 				showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+				return;
+			case PastyException.ERROR_UNKNOWN:
+				showDialog(PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
+				setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+				ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+				pbLoading.setVisibility(View.GONE);
+				pbLoading = null;
+				TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+				mHelpTextBig.setText(R.string.helptext_PastyActivity_error_occured);
+				mHelpTextBig = null;
 				return;
 			default:
 				break;

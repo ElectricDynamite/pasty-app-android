@@ -16,6 +16,7 @@
     <string name="helptext_PastyActivity_loading">Lade dein Pasty Clipboard&#8230;</string>
     <string name="helptext_PastyActivity_clipboard_empty">Dein Clipboard ist leer!</string>
     <string name="helptext_PastyActivity_how_to_add">Drücke das Plus-Zeichen zum Hinzufügen</string>
+    <string name="helptext_PastyActivity_error_occured">Ein Fehler ist aufgetreten. Versuche es später erneut.</string>
     <string name="NewItem_hint">Hier einfügen oder schreiben</string>
     <string name="PastyButton_label">Ab in die Cloud damit!</string>
     <string name="item_copied">Text ins lokale Clipboard kopiert</string>
@@ -26,13 +27,6 @@
     <string name="button_ok">Okay</string>
     <string name="button_noes">Schade eigentlich</string>
     <string name="button_get_started">Dann mal los!</string>
-    
-    <string name="error_badanswer">Fehler in der Serverkommunikation.\nVersuche es später noch einmal.</string>
-    <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
-    <string name="error_loginfailed">Login fehlgeschlagen</string>
-    <string name="error_credentials_not_set_title">Willkommen!</string>
-    <string name="error_credentials_not_set">Du musst noch die Logindaten zu deinem Pasty Account angeben.</string>
-    <string name="error_unknown">Ein unbekannte Fehler ist aufgetreten. Versuch es später noch mal, oder prüfe nach einem App-Update</string>
     
     <string name="settings">Einstellungen</string>
 	<string name="about">Über Pasty</string>
@@ -69,4 +63,14 @@
 	
 	<string name="pref_tos_title">Nutzungsbedingungen</string>
 	<string name="pref_privacy_title">Datenschutzerklärung</string>
+	
+	
+    <string name="error_badanswer">Fehler in der Serverkommunikation.\nVersuche es später noch einmal.</string>
+    <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
+    <string name="error_loginfailed">Login fehlgeschlagen</string>
+    <string name="error_credentials_not_set_title">Willkommen!</string>
+    <string name="error_credentials_not_set">Du musst noch die Logindaten zu deinem Pasty Account angeben.</string>
+    <string name="error_unknown_title">Unbekannter Fehler ist aufgetreten!</string>
+    <string name="error_unknown">Versuch es später noch mal, oder prüfe nach einem App-Update</string>
+    
 </resources>

@@ -111,7 +111,7 @@ public class PastyClient {
 			throw new PastyException("Protocolexception");
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new PastyException("IO Exception");
+			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			throw new PastyException("Bad JSON received");
@@ -168,7 +168,7 @@ public class PastyClient {
 			throw new PastyException("Protocolexception");
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new PastyException("IO Exception");
+			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			throw new PastyException("Bad JSON received");
@@ -201,7 +201,7 @@ public class PastyClient {
 			throw new PastyException("Protocolexception");
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new PastyException("IO Exception");
+			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} 
 	}	
 	

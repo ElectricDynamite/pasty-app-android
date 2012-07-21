@@ -24,11 +24,10 @@ public class PastySharedStatics {
     static final String PREF_SERVER				= "pref_server";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     
-    static final String PREF_SERVER_DEFAULT		= "mario.blafaselblub.net";
+    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
+    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";
     
-    static final String PORT_HTTP				= "80";
-    static final String PORT_HTTPS				= "4444";
-    
-    static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
-    static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";
+    // Unused? 
+    /*static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
+    static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";*/
 }
