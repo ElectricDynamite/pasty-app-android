@@ -1,5 +1,9 @@
 package de.electricdynamite.pasty;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -9,9 +13,8 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
  
-public class PastyPreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String URL_ACCOUNT_CREATE	= "https://pastyapp.org/user/create/";
 		private static final String URL_TOS				= "https://pastyapp.org/tos/";
 		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html"; 
@@ -27,7 +30,12 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
 	
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
+                super.onCreate(savedInstanceState);	
+                ActionBar ab = getSherlock().getActionBar();
+                ab.setHomeButtonEnabled(true);
+                ab.setDisplayHomeAsUpEnabled(true);
+
+
                 addPreferencesFromResource(R.xml.prefs);
                 
                 prefUsername = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_USERNAME);
@@ -144,4 +152,16 @@ public class PastyPreferencesActivity extends PreferenceActivity implements OnSh
             mKeyVal = null;
             mSumVal = null;
         }
+        
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+        	switch (item.getItemId()) {
+        		case android.R.id.home:
+        			finish();
+        			return true;
+        		default:
+        			return super.onOptionsItemSelected(item);
+        	}
+        } 
 }

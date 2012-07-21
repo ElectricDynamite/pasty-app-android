@@ -167,6 +167,7 @@ public class PastyActivity extends SherlockActivity {
         	builder = new AlertDialog.Builder(this);  	
         	builder.setMessage(getString(R.string.error_login_failed))
         		.setCancelable(false)
+        		.setTitle(R.string.error_login_failed_title)
         		.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
         	        	Intent settingsActivity = new Intent(getBaseContext(),

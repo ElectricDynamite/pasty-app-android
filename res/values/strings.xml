@@ -74,7 +74,8 @@
 	
     <string name="error_bad_answer">Problem talking to server.\nTry again later</string>
     <string name="error_not_supported">This feature is not supported yet</string>
-    <string name="error_login_failed">Login failed</string>
+    <string name="error_login_failed_title">Login failed</string>
+    <string name="error_login_failed">Please make sure you specified your account correctly</string>
     <string name="error_credentials_not_set_title">Welcome!</string>
     <string name="error_credentials_not_set">You need to provide the login data to your Pasty account</string>
     <string name="error_unknown_title">Unknown error occured!</string>
