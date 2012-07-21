@@ -324,23 +324,25 @@ public class PastyActivity extends SherlockActivity {
 
     private void listItems(Bundle ClipboardBundle) {
 		JSONArray Clipboard = null;
-		short ExceptionId = ClipboardBundle.getShort("Exception");
-		switch(ExceptionId) {
-			case PastyException.ERROR_AUTHORIZATION_FAILED:
-				showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
-				return;
-			case PastyException.ERROR_UNKNOWN:
-				showDialog(PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
-				setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
-				ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
-				pbLoading.setVisibility(View.GONE);
-				pbLoading = null;
-				TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
-				mHelpTextBig.setText(R.string.helptext_PastyActivity_error_occured);
-				mHelpTextBig = null;
-				return;
-			default:
-				break;
+		if(ClipboardBundle.containsKey("Exception")) {
+			short ExceptionId = ClipboardBundle.getShort("Exception");
+			switch(ExceptionId) {
+				case PastyException.ERROR_AUTHORIZATION_FAILED:
+					showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+					return;
+				case PastyException.ERROR_UNKNOWN:
+					showDialog(PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
+					setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+					ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+					pbLoading.setVisibility(View.GONE);
+					pbLoading = null;
+					TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+					mHelpTextBig.setText(R.string.helptext_PastyActivity_error_occured);
+					mHelpTextBig = null;
+					return;
+				default:
+					break;
+			}
 		}
 		try {
 			Clipboard = new JSONArray(ClipboardBundle.getString("Clipboard"));

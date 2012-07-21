@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class PastyPreferencesProvider {
 	private SharedPreferences prefs;	
@@ -33,11 +32,8 @@ public class PastyPreferencesProvider {
 		this.restServerHost = uri.getHost();
 		this.restServerPort = uri.getPort();
 		this.restServerScheme = uri.getScheme();
-		Log.d(PastyPreferencesProvider.class.toString(),"Port is "+this.restServerPort);
-		Log.d(PastyPreferencesProvider.class.toString(),"Scheme is "+this.restServerScheme);
 		if(this.restServerPort == -1) {
-			if(this.restServerScheme == "https") { // TODO this if clause does not work as expected
-				Log.d(PastyPreferencesProvider.class.toString(),"IN https if clause");
+			if(this.restServerScheme.equals(new String("https"))) {
 				this.restServerPort = 443;
 			} else {
 				this.restServerPort = 80;
