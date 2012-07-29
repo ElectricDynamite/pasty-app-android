@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -77,15 +79,24 @@ public class PastyActivity extends SherlockActivity {
     	super.onResume();
     	// Let's get preferences
 		reloadPreferences();
-    	// Create a PastyClient
-    	client = new PastyClient(prefs.getRESTBaseURL(), true);
-    	client.setUsername(prefs.getUsername());
-    	client.setPassword(prefs.getPassword());
-		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
-			refreshClipboard();
-		} else {
-			showDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
-		}
+		
+		// Check for network connectivity
+		ConnectivityManager connMgr = (ConnectivityManager) 
+				getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+	    	// Create a PastyClient
+	    	client = new PastyClient(prefs.getRESTBaseURL(), true);
+	    	client.setUsername(prefs.getUsername());
+	    	client.setPassword(prefs.getPassword());
+			if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
+				refreshClipboard();
+			} else {
+				showDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
+			}
+		 } else {
+				showDialog(PastySharedStatics.DIALOG_NO_NETWORK);
+		 }
     }
     
     public void onStop() {
@@ -153,6 +164,24 @@ public class PastyActivity extends SherlockActivity {
         		.setPositiveButton(getString(R.string.button_noes), new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
         				//PastyActivity.this.finish();
+        			}
+        		});
+			    /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			        public void onClick(DialogInterface dialog, int id) {
+			             dialog.cancel();
+			        }
+			    });*/
+    			alert = builder.create();
+    			alert.show();
+				break;
+        case PastySharedStatics.DIALOG_NO_NETWORK:   	
+        	builder = new AlertDialog.Builder(this);
+        	builder.setMessage(getString(R.string.error_no_network))
+        		.setCancelable(false)
+        		.setTitle(R.string.error_no_network_title)
+        		.setPositiveButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int id) {
+        				PastyActivity.this.finish();
         			}
         		});
 			    /*.setNegativeButton("No", new DialogInterface.OnClickListener() {

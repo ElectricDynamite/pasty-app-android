@@ -24,15 +24,23 @@
             android:name=".PastyPreferencesActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity
+        <receiver android:enabled="true" android:name="PastyAddItemReveiver">
+      		<intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+	            <data android:mimeType="text/plain" />
+      		</intent-filter>
+    	</receiver>
+        <!-- <activity
             android:name=".PastyAddItemActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_share_via_pasty">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
 	            <data android:mimeType="text/plain" />
             </intent-filter>
-        </activity>
+        </activity> -->
     </application>
 
 </manifest>

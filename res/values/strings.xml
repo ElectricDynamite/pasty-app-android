@@ -27,6 +27,7 @@
     
     <string name="button_ok">Okay</string>
     <string name="button_noes">Oh noes!</string>
+    <string name="button_exit">Exit</string>
     <string name="button_get_started">Let\'s get started!</string>
     
     <string name="settings">Settings</string>
@@ -73,6 +74,8 @@
 	
 	
     <string name="error_bad_answer">Problem talking to server.\nTry again later</string>
+    <string name="error_no_network_title">No network available</string>
+    <string name="error_no_network">Please enable a network connection to use Pasty</string>
     <string name="error_not_supported">This feature is not supported yet</string>
     <string name="error_login_failed_title">Login failed</string>
     <string name="error_login_failed">Please make sure you specified your account correctly</string>

@@ -26,6 +26,7 @@
     
     <string name="button_ok">Okay</string>
     <string name="button_noes">Schade eigentlich</string>
+    <string name="button_exit">Beenden</string>
     <string name="button_get_started">Dann mal los!</string>
     
     <string name="settings">Einstellungen</string>
@@ -66,6 +67,8 @@
 	
 	
     <string name="error_badanswer">Fehler in der Serverkommunikation.\nVersuche es später noch einmal.</string>
+    <string name="error_no_network_title">Keine Datenverbindung</string>
+    <string name="error_no_network">Bitte aktiviere eine Datenverbindung, um Pasty zu nutzen</string>
     <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
     <string name="error_login_failed_title">Login fehlgeschlagen</string>
     <string name="error_login_failed">Prüfe doch bitte, dass du deinen Account richtig angegeben hast</string>

@@ -6,6 +6,7 @@ public class PastySharedStatics {
     static final int DIALOG_CONNECTION_ERROR_ID	= 1;
     static final int DIALOG_AUTH_ERROR_ID		= 2;
     static final int DIALOG_CREDENTIALS_NOT_SET = 3;
+    static final int DIALOG_NO_NETWORK			= 4;
     static final int DIALOG_UNKNOWN_ERROR_ID	= 99;   		
 
     // Other Dialog IDs
