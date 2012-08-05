@@ -159,18 +159,14 @@ public class PastyActivity extends SherlockActivity {
         switch(id) {
         case PastySharedStatics.DIALOG_CONNECTION_ERROR_ID:   	
         	builder = new AlertDialog.Builder(this);
-        	builder.setMessage(getString(R.string.error_bad_answer))
+        	builder.setMessage(getString(R.string.error_io))
+    			.setTitle(R.string.error_io_title)
         		.setCancelable(false)
-        		.setPositiveButton(getString(R.string.button_noes), new DialogInterface.OnClickListener() {
+        		.setPositiveButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
         			public void onClick(DialogInterface dialog, int id) {
-        				//PastyActivity.this.finish();
+        				PastyActivity.this.finish();
         			}
         		});
-			    /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int id) {
-			             dialog.cancel();
-			        }
-			    });*/
     			alert = builder.create();
     			alert.show();
 				break;
@@ -189,6 +185,19 @@ public class PastyActivity extends SherlockActivity {
 			             dialog.cancel();
 			        }
 			    });*/
+    			alert = builder.create();
+    			alert.show();
+				break;
+        case PastySharedStatics.DIALOG_BAD_ANSWER:
+        	builder = new AlertDialog.Builder(this);
+        	builder.setMessage(getString(R.string.error_badanswer))
+        		.setCancelable(false)
+        		.setTitle(R.string.error_badanswer_title)
+        		.setPositiveButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
+        			public void onClick(DialogInterface dialog, int id) {
+        				PastyActivity.this.finish();
+        			}
+        		});
     			alert = builder.create();
     			alert.show();
 				break;
@@ -360,6 +369,12 @@ public class PastyActivity extends SherlockActivity {
 				case PastyException.ERROR_AUTHORIZATION_FAILED:
 					showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
 					return;
+				case PastyException.ERROR_IO_EXCEPTION:
+					showDialog(PastySharedStatics.DIALOG_CONNECTION_ERROR_ID);
+					return;
+				case PastyException.ERROR_ILLEGAL_RESPONSE:
+					showDialog(PastySharedStatics.DIALOG_BAD_ANSWER);
+					return;
 				case PastyException.ERROR_UNKNOWN:
 					showDialog(PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
 					setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
@@ -464,10 +479,7 @@ public class PastyActivity extends SherlockActivity {
 
 					ClipboardBundle.putString("Clipboard", Clipboard.toString());
 				} catch (PastyException e) {
-					// TODO Auto-generated catch block
-					if(e.errorId == PastyException.ERROR_AUTHORIZATION_FAILED) {
-						ClipboardBundle.putShort("Exception", e.errorId);
-					}
+					ClipboardBundle.putShort("Exception", e.errorId);
 					e.printStackTrace();
 				} finally {
 					msg.setData(ClipboardBundle);

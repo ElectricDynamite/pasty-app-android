@@ -66,7 +66,10 @@
 	<string name="pref_privacy_title">Datenschutzerklärung</string>
 	
 	
-    <string name="error_badanswer">Fehler in der Serverkommunikation.\nVersuche es später noch einmal.</string>
+    <string name="error_badanswer_title">Fehler in der Serverkommunikation</string>
+    <string name="error_badanswer">Versuche es später noch einmal (Ungültige Antwort)</string>
+    <string name="error_io_title">Fehler in der Serverkommunikation</string>
+    <string name="error_io">Versuche es später noch einmal (Keine Verbindung)</string>
     <string name="error_no_network_title">Keine Datenverbindung</string>
     <string name="error_no_network">Bitte aktiviere eine Datenverbindung, um Pasty zu nutzen</string>
     <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>

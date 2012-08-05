@@ -73,7 +73,10 @@
 	<string name="pref_version_title">Version</string>
 	
 	
-    <string name="error_bad_answer">Problem talking to server.\nTry again later</string>
+    <string name="error_badanswer_title">Problem talking to server</string>
+    <string name="error_badanswer">Try again later (invalid answer)</string>
+    <string name="error_io_title">Problem talking to server</string>
+    <string name="error_io">Try again later (no connection)</string>
     <string name="error_no_network_title">No network available</string>
     <string name="error_no_network">Please enable a network connection to use Pasty</string>
     <string name="error_not_supported">This feature is not supported yet</string>

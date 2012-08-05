@@ -12,8 +12,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.DefaultedHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,15 +39,19 @@ public class PastyClient {
     private static final String		REST_URI_ITEM			= "/v2/clipboard/item/";
     private static final String 	REST_URI_CLIPBOARD		= "/v2/clipboard/list.json";
 	
-	private static final int		API_VERSION				= 2;
+	public static final int			API_VERSION				= 2;
+	public static final String		VERSION = "0.1.0";
 	
 	private String username;
 	private String password;
+	private final String httpUserAgent = "PastyClient for Android/"+PastyClient.VERSION;
+	private DefaultedHttpParams defaultHttpParams;
 	
 
 	public PastyClient(String restServerBaseURL, Boolean tls) {
 		this.REST_SERVER_BASE_URL = restServerBaseURL;
 		this.REST_SERVER_TLS_ENABLE = tls;
+		initializeEnvironment();
 	}
 	
 	public PastyClient() {
@@ -54,8 +64,12 @@ public class PastyClient {
 		url = url+PastyClient.REST_SERVER_DEFAULT_BASE_HOST;
 		this.REST_SERVER_BASE_URL = url;
 		this.REST_SERVER_TLS_ENABLE = PastyClient.REST_SERVER_DEFAULT_TLS_ENABLED;
+		initializeEnvironment();
 	}
 	
+	private void initializeEnvironment() {
+		//this.defaultHttpParams.setParameter(CoreProtocolPNames.USER_AGENT, this.httpUserAgent);
+	}
 	
 	public void setUsername(String username) {
 		this.username = username;
@@ -75,7 +89,7 @@ public class PastyClient {
 		
 		try {
 			httpGet.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
-		    httpGet.setHeader("Content-type", "application/json");  
+		    httpGet.setHeader("Content-type", "application/json"); 
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpGet);
 		    StatusLine statusLine = response.getStatusLine();
@@ -104,17 +118,17 @@ public class PastyClient {
 			} else if(statusCode == 401) {
 				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
 			} else {
-				throw new PastyException("Bad HTTP return code");
+				throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			throw new PastyException("Protocolexception");
+			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new PastyException("Bad JSON received");
+			throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 		}
 	}
 	
@@ -131,7 +145,8 @@ public class PastyClient {
 		    params.put("item", Item);
 		    httpPost.setEntity(new ByteArrayEntity(
 		        params.toString().getBytes("UTF8")));
-		    httpPost.setHeader("Content-type", "application/json");  
+		    httpPost.setHeader("Content-type", "application/json");
+		    httpPost.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpPost);
 		    StatusLine statusLine = response.getStatusLine();
@@ -158,20 +173,20 @@ public class PastyClient {
 				response	= null;
 				statusLine	= null;
 				return ItemId;
-			} else if (statusCode == 401) {
-				throw new PastyException("Authorization failed");
+			} else if(statusCode == 401) {
+				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
 			} else {
-				throw new PastyException("Bad HTTP return code");
+				throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			throw new PastyException("Protocolexception");
+			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new PastyException("Bad JSON received");
+			throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 		}
 	}	
 	
@@ -183,7 +198,8 @@ public class PastyClient {
 		String basicAuthInfo	= username+":"+password; 
 		try {
 			httpDelete.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
-		    httpDelete.setHeader("Content-type", "application/json");  
+		    httpDelete.setHeader("Content-type", "application/json");
+		    httpDelete.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpDelete);
 		    StatusLine statusLine = response.getStatusLine();
@@ -193,16 +209,18 @@ public class PastyClient {
 				httpDelete	= null;
 				response	= null;
 				statusLine	= null;
+			} else if(statusCode == 401) {
+				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
 			} else {
-				throw new PastyException("Bad HTTP return code");
+				throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			throw new PastyException("Protocolexception");
+			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new PastyException(PastyException.ERROR_IO_EXCEPTION);
-		} 
+		}
 	}	
 	
 }
