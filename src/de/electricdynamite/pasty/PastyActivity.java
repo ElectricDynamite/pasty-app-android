@@ -70,9 +70,10 @@ public class PastyActivity extends SherlockActivity {
 		}
 		// Request features
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    	
-    	// Let's get preferences
+
+    	// Let's draw our layout
 	    setContentView(R.layout.main);
+	    
 	}
     
     public void onResume() {
@@ -90,7 +91,19 @@ public class PastyActivity extends SherlockActivity {
 	    	client.setUsername(prefs.getUsername());
 	    	client.setPassword(prefs.getPassword());
 			if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
-				refreshClipboard();
+		    	// check for the Intent extras
+				Log.d(PastyActivity.class.getName(),"Intent Action is "+getIntent().getAction()); 
+				Log.d(PastyActivity.class.getName(),"Intent.ACTION_SEND is "+Intent.ACTION_SEND); 
+				if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
+					Log.d(PastyActivity.class.getName(),"Intent.ACTION_SEND is active!!"); 
+			    	Bundle extras = getIntent().getExtras();
+			    	if (extras != null) {
+			    		String newItem = extras.getString(Intent.EXTRA_TEXT);
+			    		addItem(newItem);
+			    	}
+			    } else {
+			    	refreshClipboard();
+			    }
 			} else {
 				showDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
 			}

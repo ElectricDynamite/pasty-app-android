@@ -21,7 +21,8 @@
     <string name="NewItem_hint">Paste new item here</string>
     <string name="PastyButton_label">Send to cloud!</string>
     <string name="item_copied">Copied text to local clipboard</string>
-    <string name="item_added">Added text to Pasty clipboard</string>
+    <string name="item_adding">Adding your item to Pasty Clipboard&#8230;</string>
+    <string name="item_added">Added text to Pasty Clipboard</string>
     <string name="item_deleted">Item deleted from Pasty Clipboard</string>
     <string name="empty_item">Cannot add empty item</string>
     
@@ -86,5 +87,7 @@
     <string name="error_credentials_not_set">You need to provide the login data to your Pasty account</string>
     <string name="error_unknown_title">Unknown error occured!</string>
     <string name="error_unknown">Please try again later or check for an App update</string>
+    
+    <string name="error_adding">An error occured while adding your item</string>
 	
 </resources>
