@@ -147,7 +147,9 @@ public class PastyActivity extends SherlockActivity {
         	startActivity(settingsActivity);
             return true;
         case R.id.menu_about:
-        	showDialog(PastySharedStatics.DIALOG_ABOUT_ID);
+        	Intent aboutActivity = new Intent(getBaseContext(),
+        			PastyAboutActivity.class);
+        	startActivity(aboutActivity);
 	        return true;
         default:
                 return super.onOptionsItemSelected(item);

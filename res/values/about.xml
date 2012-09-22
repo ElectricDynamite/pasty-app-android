@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>	
     <string name="about_title">About Pasty</string>
-	<string name="about_text"><b><u>Pasty - the cloud clipboard\n</u></b>Copyright &#169; 2012 by Philipp Geschke\n\n<i>THIS SOFTWARE IS IN AN REALLY EARLY STAGE!</i>\n\nFor details see http://www.pastyapp.org/\n\nThank you for using Pasty, you\'re awesome!</string>
+	<string name="about_text">
+	    <b><u>Pasty Cloud Clipboard\n</u></b>
+	    Copyright &#169; 2012 by Philipp Geschke\n\n
+	    For details see http://www.pastyapp.org\n
+	    Visit https://pasty.cc for the webinterface!\n\n
+	    Thank you for using Pasty, you\'re awesome!\n\n
+	    <b><u>Terms of Service</u></b>\n\n
+	    You can find the Terms of Service online at http://pasty.cc/tos.\n\n
+	    <b><u>Privacy Policy</u></b>\n\n
+	    Our Privacy Policy is available at  http://electricdynamite.de/privacy.html.\n\n
+	</string>
 </resources>

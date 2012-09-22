@@ -26,7 +26,11 @@
         </activity>
         <activity
             android:name=".PastyPreferencesActivity"
-            android:label="@string/app_name" >
+            android:label="@string/settings" >
+        </activity>
+        <activity
+            android:name=".PastyAboutActivity"
+            android:label="@string/about" >
         </activity>
         <!--  <receiver android:enabled="true" android:name="PastyAddItemReveiver">
       		<intent-filter>
