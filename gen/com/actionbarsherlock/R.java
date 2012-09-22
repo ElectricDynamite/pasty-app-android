@@ -794,11 +794,14 @@ containing a value of this type.
         public static final int abs__tab_unselected_focused_holo=0x7f02005a;
         public static final int abs__tab_unselected_holo=0x7f02005b;
         public static final int abs__tab_unselected_pressed_holo=0x7f02005c;
-        public static final int ic_content_copy=0x7f02005d;
-        public static final int ic_launcher=0x7f02005e;
-        public static final int ic_menu_add=0x7f02005f;
-        public static final int ic_menu_info_details=0x7f020060;
-        public static final int ic_menu_preferences=0x7f020061;
+        public static final int ic_content_copy_holo_dark=0x7f02005d;
+        public static final int ic_content_copy_holo_ligh=0x7f02005e;
+        public static final int ic_content_copy_holo_light=0x7f02005f;
+        public static final int ic_launcher=0x7f020060;
+        public static final int ic_menu_add_holo_dark=0x7f020061;
+        public static final int ic_menu_add_holo_light=0x7f020062;
+        public static final int ic_menu_info_details=0x7f020063;
+        public static final int ic_menu_preferences=0x7f020064;
     }
     public static final class id {
         public static final int NewItem=0x7f05002c;

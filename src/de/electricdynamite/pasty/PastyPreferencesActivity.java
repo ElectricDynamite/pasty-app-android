@@ -15,8 +15,8 @@ import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
  
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
-		private static final String URL_ACCOUNT_CREATE	= "https://pastyapp.org/user/create/";
-		private static final String URL_TOS				= "https://pastyapp.org/tos/";
+		private static final String URL_ACCOUNT_CREATE	= "https://pasty.cc/user/create/";
+		private static final String URL_TOS				= "https://pasty.cc/tos/";
 		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html"; 
 			
 	    public static final String KEY_PREF_USERNAME = "pref_username";
