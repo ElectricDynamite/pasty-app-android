@@ -6,11 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
+
+import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
 
 import android.app.AlertDialog;
@@ -43,9 +45,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 
 @SuppressWarnings("deprecation")
-public class PastyActivity extends SherlockActivity {
+public class PastyActivity extends SherlockFragmentActivity implements LoaderCallbacks<PastyLoader.PastyResponse> {
   
     
     public String versionName;
@@ -55,7 +59,7 @@ public class PastyActivity extends SherlockActivity {
 	private ClipboardItemListAdapter ClipboardListAdapter;
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
-    
+    private static final int LOADER_FETCH_CLIPBOARD = 0x1;
 	
 	 /** Called when the activity is first created. */
     @Override
@@ -164,7 +168,119 @@ public class PastyActivity extends SherlockActivity {
     	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
     	mHelpTextSmall.setText("");
     	mHelpTextSmall = null;
-		getItemList();
+		// Initialize the Loader.
+    	Bundle b = new Bundle();
+	    getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
+	    b = null;
+	    // Let's look busy
+		setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
+		TextView mHelpTextBig			= (TextView) findViewById(R.id.tvHelpTextBig);
+		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+		mHelpTextBig.setText(R.string.helptext_PastyActivity_loading);
+		pbLoading.setVisibility(View.VISIBLE);
+		mHelpTextBig = null;
+		pbLoading = null;
+		//getItemList();
+	}
+	
+	@Override
+	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
+		return new PastyLoader(this, id);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<PastyLoader.PastyResponse> loader, PastyLoader.PastyResponse response) {
+	    if(response.hasException) {
+	    	// an error occured
+	    	PastyException mException = response.getException();
+	    	switch(mException.errorId) {
+	    		case PastyException.ERROR_AUTHORIZATION_FAILED:
+					showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+					return;
+				case PastyException.ERROR_IO_EXCEPTION:
+					showDialog(PastySharedStatics.DIALOG_CONNECTION_ERROR_ID);
+					return;
+				case PastyException.ERROR_ILLEGAL_RESPONSE:
+					showDialog(PastySharedStatics.DIALOG_BAD_ANSWER);
+					return;
+				case PastyException.ERROR_UNKNOWN:
+					showDialog(PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
+					setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+					ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+					pbLoading.setVisibility(View.GONE);
+					pbLoading = null;
+					TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+					mHelpTextBig.setText(R.string.helptext_PastyActivity_error_occured);
+					mHelpTextBig = null;
+					return;
+				default:
+					break;
+				}
+	    } else {
+	    	switch(response.getTaskId()) {
+	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
+	    		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
+	    		pbLoading.setVisibility(View.GONE);
+	    		pbLoading = null;
+	    		JSONArray Clipboard = response.getClipboard();
+	    		try {
+	    		    if(Clipboard.length() == 0) {
+	    		       //Clipboard is empty
+	    	        	TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+	    	        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
+	    	        	mHelpTextBig = null;
+	    	        	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
+	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
+	    	        	mHelpTextSmall = null;
+	    	        } else {
+	    				if(Clipboard.length() > 15) {
+	    					throw new Exception();
+	    				}
+	    				for (int i = 0; i < Clipboard.length(); i++) {
+	    					JSONObject Item = Clipboard.getJSONObject(i);
+	    					ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
+	    					this.ItemList.add(cbItem);
+	    				}
+	    			
+	    				TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
+	    				mHelpTextBig = null;
+	    			
+	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(this.ItemList, this);
+	    				//Assign adapter to ListView
+	    				ListView listView = (ListView) findViewById(R.id.listItems);
+	    				listView.setAdapter(adapter);
+	    				this.ClipboardListAdapter = adapter;
+	    					
+	    				listView.setOnItemClickListener(new OnItemClickListener() { 
+	    					@Override
+	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	    				    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
+	    						ClipboardManager sysClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+	    						Item.copyToClipboard(sysClipboard);
+	    				    	Context context = getApplicationContext();
+	    				    	CharSequence text = getString(R.string.item_copied);
+	    				    	int duration = Toast.LENGTH_LONG;
+	    				    	Toast toast = Toast.makeText(context, text, duration);
+	    				    	toast.show();
+	    				    	toast = null;
+	    				    	context = null;
+	    				    	sysClipboard = null;
+	    				    	text = null;
+	    					    	PastyActivity.this.finish();
+	    					}
+	    				});
+	    				registerForContextMenu(listView);
+	    		    }
+	    		} catch (Exception e) {
+	    			e.printStackTrace();
+	    		}
+	    		setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+	    		break;
+	    	default:
+	    		break;
+	    	}
+	    }
 	}
     
     protected AlertDialog onCreateDialog(int id) {
@@ -663,4 +779,10 @@ public class PastyActivity extends SherlockActivity {
       //text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
       return true;
     }
+
+	@Override
+	public void onLoaderReset(Loader<PastyResponse> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
