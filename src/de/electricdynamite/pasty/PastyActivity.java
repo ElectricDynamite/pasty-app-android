@@ -168,7 +168,7 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
     	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
     	mHelpTextSmall.setText("");
     	mHelpTextSmall = null;
-		// Initialize the Loader.
+		// Initialize the Loader. TODO: Loader should be in onCreate();
     	Bundle b = new Bundle();
 	    getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
 	    b = null;
@@ -217,7 +217,7 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
 					break;
 				}
 	    } else {
-	    	switch(response.getTaskId()) {
+	    	switch(loader.getId()) {
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
 	    		ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
 	    		pbLoading.setVisibility(View.GONE);
@@ -267,7 +267,7 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
 	    				    	context = null;
 	    				    	sysClipboard = null;
 	    				    	text = null;
-	    					    	PastyActivity.this.finish();
+	    					    PastyActivity.this.finish();
 	    					}
 	    				});
 	    				registerForContextMenu(listView);

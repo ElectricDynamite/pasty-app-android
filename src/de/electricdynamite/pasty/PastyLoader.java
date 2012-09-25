@@ -26,7 +26,6 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
     
     public static class PastyResponse {
-    	private int taskId = 0x0;        
         private JSONArray mClipboard;
         private PastyException mException;
 		public boolean hasException = false;
@@ -34,23 +33,17 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 		public PastyResponse() {
         }
         
-        public PastyResponse(int taskId, JSONArray clipboard) {
-        	this.taskId = taskId;
+        public PastyResponse(JSONArray clipboard) {
         	this.mClipboard = clipboard;
         }
         
-        public PastyResponse(int taskId, PastyException e) {
-        	this.taskId = taskId;
+        public PastyResponse(PastyException e) {
         	this.mException = e;
         	this.hasException  = true;
         }
         
         public JSONArray getClipboard() {
             return mClipboard;
-        }
-        
-        public int getTaskId() {
-        	return taskId;
         }
         
         public PastyException getException() {
@@ -93,14 +86,12 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             // At the very least we always need an action.
             if (taskId == 0x0) {
                 Log.e(TAG, "No taskId provided.");
-                return new PastyResponse(); // We send an empty response back. The LoaderCallbacks<RESTResponse>
-                                           // implementation will always need to check the RESTResponse
-                                           // and handle error cases like this.
+                return new PastyResponse(); 
             }
             switch(taskId) {
             case TASK_CLIPBOARD_FETCH:
             	JSONArray clipboard = client.getClipboard();
-            	return new PastyResponse(taskId, clipboard);
+            	return new PastyResponse(clipboard);
             case TASK_ITEM_ADD:
             	break;
             case TASK_ITEM_DELETE:
@@ -112,7 +103,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             return new PastyResponse();
         } 
         catch (PastyException e) {
-        	return new PastyResponse(taskId, e);
+        	return new PastyResponse(e);
         }
     }
     
