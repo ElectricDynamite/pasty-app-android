@@ -28,6 +28,7 @@ import android.util.Base64;
 import android.util.Log;
 
 public class PastyClient {
+	private static final String		TAG = PastyClient.class.toString();
 	private static final String		REST_SERVER_DEFAULT_BASE_HOST = "api.pastyapp.org";
 	private static final int		REST_SERVER_DEFAULT_PORT_HTTP = 80;
 	private static final int 		REST_SERVER_DEFAULT_PORT_HTTPS = 443;
@@ -81,7 +82,7 @@ public class PastyClient {
 	
 	public JSONArray getClipboard() throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_CLIPBOARD;
-		Log.d(PastyClient.class.toString(),"url is "+url);
+		Log.d(TAG,"REST URL is "+url);
 		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpGet httpGet			= new HttpGet(url);
@@ -91,7 +92,9 @@ public class PastyClient {
 			httpGet.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
 		    httpGet.setHeader("Content-type", "application/json"); 
 		    System.setProperty("http.keepAlive", "false");
+		    Log.d(TAG, "Starting REST CALL");
 		    HttpResponse response = client.execute(httpGet);
+		    Log.d(TAG, "REST CALL finished");
 		    StatusLine statusLine = response.getStatusLine();
 		    int statusCode = statusLine.getStatusCode();
 		    if (statusCode == 200) {
