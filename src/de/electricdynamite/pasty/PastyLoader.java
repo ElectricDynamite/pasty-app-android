@@ -70,6 +70,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
     public PastyLoader(Context context, int taskId, ClipboardItem item) {
         super(context);
+        Log.d(TAG, "Loader constructor called");
     	// Restore preferences
    	 	this.prefs = new PastyPreferencesProvider(context);
         // Create a PastyClient

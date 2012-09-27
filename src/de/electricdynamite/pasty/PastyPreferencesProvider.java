@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class PastyPreferencesProvider {
+	private static final String TAG = PastyPreferencesProvider.class.toString();
 	private SharedPreferences prefs;	
 	private String username;	
 	private String password;
@@ -16,6 +18,7 @@ public class PastyPreferencesProvider {
 	private Boolean pasteCurrClip;
 	
 	public PastyPreferencesProvider(Context context) {
+		Log.d(TAG, "Constructor called");
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		this.username = prefs.getString(PastySharedStatics.PREF_USER,"");
 		this.password = prefs.getString(PastySharedStatics.PREF_PASSWORD,"");
@@ -40,6 +43,7 @@ public class PastyPreferencesProvider {
 			}
 		}
 		this.pasteCurrClip = prefs.getBoolean(PastySharedStatics.PREF_PASTE_CLIPBOARD, true);
+		Log.d(TAG, "Username is "+this.username);
 	}
 	
 	String getUsername() {

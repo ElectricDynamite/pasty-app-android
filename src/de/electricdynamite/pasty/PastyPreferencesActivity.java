@@ -17,7 +17,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String URL_ACCOUNT_CREATE	= "https://pasty.cc/user/create/";
 		private static final String URL_TOS				= "https://pasty.cc/tos/";
-		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html"; 
+		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html";
 			
 	    public static final String KEY_PREF_USERNAME = "pref_username";
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
@@ -125,7 +125,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             super.onPause();
 
             // Unregister the listener whenever a key changes            
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);    
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         }
 
         

@@ -51,7 +51,7 @@ import android.support.v4.content.Loader;
 @SuppressWarnings("deprecation")
 public class PastyActivity extends SherlockFragmentActivity implements LoaderCallbacks<PastyLoader.PastyResponse> {
   
-    
+    private static final String TAG = PastyActivity.class.toString();
     public String versionName;
     public int versionCode;
     
@@ -59,7 +59,6 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
 	private ClipboardItemListAdapter ClipboardListAdapter;
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
-    private static final int LOADER_FETCH_CLIPBOARD = 0x1;
 	
 	 /** Called when the activity is first created. */
     @Override
@@ -82,6 +81,7 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
     
     public void onResume() {
     	super.onResume();
+    	Log.d(TAG, "Activity onResume()");
     	// Let's get preferences
 		reloadPreferences();
 		
@@ -96,10 +96,7 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
 	    	client.setPassword(prefs.getPassword());
 			if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
 		    	// check for the Intent extras
-				Log.d(PastyActivity.class.getName(),"Intent Action is "+getIntent().getAction()); 
-				Log.d(PastyActivity.class.getName(),"Intent.ACTION_SEND is "+Intent.ACTION_SEND); 
 				if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
-					Log.d(PastyActivity.class.getName(),"Intent.ACTION_SEND is active!!"); 
 			    	Bundle extras = getIntent().getExtras();
 			    	if (extras != null) {
 			    		String newItem = extras.getString(Intent.EXTRA_TEXT);
@@ -124,7 +121,8 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
     
     public void reloadPreferences() {
     	// Restore preferences
-    	 this.prefs = new PastyPreferencesProvider(getBaseContext());
+    	Log.d(TAG, "reloadPreferences() called");
+    	this.prefs = new PastyPreferencesProvider(getBaseContext());
     	
     }
     
@@ -161,6 +159,8 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
     }
     
 	private void refreshClipboard() {
+
+    	Log.d(TAG, "refreshClipboard() called");
 		if(PastyActivity.this.ClipboardListAdapter != null) {
 			PastyActivity.this.ClipboardListAdapter.removeAll();
 			PastyActivity.this.ClipboardListAdapter.notifyDataSetChanged();
