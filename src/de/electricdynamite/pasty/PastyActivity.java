@@ -168,10 +168,6 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
     	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
     	mHelpTextSmall.setText("");
     	mHelpTextSmall = null;
-		// Initialize the Loader. TODO: Loader should be in onCreate();
-    	Bundle b = new Bundle();
-	    getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
-	    b = null;
 	    // Let's look busy
 		setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		TextView mHelpTextBig			= (TextView) findViewById(R.id.tvHelpTextBig);
@@ -180,7 +176,12 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
 		pbLoading.setVisibility(View.VISIBLE);
 		mHelpTextBig = null;
 		pbLoading = null;
-		//getItemList();
+		
+
+		// Initialize the Loader.
+    	Bundle b = new Bundle();
+	    getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
+	    b = null;
 	}
 	
 	@Override

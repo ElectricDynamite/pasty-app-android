@@ -158,10 +158,14 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
         public boolean onOptionsItemSelected(MenuItem item) {
         	switch (item.getItemId()) {
     			case android.R.id.home:
-    				Intent intent = new Intent(this,
+    				/*
+    				 * We will not call Home using an intend, but instead will finish() this activity.
+    				 * Intent intent = new Intent(this,
             			PastyActivity.class);
     				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     				startActivity(intent);
+    				*/
+    				finish();
     				return true;
         		default:
         			return super.onOptionsItemSelected(item);

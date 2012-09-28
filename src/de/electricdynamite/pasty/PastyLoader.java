@@ -9,10 +9,8 @@ import android.util.Log;
 public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     private static final String TAG = PastyLoader.class.getName();
     
-    // We use this delta to determine if our cached data is
-    // old or not. The value we have here is 10 minutes;
-    @SuppressWarnings("unused")
-	private static final long STALE_DELTA = 600000;
+    // Delta to determine if our cached response is old
+	private static final long STALE_DELTA = 60000;
 
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
@@ -23,6 +21,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
     private int taskId = 0x0;
     private ClipboardItem item;
+    
     
     
     public static class PastyResponse {
@@ -51,10 +50,8 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         }
     }
     
-    @SuppressWarnings("unused")
-	private PastyResponse mPastyResponse;
+	private PastyResponse mCachePastyResponse;
     
-    @SuppressWarnings("unused")
 	private long mLastLoad;
         
     public PastyLoader(Context context, int taskId) {
@@ -83,6 +80,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 
 	@Override
     public PastyResponse loadInBackground() {
+		Log.d(TAG, "loadInBackground() called");
         try {
             // At the very least we always need an action.
             if (taskId == 0x0) {
@@ -110,12 +108,21 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
 	@Override
     public void deliverResult(PastyResponse response) {
+		// Store our PastyResponse as cached result
+		mCachePastyResponse = response;
         super.deliverResult(response);
     }
     
     @Override
     protected void onStartLoading() {
-    	forceLoad();
+    	if (mCachePastyResponse != null) {
+    		// Instantly return a cached version
+    		super.deliverResult(mCachePastyResponse);
+    	}
+    
+    	// If we have not response or only an old response we will forceLoad();
+    	if (mCachePastyResponse == null || System.currentTimeMillis() - mLastLoad >= STALE_DELTA) forceLoad();
+    	mLastLoad = System.currentTimeMillis();
     }
     
     @Override
@@ -131,6 +138,9 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         
         // Stop the Loader if it is currently running.
         onStopLoading();
+        
+        // Reset cache
+        mCachePastyResponse = null;
                 
         // Reset our stale timer.
         mLastLoad = 0;
