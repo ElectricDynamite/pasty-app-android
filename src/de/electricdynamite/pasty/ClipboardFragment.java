@@ -7,7 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.ClipboardManager;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -31,7 +35,92 @@ import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
 public class ClipboardFragment extends SherlockListFragment implements LoaderCallbacks<PastyLoader.PastyResponse> {
 	private static final String TAG = ClipboardFragment.class.toString();
-	
+	private LayoutInflater mInflater;
+	private Resources mRes;
+	private ClipboardItemListAdapter mAdapter;
+	private ArrayList<ClipboardItem> mItems;
+	private Button mBtnReload;
+
+	private boolean mFirstRun = true;
+	private final Handler mHandler = new Handler();
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		// this is really important in order to save the state across screen
+		// configuration changes for example
+		setRetainInstance(true);
+
+		// LoaderManager.enableDebugLogging(true);
+
+		mRes = getResources();
+		mInflater = LayoutInflater.from(getActivity());
+
+		mBtnReload = (Button) getActivity().findViewById(R.id.btn);
+		mBtnReload.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// first time
+				if (mFirstRun) {
+
+					mFirstRun = false;
+					mBtnReload.setText("RELOAD");
+
+					startLoading();
+				}
+				// already started once
+				else {
+					restartLoading();
+				}
+			}
+		});
+
+		// you only need to instantiate these the first time your fragment is
+		// created; then, the method above will do the rest
+		if (mAdapter == null) {
+			mItems = new ArrayList<ClipboardItem>();
+			mAdapter = new ClipboardItemListAdapter(getActivity(), mItems);
+		}
+		getListView().setAdapter(mAdapter);
+
+		// ---- magic lines starting here -----
+		// call this to re-connect with an existing
+		// loader (after screen configuration changes for e.g!)
+		LoaderManager lm = getLoaderManager();
+		if (lm.getLoader(0) != null) {
+			lm.initLoader(0, null, this);
+		}
+		// ----- end magic lines -----
+
+		if (!mFirstRun) {
+			mBtnReload.setText("RELOAD");
+		}
+	}
+
+	protected void startLoading() {
+		Log.d(TAG,"startLoading()");
+		//showDialog();
+
+		// first time we call this loader, so we need to create a new one
+		getLoaderManager().initLoader(0, null, this);
+	}
+
+	protected void restartLoading() {
+		//showDialog();
+
+		mItems.clear();
+		mAdapter.notifyDataSetChanged();
+		getListView().invalidateViews();
+
+		// --------- the other magic lines ----------
+		// call restart because we want the background work to be executed
+		// again
+		Log.d(TAG, "restartLoading(): re-starting loader");
+		getLoaderManager().restartLoader(0, null, this);
+		// --------- end the other magic lines --------
+	}
+
 
 	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
 	private ClipboardItemListAdapter ClipboardListAdapter;
@@ -102,7 +191,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
 	    				mHelpTextBig = null;*/
 	    			
-	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(this.ItemList, getActivity());
+	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(getActivity(), this.ItemList);
 	    				//Assign adapter to ListView
 	    				/*ListView listView = (ListView) findViewById(R.id.listItems);
 	    				listView.setAdapter(adapter);*/
@@ -145,13 +234,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		
 	}
 	
-	 public class ClipboardItemListAdapter extends BaseAdapter {
-    	 
+	public class ClipboardItemListAdapter extends BaseAdapter {
+			// List of stored ClipboardItems
 	        private List<ClipboardItem> itemList;
-	     
 	        private Context context;
 	     
-	        public ClipboardItemListAdapter(List<ClipboardItem> itemList, Context context) {
+	        public ClipboardItemListAdapter(Context context, List<ClipboardItem> itemList) {
 	            this.itemList = itemList;
 	            this.context = context;
 	        }
@@ -182,6 +270,18 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 			@Override
 	        public View getView(int position, View convertView, ViewGroup parent) {
+				
+				View view = convertView;
+				Wrapper wrapper;
+
+				if (view == null) {
+					view = mInflater.inflate(R.layout.listitem, null);
+					wrapper = new Wrapper(view);
+					view.setTag(wrapper);
+				} else {
+					wrapper = (Wrapper) view.getTag();
+				}
+				
 	            LinearLayout itemLayout;
 	            ClipboardItem Item = itemList.get(position);
 	     
@@ -195,4 +295,47 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            return itemLayout;
 	        }
 	    }
+	
+		// use an wrapper (or view holder) object to limit calling the
+		// findViewById() method, which parses the entire structure of your
+		// XML in search for the ID of your view
+		private static class Wrapper {
+			private final View mRoot;
+			private TextView tvHelpTextBig;
+			private TextView tvHelpTextSmall;
+			private ProgressBar pbLoading;
+			
+			public static final int VIEW_HELPTEXT_BIG = 0x1;
+			public static final int VIEW_HELPTEXT_SMALL = 0x2;
+			public static final int VIEW_PROGRESS_LOADING = 0x3;
+
+			public Wrapper(View root) {
+				mRoot = root;
+			}
+
+			public TextView getTextView(int tv) {
+				switch (tv) {
+				case VIEW_HELPTEXT_BIG:
+					if (tvHelpTextBig == null) {
+						tvHelpTextBig = (TextView) mRoot.findViewById(R.id.tvHelpTextBig);
+					}
+					return tvHelpTextBig;
+				case VIEW_HELPTEXT_SMALL:
+					if (tvHelpTextSmall == null) {
+						tvHelpTextSmall = (TextView) mRoot.findViewById(R.id.tvHelpTextSmall);
+					}
+					return tvHelpTextBig;
+				default:
+					return null;
+				}
+			}
+
+			public View getBar() {
+				if (pbLoading == null) {
+					pbLoading = (ProgressBar) mRoot.findViewById(R.id.progressbar_downloading);
+				}
+				return pbLoading;
+			}
+		}
+	
 }
