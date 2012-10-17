@@ -27,6 +27,11 @@
 			android:layout_below="@+id/tvHelpTextSmall"
 			android:layout_centerHorizontal="true"
 			android:layout_marginTop="40dp" />
+		<FrameLayout 
+		    android:id="@+id/fragment_placeholder"
+		    android:layout_width="fill_parent"
+		    android:layout_height="0dp"
+		    android:layout_weight="1" />
 		<ListView
        		android:id="@+id/listItems"
 			android:layout_below="@+id/tvHelpTextSmall"

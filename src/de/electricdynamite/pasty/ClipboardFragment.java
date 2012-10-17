@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.support.v4.content.Loader;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -95,6 +96,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 		if (!mFirstRun) {
 			mBtnReload.setText("RELOAD");
+		} else {
+			startLoading();
 		}
 	}
 
@@ -102,8 +105,11 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		Log.d(TAG,"startLoading()");
 		//showDialog();
 
+		Bundle b = new Bundle();
+		
 		// first time we call this loader, so we need to create a new one
-		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
+		b = null;
 	}
 
 	protected void restartLoading() {
@@ -117,7 +123,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// call restart because we want the background work to be executed
 		// again
 		Log.d(TAG, "restartLoading(): re-starting loader");
-		getLoaderManager().restartLoader(0, null, this);
+		Bundle b = new Bundle();
+		getLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
+		b = null;
 		// --------- end the other magic lines --------
 	}
 
@@ -133,6 +141,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	@Override
 	public void onLoadFinished(Loader<PastyLoader.PastyResponse> loader, PastyLoader.PastyResponse response) {
 	    if(response.hasException) {
+	    	Log.d(TAG, "Loader delivered result");
 	    	// an error occured
 	    	PastyException mException = response.getException();
 	    	switch(mException.errorId) {
@@ -164,6 +173,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    } else {
 	    	switch(loader.getId()) {
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
+	    		Log.d(TAG, "Loader delivered TASK_CLIPBOARD_FETCH without exception");
 	    		/*ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
 	    		pbLoading.setVisibility(View.GONE);
 	    		pbLoading = null;*/
@@ -193,8 +203,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    			
 	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(getActivity(), this.ItemList);
 	    				//Assign adapter to ListView
-	    				/*ListView listView = (ListView) findViewById(R.id.listItems);
-	    				listView.setAdapter(adapter);*/
+	    				ListView listView = (ListView) getActivity().findViewById(R.id.listItems);
+	    				listView.setAdapter(adapter);
 	    				this.ClipboardListAdapter = adapter;
 	    					
 	    				/*listView.setOnItemClickListener(new OnItemClickListener() { 
@@ -275,24 +285,24 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				Wrapper wrapper;
 
 				if (view == null) {
-					view = mInflater.inflate(R.layout.listitem, null);
+					view = mInflater.inflate(R.layout.listitem, parent, false);
 					wrapper = new Wrapper(view);
 					view.setTag(wrapper);
 				} else {
 					wrapper = (Wrapper) view.getTag();
 				}
 				
-	            LinearLayout itemLayout;
+	            //LinearLayout itemLayout;
 	            ClipboardItem Item = itemList.get(position);
 	     
-	            itemLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.listitem, parent, false);
+	            //itemLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.listitem, parent, false);
 	     
-	            TextView tvListItem = (TextView) itemLayout.findViewById(R.id.myListitem);
+	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
 	            Linkify.addLinks(tvListItem, Linkify.ALL);
 	     
 	     
-	            return itemLayout;
+	            return view;
 	        }
 	    }
 	

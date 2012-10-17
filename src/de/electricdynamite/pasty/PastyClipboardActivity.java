@@ -13,7 +13,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.listItems, new ClipboardFragment())
+					.replace(R.id.fragment_placeholder, new ClipboardFragment())
 					.commit();
 		}
     }
