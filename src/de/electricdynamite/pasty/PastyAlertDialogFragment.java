@@ -3,17 +3,7 @@ package de.electricdynamite.pasty;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.ClipboardManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
@@ -30,7 +20,7 @@ public class PastyAlertDialogFragment extends SherlockDialogFragment {
 		this.id = id;
     }
 	
-	public Dialog onCreateDialog(int id) {
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
     	AlertDialog.Builder	mBuilder = null;
 		AlertDialog mDialog = null;
 		final PastyAlertDialogListener activity = (PastyAlertDialogListener) getSherlockActivity();
