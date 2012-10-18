@@ -42,6 +42,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	private ArrayList<ClipboardItem> mItems;
 	private Button mBtnReload;
 
+	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
+	private ClipboardItemListAdapter ClipboardListAdapter;
+
 	private boolean mFirstRun = true;
 	private final Handler mHandler = new Handler();
 
@@ -55,9 +58,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// LoaderManager.enableDebugLogging(true);
 
 		mRes = getResources();
-		mInflater = LayoutInflater.from(getActivity());
+		mInflater = LayoutInflater.from(getSherlockActivity());
 
-		mBtnReload = (Button) getActivity().findViewById(R.id.btn);
+		mBtnReload = (Button) getSherlockActivity().findViewById(R.id.btn);
 		mBtnReload.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -81,16 +84,16 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// created; then, the method above will do the rest
 		if (mAdapter == null) {
 			mItems = new ArrayList<ClipboardItem>();
-			mAdapter = new ClipboardItemListAdapter(getActivity(), mItems);
+			mAdapter = new ClipboardItemListAdapter(getSherlockActivity(), mItems);
 		}
 		getListView().setAdapter(mAdapter);
 
 		// ---- magic lines starting here -----
 		// call this to re-connect with an existing
 		// loader (after screen configuration changes for e.g!)
-		LoaderManager lm = getLoaderManager();
-		if (lm.getLoader(0) != null) {
-			lm.initLoader(0, null, this);
+		LoaderManager lm = getSherlockActivity().getSupportLoaderManager();
+		if (lm.getLoader(PastyLoader.TASK_CLIPBOARD_FETCH) != null) {
+			lm.initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, null, this);
 		}
 		// ----- end magic lines -----
 
@@ -110,6 +113,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// first time we call this loader, so we need to create a new one
 		getLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
 		b = null;
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 	}
 
 	protected void restartLoading() {
@@ -129,19 +133,20 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// --------- end the other magic lines --------
 	}
 
-
-	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
-	private ClipboardItemListAdapter ClipboardListAdapter;
 	
 	@Override
 	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
-		return new PastyLoader(getActivity(), id);
+		return new PastyLoader(getSherlockActivity(), id);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<PastyLoader.PastyResponse> loader, PastyLoader.PastyResponse response) {
+		ProgressBar pbLoading			= (ProgressBar) getSherlockActivity().findViewById(R.id.progressbar_downloading);
+		pbLoading.setVisibility(View.GONE);
+		pbLoading = null;
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
 	    if(response.hasException) {
-	    	Log.d(TAG, "Loader delivered result");
+	    	Log.d(TAG, "Loader delivered exception");
 	    	// an error occured
 	    	PastyException mException = response.getException();
 	    	switch(mException.errorId) {
@@ -174,9 +179,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	switch(loader.getId()) {
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
 	    		Log.d(TAG, "Loader delivered TASK_CLIPBOARD_FETCH without exception");
-	    		/*ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
-	    		pbLoading.setVisibility(View.GONE);
-	    		pbLoading = null;*/
 	    		JSONArray Clipboard = response.getClipboard();
 	    		try {
 	    		    if(Clipboard.length() == 0) {
@@ -201,9 +203,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
 	    				mHelpTextBig = null;*/
 	    			
-	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(getActivity(), this.ItemList);
+	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(getSherlockActivity(), this.ItemList);
 	    				//Assign adapter to ListView
-	    				ListView listView = (ListView) getActivity().findViewById(R.id.listItems);
+	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
 	    				listView.setAdapter(adapter);
 	    				this.ClipboardListAdapter = adapter;
 	    					
@@ -230,7 +232,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    		} catch (Exception e) {
 	    			e.printStackTrace();
 	    		}
-	    		// setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); TODO
 	    		break;
 	    	default:
 	    		break;
