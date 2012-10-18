@@ -31,6 +31,11 @@ public class PastySharedStatics {
     static final String DEFAULT_REST_URI_HTTP	= "http://mario.blafaselblub.net:8080/";
     static final String DEFAULT_REST_URI_HTTPS	= "https://mario.blafaselblub.net:4444/";
     
+    // Dialog Signal
+    static final int SIGNAL_EXIT = 0x1;
+    static final int SIGNAL_ACTIVITY_SETTINGS = 0xA1;
+    static final int SIGNAL_ACTIVITY_ABOUT = 0xA2;
+    
     // Unused? 
     /*static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
     static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";*/

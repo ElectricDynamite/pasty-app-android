@@ -32,6 +32,8 @@
     
     <string name="settings">Einstellungen</string>
 	<string name="about">Über Pasty</string>
+	<string name="add">Hinzufügen</string>
+	<string name="reload">Aktualisieren</string>
 	<string name="login">Login</string>
 	<string name="behaviour">Verhalten</string>
 	<string name="network">Netzwerk</string>

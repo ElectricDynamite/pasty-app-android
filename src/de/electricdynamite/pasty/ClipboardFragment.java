@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,21 +17,20 @@ import android.support.v4.content.Loader;
 import android.text.ClipboardManager;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import android.support.v4.content.Loader;
-
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
 
 import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
@@ -40,10 +40,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	private Resources mRes;
 	private ClipboardItemListAdapter mAdapter;
 	private ArrayList<ClipboardItem> mItems;
-	private Button mBtnReload;
-
-	private List<ClipboardItem> ItemList = new ArrayList<ClipboardItem>();
-	private ClipboardItemListAdapter ClipboardListAdapter;
 
 	private boolean mFirstRun = true;
 	private final Handler mHandler = new Handler();
@@ -60,25 +56,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
 
-		mBtnReload = (Button) getSherlockActivity().findViewById(R.id.btn);
-		mBtnReload.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// first time
-				if (mFirstRun) {
-
-					mFirstRun = false;
-					mBtnReload.setText("RELOAD");
-
-					startLoading();
-				}
-				// already started once
-				else {
-					restartLoading();
-				}
-			}
-		});
 
 		// you only need to instantiate these the first time your fragment is
 		// created; then, the method above will do the rest
@@ -93,13 +70,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// loader (after screen configuration changes for e.g!)
 		LoaderManager lm = getSherlockActivity().getSupportLoaderManager();
 		if (lm.getLoader(PastyLoader.TASK_CLIPBOARD_FETCH) != null) {
+			Log.d(TAG, "onActivityCreated(): Loader already exists, reconnecting");
 			lm.initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, null, this);
 		}
 		// ----- end magic lines -----
 
-		if (!mFirstRun) {
-			mBtnReload.setText("RELOAD");
-		} else {
+		if(mFirstRun) {
 			startLoading();
 		}
 	}
@@ -107,7 +83,13 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	protected void startLoading() {
 		Log.d(TAG,"startLoading()");
 		//showDialog();
-
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
+		TextView mHelpTextBig			= (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
+		ProgressBar pbLoading			= (ProgressBar) getSherlockActivity().findViewById(R.id.progressbar_downloading);
+		mHelpTextBig.setText(R.string.helptext_PastyActivity_loading);
+		pbLoading.setVisibility(View.VISIBLE);
+		mHelpTextBig = null;
+		pbLoading = null;
 		Bundle b = new Bundle();
 		
 		// first time we call this loader, so we need to create a new one
@@ -115,14 +97,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		b = null;
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 	}
-
+	
 	protected void restartLoading() {
 		//showDialog();
 
-		mItems.clear();
-		mAdapter.notifyDataSetChanged();
-		getListView().invalidateViews();
 
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		// --------- the other magic lines ----------
 		// call restart because we want the background work to be executed
 		// again
@@ -180,15 +160,18 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
 	    		Log.d(TAG, "Loader delivered TASK_CLIPBOARD_FETCH without exception");
 	    		JSONArray Clipboard = response.getClipboard();
+	    		mItems.clear();
+	    		mAdapter.notifyDataSetChanged();
+	    		getListView().invalidateViews();
 	    		try {
 	    		    if(Clipboard.length() == 0) {
 	    		       //Clipboard is empty
-	    	        	/*TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+	    	        	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    	        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
 	    	        	mHelpTextBig = null;
-	    	        	TextView mHelpTextSmall = (TextView) findViewById(R.id.tvHelpTextSmall);
+	    	        	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
-	    	        	mHelpTextSmall = null;*/
+	    	        	mHelpTextSmall = null;
 	    	        } else {
 	    				if(Clipboard.length() > 15) {
 	    					throw new Exception();
@@ -196,26 +179,25 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				for (int i = 0; i < Clipboard.length(); i++) {
 	    					JSONObject Item = Clipboard.getJSONObject(i);
 	    					ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
-	    					this.ItemList.add(cbItem);
+	    					this.mItems.add(cbItem);
 	    				}
 	    			
-	    				/*TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
+	    				TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
-	    				mHelpTextBig = null;*/
+	    				mHelpTextBig = null;
 	    			
-	    				ClipboardItemListAdapter adapter = new ClipboardItemListAdapter(getSherlockActivity(), this.ItemList);
 	    				//Assign adapter to ListView
 	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
-	    				listView.setAdapter(adapter);
-	    				this.ClipboardListAdapter = adapter;
-	    					
-	    				/*listView.setOnItemClickListener(new OnItemClickListener() { 
+	    				listView.setAdapter(mAdapter);
+	    				listView.setOnItemClickListener(new OnItemClickListener() { 
 	    					@Override
 	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	    				    	ClipboardItem Item = PastyActivity.this.ItemList.get(position);
-	    						ClipboardManager sysClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+	    	    				Log.d(TAG, "listView.onItemClick() called");
+	    				    	ClipboardItem Item = mItems.get(position);
+	    						ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 	    						Item.copyToClipboard(sysClipboard);
-	    				    	Context context = getApplicationContext();
+	    				    	Context context = getSherlockActivity().getApplicationContext();
 	    				    	CharSequence text = getString(R.string.item_copied);
 	    				    	int duration = Toast.LENGTH_LONG;
 	    				    	Toast toast = Toast.makeText(context, text, duration);
@@ -224,10 +206,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				    	context = null;
 	    				    	sysClipboard = null;
 	    				    	text = null;
-	    					    PastyActivity.this.finish();
+	    					    getSherlockActivity().finish();
 	    					}
 	    				});
-	    				registerForContextMenu(listView);*/
+	    				registerForContextMenu(listView);
 	    		    }
 	    		} catch (Exception e) {
 	    			e.printStackTrace();
@@ -348,5 +330,52 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				return pbLoading;
 			}
 		}
-	
+		
+		@Override
+	    public void onCreateContextMenu(ContextMenu menu, View v,
+	        ContextMenuInfo menuInfo) {
+	      if (v.getId()==R.id.listItems) {
+	        menu.setHeaderTitle(getString(R.string.itemContextMenuTitle));
+	        String[] menuItems = getResources().getStringArray(R.array.itemContextMenu);
+	        for (int i = 0; i<menuItems.length; i++) {
+	          menu.add(Menu.NONE, i, i, menuItems[i]);
+	        }
+	      }      
+	    }
+	    
+	    public boolean onContextItemSelected(android.view.MenuItem item) {
+	      AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+	      int menuItemIndex = item.getItemId();
+	      ClipboardItem Item = mItems.get(info.position);
+	      switch (menuItemIndex) {
+	      	case PastySharedStatics.ITEM_CONTEXTMENU_COPY_ID:
+	      		// Copy without exit selected
+	      		ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+				Item.copyToClipboard(clipboard);
+		    	Context context = getSherlockActivity().getApplicationContext();
+		    	CharSequence text = getString(R.string.item_copied);
+		    	int duration = Toast.LENGTH_LONG;
+		    	Toast toast = Toast.makeText(context, text, duration);
+		    	toast.show();
+		    	toast = null;
+		    	context = null;
+		    	clipboard = null;
+		    	text = null;
+	      		break;
+	      	case PastySharedStatics.ITEM_CONTEXTMENU_SHARE_ID:
+	      		// Share to another app
+	      		Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+	      		shareIntent.setType("text/plain");
+	      		shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, Item.getText());
+	      		startActivity(Intent.createChooser(shareIntent, getString(R.string.app_share_from_pasty)));
+	      		break;
+	      	case PastySharedStatics.ITEM_CONTEXTMENU_DELETE_ID:
+	      		// Delete selected
+	      		//this.deleteItem(Item, info.position);
+	      		break;
+	      }
+	      //TextView text = (TextView)findViewById(R.id.footer);
+	      //text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
+	      return true;
+	    }
 }
