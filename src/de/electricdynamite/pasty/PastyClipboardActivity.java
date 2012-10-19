@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import de.electricdynamite.pasty.ClipboardFragment.PastyClipboardFragmentListener;
 import de.electricdynamite.pasty.PastyAlertDialogFragment.PastyAlertDialogListener;
 
 import android.content.Context;
@@ -17,7 +18,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
-public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener {
+public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener {
 	
 
     private static final String TAG = PastyActivity.class.toString();
@@ -131,11 +132,33 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 
 	@Override
 	public void onFinishPastyAlertDialog(int signal) {
+		actOnSignal(signal);
+	}
+
+	private void actOnSignal(int signal) {
+
 		switch(signal) {
 			case PastySharedStatics.SIGNAL_EXIT:
 				this.finish();
 				break;
+			case PastySharedStatics.SIGNAL_ACTIVITY_SETTINGS:
+				Intent settingsActivity = new Intent(getBaseContext(),
+	                    PastyPreferencesActivity.class);
+	        	settingsActivity.putExtra("versionName", versionName);
+	        	settingsActivity.putExtra("versionCode", versionCode);
+	        	startActivity(settingsActivity);
+				break;
+			case PastySharedStatics.SIGNAL_ACTIVITY_ABOUT:
+	        	Intent aboutActivity = new Intent(getBaseContext(),
+	        			PastyAboutActivity.class);
+	        	startActivity(aboutActivity);
+				break;
 		}
+	}
+
+	@Override
+	public void onPastyClipboardFragmentSignal(int signal) {
+		actOnSignal(signal);		
 	}
     
 }

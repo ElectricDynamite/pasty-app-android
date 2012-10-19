@@ -44,6 +44,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	private boolean mFirstRun = true;
 	private final Handler mHandler = new Handler();
 
+	public interface PastyClipboardFragmentListener {
+        void onPastyClipboardFragmentSignal(int signal);
+    }
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -131,7 +135,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	PastyException mException = response.getException();
 	    	switch(mException.errorId) {
 	    		case PastyException.ERROR_AUTHORIZATION_FAILED:
-					//showDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+					//getSherlockActivity().showAlertDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
 	    			Log.d(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
 					return;
 				case PastyException.ERROR_IO_EXCEPTION:
