@@ -66,7 +66,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 	    				//mClipboardFragment = (ClipboardFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentBId);
 	    			}
 	    		} else {
-	    			showDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
+	    			showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
 	    		}
 	    	} else {
 	    		showAlertDialog(PastySharedStatics.DIALOG_NO_NETWORK);

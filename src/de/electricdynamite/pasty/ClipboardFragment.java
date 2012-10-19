@@ -112,6 +112,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// again
 		Log.d(TAG, "restartLoading(): re-starting loader");
 		Bundle b = new Bundle();
+		// TODO Make sure this does not get called before startLoading was called, or NULL PE
 		getLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
 		b = null;
 		// --------- end the other magic lines --------
