@@ -160,5 +160,15 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 	public void onPastyClipboardFragmentSignal(int signal) {
 		actOnSignal(signal);		
 	}
+	
+	@Override
+	public void onPastyClipboardFragmentSignal(int signal, int dialogId) {
+		Log.d(TAG, "onPastyClipboardFragmentSignal(): Called to open dialog #"+dialogId);
+		if(signal != PastySharedStatics.SIGNAL_DIALOG) {
+			actOnSignal(signal);
+		} else {
+			showAlertDialog(dialogId);
+		}
+	}
     
 }

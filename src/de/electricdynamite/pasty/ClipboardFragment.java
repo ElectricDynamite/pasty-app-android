@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -32,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 
+import de.electricdynamite.pasty.PastyAlertDialogFragment.PastyAlertDialogListener;
 import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
 public class ClipboardFragment extends SherlockListFragment implements LoaderCallbacks<PastyLoader.PastyResponse> {
@@ -43,9 +45,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 	private boolean mFirstRun = true;
 	private final Handler mHandler = new Handler();
+	
+	private PastyClipboardFragmentListener activity;
 
 	public interface PastyClipboardFragmentListener {
         void onPastyClipboardFragmentSignal(int signal);
+        void onPastyClipboardFragmentSignal(int signal, int dialogId);
     }
 	
 	@Override
@@ -59,6 +64,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 		mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
+		activity = (PastyClipboardFragmentListener) getSherlockActivity();
 
 
 		// you only need to instantiate these the first time your fragment is
@@ -131,35 +137,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		pbLoading = null;
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
 	    if(response.hasException) {
-	    	Log.d(TAG, "Loader delivered exception");
+	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
 	    	// an error occured
 	    	PastyException mException = response.getException();
-	    	switch(mException.errorId) {
-	    		case PastyException.ERROR_AUTHORIZATION_FAILED:
-					//getSherlockActivity().showAlertDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
-	    			Log.d(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
-					return;
-				case PastyException.ERROR_IO_EXCEPTION:
-					//showDialog(PastySharedStatics.DIALOG_CONNECTION_ERROR_ID);
-	    			Log.d(TAG, "ERROR_IO_EXCEPTION");
-					return;
-				case PastyException.ERROR_ILLEGAL_RESPONSE:
-					//showDialog(PastySharedStatics.DIALOG_BAD_ANSWER);
-	    			Log.d(TAG, "ERROR_ILLEGAL_RESPONSE EXCEPTION");
-					return;
-				case PastyException.ERROR_UNKNOWN:
-					//showDialog(PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
-					//setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); TODO Manipulate Activity 
-					//ProgressBar pbLoading			= (ProgressBar) findViewById(R.id.progressbar_downloading);
-					//pbLoading.setVisibility(View.GONE);
-					//pbLoading = null;
-					//TextView mHelpTextBig = (TextView) findViewById(R.id.tvHelpTextBig);
-					//mHelpTextBig.setText(R.string.helptext_PastyActivity_error_occured);
-					//mHelpTextBig = null;
-					return;
-				default:
-					break;
-				}
+	    	handleException(mException);
 	    } else {
 	    	switch(loader.getId()) {
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
@@ -382,5 +363,34 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      //TextView text = (TextView)findViewById(R.id.footer);
 	      //text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
 	      return true;
+	    }
+	    
+	    protected void handleException(PastyException mException) {
+	    	switch(mException.errorId) {
+    		case PastyException.ERROR_AUTHORIZATION_FAILED:
+				//activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+    			Log.d(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
+    			//showAlertDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+				return;
+			case PastyException.ERROR_IO_EXCEPTION:
+    			Log.d(TAG, "ERROR_IO_EXCEPTION");
+				activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_CONNECTION_ERROR_ID);
+			case PastyException.ERROR_ILLEGAL_RESPONSE:
+				Log.d(TAG, "ERROR_ILLEGAL_RESPONSE EXCEPTION");
+				activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_BAD_ANSWER);
+				return;
+			case PastyException.ERROR_UNKNOWN:
+				activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
+				return;
+			default:
+				break;
+			}
+	    }
+	    
+	    
+	    protected void showAlertDialog(int id) {
+	        FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
+	        PastyAlertDialogFragment AlertDialog = new PastyAlertDialogFragment(id);
+	        AlertDialog.show(fm, "fragment_alert_name");
 	    }
 }
