@@ -60,7 +60,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// configuration changes for example
 		setRetainInstance(true);
 
-		// LoaderManager.enableDebugLogging(true);
+		 LoaderManager.enableDebugLogging(true);
 
 		mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
@@ -78,15 +78,19 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// ---- magic lines starting here -----
 		// call this to re-connect with an existing
 		// loader (after screen configuration changes for e.g!)
-		LoaderManager lm = getSherlockActivity().getSupportLoaderManager();
+		LoaderManager lm = getLoaderManager();
 		if (lm.getLoader(PastyLoader.TASK_CLIPBOARD_FETCH) != null) {
 			Log.d(TAG, "onActivityCreated(): Loader already exists, reconnecting");
 			lm.initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, null, this);
+		} else { 
+			Log.d(TAG, "onActivityCreated(): No PastyLoader found");
+			startLoading();
 		}
 		// ----- end magic lines -----
 
 		if(mFirstRun) {
 			startLoading();
+			mFirstRun = false;
 		}
 	}
 
@@ -127,6 +131,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	
 	@Override
 	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
+		Log.d(TAG, "onCreateLoader(): New PastyLoader created");
 		return new PastyLoader(getSherlockActivity(), id);
 	}
 
@@ -135,6 +140,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		ProgressBar pbLoading			= (ProgressBar) getSherlockActivity().findViewById(R.id.progressbar_downloading);
 		pbLoading.setVisibility(View.GONE);
 		pbLoading = null;
+
+    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
+    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
+		mHelpTextBig.setTextColor(getResources().getColor(R.color.abs__primary_text_holo_light));
+		mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.abs__background_holo_light));
+		
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
 	    if(response.hasException) {
 	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
@@ -152,10 +163,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    		try {
 	    		    if(Clipboard.length() == 0) {
 	    		       //Clipboard is empty
-	    	        	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    	        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
 	    	        	mHelpTextBig = null;
-	    	        	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
 	    	        	mHelpTextSmall = null;
 	    	        } else {
@@ -168,9 +177,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    					this.mItems.add(cbItem);
 	    				}
 	    			
-	    				TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
+	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_options);
 	    				mHelpTextBig = null;
+	    	        	mHelpTextSmall = null;
 	    			
 	    				//Assign adapter to ListView
 	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
@@ -210,6 +220,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	@Override
 	public void onLoaderReset(Loader<PastyResponse> arg0) {
 		// TODO Auto-generated method stub
+		Log.d(TAG, "onLoaderReset() called");
 		
 	}
 	
@@ -268,7 +279,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	     
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
-	            Linkify.addLinks(tvListItem, Linkify.ALL);
+	            //Linkify.addLinks(tvListItem, Linkify.ALL); TODO Find way to linkify without f*cking up the context menu
 	     
 	     
 	            return view;
@@ -320,7 +331,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		@Override
 	    public void onCreateContextMenu(ContextMenu menu, View v,
 	        ContextMenuInfo menuInfo) {
-	      if (v.getId()==R.id.listItems) {
+	      if (v.getId()==R.id.listItems || v.getId() == R.id.myListimage) {
 	        menu.setHeaderTitle(getString(R.string.itemContextMenuTitle));
 	        String[] menuItems = getResources().getStringArray(R.array.itemContextMenu);
 	        for (int i = 0; i<menuItems.length; i++) {
@@ -360,37 +371,44 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      		//this.deleteItem(Item, info.position);
 	      		break;
 	      }
-	      //TextView text = (TextView)findViewById(R.id.footer);
-	      //text.setText(String.format("Selected %s for item %s", menuItemName, listItemName));
 	      return true;
 	    }
 	    
 	    protected void handleException(PastyException mException) {
+	    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
+	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 	    	switch(mException.errorId) {
     		case PastyException.ERROR_AUTHORIZATION_FAILED:
-				//activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_AUTH_ERROR_ID);
     			Log.d(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
-    			//showAlertDialog(PastySharedStatics.DIALOG_AUTH_ERROR_ID);
+				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
+				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
+				mHelpTextBig.setText(R.string.error_login_failed_title);
+				mHelpTextSmall.setText(R.string.error_login_failed);
 				return;
 			case PastyException.ERROR_IO_EXCEPTION:
     			Log.d(TAG, "ERROR_IO_EXCEPTION");
-				activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_CONNECTION_ERROR_ID);
+				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
+				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
+				mHelpTextBig.setText(R.string.error_io_title);
+				mHelpTextSmall.setText(R.string.error_io);
 			case PastyException.ERROR_ILLEGAL_RESPONSE:
 				Log.d(TAG, "ERROR_ILLEGAL_RESPONSE EXCEPTION");
-				activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_BAD_ANSWER);
+				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
+				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
+				mHelpTextBig.setText(R.string.error_badanswer_title);
+				mHelpTextSmall.setText(R.string.error_badanswer);
 				return;
 			case PastyException.ERROR_UNKNOWN:
-				activity.onPastyClipboardFragmentSignal(PastySharedStatics.SIGNAL_DIALOG, PastySharedStatics.DIALOG_UNKNOWN_ERROR_ID);
+				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
+				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
+				mHelpTextBig.setText(R.string.error_unknown_title);
+				mHelpTextSmall.setText(R.string.error_unknown);
 				return;
 			default:
 				break;
 			}
+
+			mHelpTextBig = null;
 	    }
 	    
-	    
-	    protected void showAlertDialog(int id) {
-	        FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
-	        PastyAlertDialogFragment AlertDialog = new PastyAlertDialogFragment(id);
-	        AlertDialog.show(fm, "fragment_alert_name");
-	    }
 }

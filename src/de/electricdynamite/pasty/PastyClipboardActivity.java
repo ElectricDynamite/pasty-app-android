@@ -12,6 +12,7 @@ import de.electricdynamite.pasty.PastyAlertDialogFragment.PastyAlertDialogListen
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -39,38 +40,10 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 		}
 		// Request features
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    	
+    	this.prefs = new PastyPreferencesProvider(getBaseContext());
         setContentView(R.layout.main);
 
 		if (savedInstanceState == null) {
-			 // Let's get preferences
-			reloadPreferences();
-			
-	    	// Check for network connectivity
-	    	ConnectivityManager connMgr = (ConnectivityManager) 
-	    			getSystemService(Context.CONNECTIVITY_SERVICE);
-	    	NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-	    	if (networkInfo != null && networkInfo.isConnected()) {
-	    		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
-	    			// check for the Intent extras
-	    			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
-	    				Bundle extras = getIntent().getExtras();
-	    				if (extras != null) {
-	    					String newItem = extras.getString(Intent.EXTRA_TEXT);
-	    					//addItem(newItem);
-	    				 }
-	    			} else {
-	    				getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fragment_placeholder, mClipboardFragment)
-						.commit();
-	    				//mClipboardFragment = (ClipboardFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentBId);
-	    			}
-	    		} else {
-	    			showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
-	    		}
-	    	} else {
-	    		showAlertDialog(PastySharedStatics.DIALOG_NO_NETWORK);
-	    	}
 		}
     }
     
@@ -78,8 +51,37 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     @Override
     public void onResume() {
     	super.onResume();
-
-
+   	 // Let's get preferences
+		reloadPreferences();
+		
+    	// Check for network connectivity
+    	ConnectivityManager connMgr = (ConnectivityManager) 
+    			getSystemService(Context.CONNECTIVITY_SERVICE);
+    	NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    	if (networkInfo != null && networkInfo.isConnected()) {
+    		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
+    			// check for the Intent extras
+    			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
+    				Bundle extras = getIntent().getExtras();
+    				if (extras != null) {
+    					String newItem = extras.getString(Intent.EXTRA_TEXT);
+    					//addItem(newItem);
+    				 }
+    			} else {
+    				if(!mClipboardFragment.isAdded()) {
+    					Log.d(TAG, "onResume(): Adding ClipboardFragment");
+    					getSupportFragmentManager().beginTransaction()
+    					.replace(R.id.fragment_placeholder, mClipboardFragment)
+    					.commit();
+    				}
+    			}
+    		} else {
+    			showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
+    			// TODO make sure this is not "skipped" with back-key
+    		}
+    	} else {
+    		showAlertDialog(PastySharedStatics.DIALOG_NO_NETWORK);
+    	}
     }
     
 
@@ -92,7 +94,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     public void reloadPreferences() {
     	// Restore preferences
     	Log.d(TAG, "reloadPreferences() called; reloading preferences");
-    	this.prefs = new PastyPreferencesProvider(getBaseContext());
+    	prefs.reload();
     }
     
    @Override
@@ -129,6 +131,13 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // some work that needs to be done on orientation change
+    }
 
 	@Override
 	public void onFinishPastyAlertDialog(int signal) {
@@ -160,15 +169,13 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 	public void onPastyClipboardFragmentSignal(int signal) {
 		actOnSignal(signal);		
 	}
-	
+
+
 	@Override
 	public void onPastyClipboardFragmentSignal(int signal, int dialogId) {
-		Log.d(TAG, "onPastyClipboardFragmentSignal(): Called to open dialog #"+dialogId);
-		if(signal != PastySharedStatics.SIGNAL_DIALOG) {
-			actOnSignal(signal);
-		} else {
-			showAlertDialog(dialogId);
-		}
+		// TODO Auto-generated method stub
+		
 	}
+	
     
 }

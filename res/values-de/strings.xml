@@ -13,6 +13,7 @@
     
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
     <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren</string>
+    <string name="helptext_PastyActivity_options">Drücken und halten für Optionen</string>
     <string name="helptext_PastyActivity_loading">Lade dein Pasty Clipboard&#8230;</string>
     <string name="helptext_PastyActivity_clipboard_empty">Dein Clipboard ist leer!</string>
     <string name="helptext_PastyActivity_how_to_add">Drücke das Plus-Zeichen zum Hinzufügen</string>

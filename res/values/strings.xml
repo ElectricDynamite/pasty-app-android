@@ -14,6 +14,7 @@
     
     <string name="helptext_PastyActivity_pasty">Paste item to cloud.</string>
     <string name="helptext_PastyActivity_copy">Touch an item to copy</string>
+    <string name="helptext_PastyActivity_options">Press and hold for options</string>
     <string name="helptext_PastyActivity_loading">Loading items from cloud&#8230;</string>
     <string name="helptext_PastyActivity_clipboard_empty">Your Clipboard is empty!</string>
     <string name="helptext_PastyActivity_how_to_add">Use the Plus sign to add something</string>
