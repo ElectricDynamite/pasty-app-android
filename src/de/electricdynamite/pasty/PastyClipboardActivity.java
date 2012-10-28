@@ -6,9 +6,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import de.electricdynamite.pasty.AddItemFragment.AddItemFragmentCallbackListener;
 import de.electricdynamite.pasty.ClipboardFragment.PastyClipboardFragmentListener;
 import de.electricdynamite.pasty.PastyAlertDialogFragment.PastyAlertDialogListener;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -16,10 +19,14 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
-public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener {
+public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
 	
 
     private static final String TAG = PastyActivity.class.toString();
@@ -27,6 +34,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     public int versionCode;
 	private PastyPreferencesProvider prefs;
 	private static ClipboardFragment mClipboardFragment = new ClipboardFragment();
+	private static AddItemFragment mAddItemFragment = new AddItemFragment();
 	
     /** Called when the activity is first created. */
     @Override
@@ -105,12 +113,20 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         return true;
     }
     
-    @Override
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.menu_add:
-        	showDialog(PastySharedStatics.DIALOG_ADD_ID);
+        	FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        	Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        	if (prev != null) {
+        		ft.remove(prev);
+        	}
+        	ft.addToBackStack(null);
+
+	        // Create and show the dialog.
+	        mAddItemFragment.show(ft, "dialog");
 	        return true;
         case R.id.menu_reload:
         	mClipboardFragment.restartLoading();
@@ -173,6 +189,13 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 
 	@Override
 	public void onPastyClipboardFragmentSignal(int signal, int dialogId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onAddItemFragmentCallbackSignal(int signal) {
 		// TODO Auto-generated method stub
 		
 	}
