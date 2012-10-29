@@ -3,13 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    	<TextView
-    	    android:id="@+id/AddItemHeading"
-    	    android:layout_width="fill_parent"
-    	    android:layout_height="wrap_content"
-    	    android:padding="3dp"
-    	    android:textSize="18dp"
-    	    android:text="@string/dialog_item_add_title" />
 		<EditText
 			android:id="@+id/NewItem"
 			android:layout_width="match_parent"
@@ -21,7 +14,7 @@
        		android:imeOptions="actionDone"
 			android:inputType="textMultiLine" />
 		<Button
-			android:id="@+id/PastyButton"
+			android:id="@+id/button_add_item_confirm"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingLeft="50dp"

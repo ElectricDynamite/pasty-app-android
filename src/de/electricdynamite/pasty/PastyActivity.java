@@ -398,7 +398,7 @@ public class PastyActivity extends SherlockFragmentActivity implements LoaderCal
 
 			// set click event listener for button
 	        addItemDialog.show();
-			Button PastyButton		= (Button) addItemDialog.findViewById(R.id.PastyButton);
+			Button PastyButton		= (Button) addItemDialog.findViewById(R.id.button_add_item_confirm);
 			PastyButton.setOnClickListener(
 					new View.OnClickListener() {
 						@Override

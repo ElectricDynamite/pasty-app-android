@@ -32,7 +32,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     private static final String TAG = PastyActivity.class.toString();
     public String versionName;
     public int versionCode;
-	private PastyPreferencesProvider prefs;
+	protected PastyPreferencesProvider prefs;
 	private static ClipboardFragment mClipboardFragment = new ClipboardFragment();
 	private static AddItemFragment mAddItemFragment = new AddItemFragment();
 	
@@ -96,6 +96,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     protected void showAlertDialog(int id) {
         FragmentManager fm = getSupportFragmentManager();
         PastyAlertDialogFragment AlertDialog = new PastyAlertDialogFragment(id);
+        AlertDialog.setCancelable(false);
         AlertDialog.show(fm, "fragment_alert_name");
     }
     
@@ -147,14 +148,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
                 return super.onOptionsItemSelected(item);
         }
     }
-    
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // some work that needs to be done on orientation change
-    }
-
+	
 	@Override
 	public void onFinishPastyAlertDialog(int signal) {
 		actOnSignal(signal);
@@ -196,9 +190,10 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 
 	@Override
 	public void onAddItemFragmentCallbackSignal(int signal) {
-		// TODO Auto-generated method stub
-		
+		actOnSignal(signal);			
 	}
+	
+	
 	
     
 }
