@@ -3,11 +3,13 @@ package de.electricdynamite.pasty;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,7 +18,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
-import de.electricdynamite.pasty.PastyAlertDialogFragment.PastyAlertDialogListener;
 import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
 
@@ -25,30 +26,54 @@ public class AddItemFragment extends SherlockDialogFragment {
 	protected PastyPreferencesProvider prefs;
 	protected Context context;
 	
+	@SuppressWarnings("deprecation")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
+	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
+
+		this.context = getSherlockActivity().getBaseContext();
+    	this.prefs = new PastyPreferencesProvider(getSherlockActivity().getBaseContext());
+		
+		// Inflate the layout for this fragment
 		getDialog().setTitle(R.string.dialog_item_add_title);
 	    View v = inflater.inflate(R.layout.add_item, container, false);
 	    
 	    Button button = (Button)v.findViewById(R.id.button_add_item_confirm);
+		final EditText mNewItemET = (EditText) v.findViewById(R.id.NewItem);
+		getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
 				LinearLayout mDialogLayout = (LinearLayout) v.getParent();
-				EditText mNewItemET = (EditText) mDialogLayout.findViewById(R.id.NewItem);
 				String mItem = mNewItemET.getText().toString();
+		    	if(mItem != null && mItem.length() == 0) {
+				   	CharSequence text = getString(R.string.empty_item);
+				   	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+				   	toast.show();
+		    		return;
+		    	}
+		    	ViewGroup container = (ViewGroup) mDialogLayout.getParent();
+		        container.removeAllViews();
+		        View pb = inflater.inflate(R.layout.progressbar, container, false);
+		        container.addView(pb);
+		        getDialog().setTitle(R.string.dialog_item_add_title_running);
+				getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             	new ItemAddTask().execute(mItem);
             }
         });
+
+		if(prefs.getPasteCurrClip()) {
+			ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService("clipboard");
+			if(clipboard.hasText()) {
+				mNewItemET.setText(clipboard.getText());
+				clipboard = null;
+			}
+		}
         return v;
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.context = getSherlockActivity().getBaseContext();
-    	this.prefs = new PastyPreferencesProvider(getSherlockActivity().getBaseContext());
 	}
 	
 

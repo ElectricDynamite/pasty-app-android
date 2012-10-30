@@ -10,6 +10,7 @@
     <string name="copy">Kopieren</string>
     
     <string name="dialog_item_add_title">Neuer Eintrag</string>
+    <string name="dialog_item_add_title_running">Sende Eintrag in die cloud&#8230;</string>
     
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
     <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren</string>

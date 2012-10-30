@@ -90,7 +90,12 @@ public class PastyAlertDialogFragment extends SherlockDialogFragment {
         			public void onClick(DialogInterface dialog, int id) {
         			    activity.onFinishPastyAlertDialog(PastySharedStatics.SIGNAL_ACTIVITY_SETTINGS);
         			}
-        		});
+        		})
+    			.setNegativeButton(R.string.button_exit, new DialogInterface.OnClickListener() {
+    				public void onClick(DialogInterface dialog, int id) {
+    			    activity.onFinishPastyAlertDialog(PastySharedStatics.SIGNAL_EXIT);
+    				}
+    			});
 				mDialog = mBuilder.create();
 				mDialog.show();
 				break;

@@ -11,6 +11,7 @@
     <string name="copy">Copy</string>
     
     <string name="dialog_item_add_title">Paste new item into cloud</string>
+    <string name="dialog_item_add_title_running">Sending item to cloud&#8230;</string>
     
     <string name="helptext_PastyActivity_pasty">Paste item to cloud.</string>
     <string name="helptext_PastyActivity_copy">Touch an item to copy</string>
