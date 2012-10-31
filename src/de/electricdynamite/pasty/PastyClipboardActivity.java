@@ -59,7 +59,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     @Override
     public void onResume() {
     	super.onResume();
-   	 // Let's get preferences
+    	// Let's get preferences
 		reloadPreferences();
 		
     	// Check for network connectivity
@@ -85,7 +85,6 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     			}
     		} else {
     			showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
-    			// TODO make sure this is not "skipped" with back-key
     		}
     	} else {
     		showAlertDialog(PastySharedStatics.DIALOG_NO_NETWORK);
@@ -102,7 +101,6 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     
     public void reloadPreferences() {
     	// Restore preferences
-    	Log.d(TAG, "reloadPreferences() called; reloading preferences");
     	prefs.reload();
     }
     

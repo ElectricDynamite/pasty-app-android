@@ -58,6 +58,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	}
 	
 	public void reload() {
+		Log.d(TAG, "reload(): Reloading SharedPreferences");
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		this.username = prefs.getString(PastySharedStatics.PREF_USER,"");
 		this.password = prefs.getString(PastySharedStatics.PREF_PASSWORD,"");

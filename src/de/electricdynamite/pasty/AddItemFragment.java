@@ -1,6 +1,7 @@
 package de.electricdynamite.pasty;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.ClipboardManager;
@@ -25,6 +26,7 @@ public class AddItemFragment extends SherlockDialogFragment {
 	private static final String TAG = AddItemFragment.class.toString();
 	protected PastyPreferencesProvider prefs;
 	protected Context context;
+	protected EditText mNewItemET;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -32,14 +34,18 @@ public class AddItemFragment extends SherlockDialogFragment {
 		
 
 		this.context = getSherlockActivity().getBaseContext();
-    	this.prefs = new PastyPreferencesProvider(getSherlockActivity().getBaseContext());
+		if(this.prefs == null) {
+			this.prefs = new PastyPreferencesProvider(getSherlockActivity().getBaseContext());
+		} else {
+			prefs.reload();
+		}
 		
 		// Inflate the layout for this fragment
 		getDialog().setTitle(R.string.dialog_item_add_title);
 	    View v = inflater.inflate(R.layout.add_item, container, false);
 	    
 	    Button button = (Button)v.findViewById(R.id.button_add_item_confirm);
-		final EditText mNewItemET = (EditText) v.findViewById(R.id.NewItem);
+		if(mNewItemET == null) { mNewItemET = (EditText) v.findViewById(R.id.NewItem); }
 		getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -65,8 +71,8 @@ public class AddItemFragment extends SherlockDialogFragment {
 			ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService("clipboard");
 			if(clipboard.hasText()) {
 				mNewItemET.setText(clipboard.getText());
-				clipboard = null;
 			}
+			clipboard = null;
 		}
         return v;
 	}
@@ -74,6 +80,11 @@ public class AddItemFragment extends SherlockDialogFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+	}
+	
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		// TODO make sure we destroy our view
 	}
 	
 
