@@ -2,6 +2,7 @@ package de.electricdynamite.pasty;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.ClipboardManager;
@@ -27,12 +28,12 @@ public class AddItemFragment extends SherlockDialogFragment {
 	protected PastyPreferencesProvider prefs;
 	protected Context context;
 	protected EditText mNewItemET;
+	private LayoutInflater inflater;
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
-
+		this.inflater = inflater;
 		this.context = getSherlockActivity().getBaseContext();
 		if(this.prefs == null) {
 			this.prefs = new PastyPreferencesProvider(getSherlockActivity().getBaseContext());
@@ -40,40 +41,50 @@ public class AddItemFragment extends SherlockDialogFragment {
 			prefs.reload();
 		}
 		
-		// Inflate the layout for this fragment
-		getDialog().setTitle(R.string.dialog_item_add_title);
-	    View v = inflater.inflate(R.layout.add_item, container, false);
-	    
-	    Button button = (Button)v.findViewById(R.id.button_add_item_confirm);
-		if(mNewItemET == null) { mNewItemET = (EditText) v.findViewById(R.id.NewItem); }
-		getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        button.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-				LinearLayout mDialogLayout = (LinearLayout) v.getParent();
-				String mItem = mNewItemET.getText().toString();
-		    	if(mItem != null && mItem.length() == 0) {
-				   	CharSequence text = getString(R.string.empty_item);
-				   	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
-				   	toast.show();
-		    		return;
-		    	}
-		    	ViewGroup container = (ViewGroup) mDialogLayout.getParent();
-		        container.removeAllViews();
-		        View pb = inflater.inflate(R.layout.progressbar, container, false);
-		        container.addView(pb);
-		        getDialog().setTitle(R.string.dialog_item_add_title_running);
-				getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-            	new ItemAddTask().execute(mItem);
-            }
-        });
-
-		if(prefs.getPasteCurrClip()) {
-			ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService("clipboard");
-			if(clipboard.hasText()) {
-				mNewItemET.setText(clipboard.getText());
+	    View v = null;
+	    if (Intent.ACTION_SEND.equals(getSherlockActivity().getIntent().getAction())) {
+	    	// called via share intent
+	        getDialog().setTitle(R.string.dialog_item_add_title_running);
+	    	Bundle extras = getSherlockActivity().getIntent().getExtras();
+    		v = inflater.inflate(R.layout.progressbar, container, false);
+	    	if (extras != null) {
+	    		String mItem = extras.getString(Intent.EXTRA_TEXT);
+	        	new ItemAddTask().execute(mItem);
+	    	}
+	    } else {
+			getDialog().setTitle(R.string.dialog_item_add_title);
+	    	v = inflater.inflate(R.layout.add_item, container, false);
+		    Button button = (Button)v.findViewById(R.id.button_add_item_confirm);
+			if(mNewItemET == null) { mNewItemET = (EditText) v.findViewById(R.id.NewItem); }
+			getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	        button.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+					LinearLayout mDialogLayout = (LinearLayout) v.getParent();
+					String mItem = mNewItemET.getText().toString();
+			    	if(mItem != null && mItem.length() == 0) {
+					   	CharSequence text = getString(R.string.empty_item);
+					   	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+					   	toast.show();
+			    		return;
+			    	}
+			    	ViewGroup container = (ViewGroup) mDialogLayout.getParent();
+			        container.removeAllViews();
+			        View pb = inflater.inflate(R.layout.progressbar, container, false);
+			        container.addView(pb);
+			        getDialog().setTitle(R.string.dialog_item_add_title_running);
+					getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	            	new ItemAddTask().execute(mItem);
+	            }
+	        });
+	
+			if(prefs.getPasteCurrClip()) {
+				ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService("clipboard");
+				if(clipboard.hasText()) {
+					mNewItemET.setText(clipboard.getText());
+				}
+				clipboard = null;
 			}
-			clipboard = null;
-		}
+	    }
         return v;
 	}
 	
@@ -87,7 +98,6 @@ public class AddItemFragment extends SherlockDialogFragment {
 		// TODO make sure we destroy our view
 	}
 	
-
 	public interface AddItemFragmentCallbackListener {
         void onAddItemFragmentCallbackSignal(int signal);
     }

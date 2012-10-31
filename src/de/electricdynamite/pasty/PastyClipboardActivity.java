@@ -69,11 +69,14 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
     			// check for the Intent extras
     			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
-    				Bundle extras = getIntent().getExtras();
-    				if (extras != null) {
-    					String newItem = extras.getString(Intent.EXTRA_TEXT);
-    					//addItem(newItem);
-    				 }
+    				AddItemFragment mAddItemFragment = new AddItemFragment();
+    		        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    		        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+    		        if (prev != null) {
+    		        	ft.remove(prev);
+    		        }
+   			        // Create and show the dialog.
+   			        mAddItemFragment.show(ft, "dialog");
     			} else {
     				if(!mClipboardFragment.isAdded()) {
     					Log.d(TAG, "onResume(): Adding ClipboardFragment");
