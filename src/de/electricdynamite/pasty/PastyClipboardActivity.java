@@ -34,7 +34,6 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     public int versionCode;
 	protected PastyPreferencesProvider prefs;
 	private static ClipboardFragment mClipboardFragment = new ClipboardFragment();
-	private static AddItemFragment mAddItemFragment = new AddItemFragment();
 	
     /** Called when the activity is first created. */
     @Override
@@ -117,12 +116,12 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.menu_add:
+        	AddItemFragment mAddItemFragment = new AddItemFragment();
         	FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         	Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         	if (prev != null) {
         		ft.remove(prev);
         	}
-        	ft.addToBackStack(null);
 
 	        // Create and show the dialog.
 	        mAddItemFragment.show(ft, "dialog");

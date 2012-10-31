@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -33,7 +34,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 
-import de.electricdynamite.pasty.PastyAlertDialogFragment.PastyAlertDialogListener;
 import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
 public class ClipboardFragment extends SherlockListFragment implements LoaderCallbacks<PastyLoader.PastyResponse> {
@@ -252,10 +252,17 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	        
 	        public void remove(int position) {
 	        	this.itemList.remove(position);
+	        	this.notifyDataSetChanged();
 	        }
 	        
 	        public void removeAll() {
 	        	this.itemList.clear();
+	        }
+	        
+	        public void delete(int position) {
+	        	ClipboardItem mItem = getItem(position);
+            	new ItemDeleteTask().execute(mItem);
+            	remove(position); // TODO Implement some kind of callback to remove only upon successful deletion.
 	        }
 
 			@Override
@@ -285,6 +292,48 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            return view;
 	        }
 	    }
+		
+
+	private class ItemDeleteTask extends AsyncTask<ClipboardItem, Void, PastyResponse > {
+		
+		private Context context;
+		
+	    /** The system calls this to perform work in a worker thread and
+	      * delivers it the parameters given to AsyncTask.execute() */
+		@Override
+		protected PastyResponse doInBackground(ClipboardItem... item) {
+			if(context == null) {
+				context = getSherlockActivity().getBaseContext();
+			}
+			PastyPreferencesProvider prefs = new PastyPreferencesProvider(context);
+			PastyClient client = new PastyClient(prefs.getRESTBaseURL(), true);
+			client.setUsername(prefs.getUsername());
+			client.setPassword(prefs.getPassword());
+			PastyResponse result;
+			try {
+				client.deleteItem(item[0]);
+				result = new PastyResponse();
+			} catch (PastyException e) {
+				result = new PastyResponse(e);
+			}
+			return result;
+		}
+	    
+	    /** The system calls this to perform work in the UI thread and delivers
+	      * the result from doInBackground() */
+	    protected void onPostExecute(PastyResponse result) {
+	       if(result.hasException) {
+	    	   handleException(result.getException());
+	       } else {
+	    	int duration = Toast.LENGTH_LONG;
+	   		CharSequence text = getString(R.string.item_deleted);
+	   		Toast toast = Toast.makeText(context, text, duration);
+	   		toast.show();
+	   		toast = null;
+	   		context = null;
+	       }
+	    }
+	}
 	
 		// use an wrapper (or view holder) object to limit calling the
 		// findViewById() method, which parses the entire structure of your
@@ -368,7 +417,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      		break;
 	      	case PastySharedStatics.ITEM_CONTEXTMENU_DELETE_ID:
 	      		// Delete selected
-	      		//this.deleteItem(Item, info.position);
+	      		mAdapter.delete(info.position);
 	      		break;
 	      }
 	      return true;
