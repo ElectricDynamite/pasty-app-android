@@ -29,7 +29,7 @@ import android.view.View;
 public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
 	
 
-    private static final String TAG = PastyActivity.class.toString();
+    private static final String TAG = PastyClipboardActivity.class.toString();
     public String versionName;
     public int versionCode;
 	protected PastyPreferencesProvider prefs;

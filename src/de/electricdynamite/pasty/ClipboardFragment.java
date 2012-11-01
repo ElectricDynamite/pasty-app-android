@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -205,7 +206,18 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    					    getSherlockActivity().finish();
 	    					}
 	    				});
+
 	    				registerForContextMenu(listView);
+	    				/*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+	    					public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
+	    						Log.d(TAG,"onItemLongClick called for position "+ position + " ");
+	    						//registerForContextMenu(v);
+	    						v.cancelLongPress();
+	    						//v.showContextMenu();
+	    						//unregisterForContextMenu(v);
+								return true;
+	    					}
+	    				});*/
 	    		    }
 	    		} catch (Exception e) {
 	    			e.printStackTrace();
@@ -286,7 +298,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	     
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
-	            //Linkify.addLinks(tvListItem, Linkify.ALL); TODO Find way to linkify without f*cking up the context menu
+	            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+	            	Linkify.addLinks(tvListItem, Linkify.ALL); //TODO Find way to linkify without f*cking up the context menu
+	            }
+	           
 	     
 	     
 	            return view;
