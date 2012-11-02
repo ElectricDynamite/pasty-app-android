@@ -206,7 +206,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    					    getSherlockActivity().finish();
 	    					}
 	    				});
-
 	    				registerForContextMenu(listView);
 	    				/*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 	    					public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
@@ -290,19 +289,18 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				} else {
 					wrapper = (Wrapper) view.getTag();
 				}
+				//view.setClickable(true);
+			    //view.setFocusable(true);
 				
-	            //LinearLayout itemLayout;
+	            // get the item associated with this position
 	            ClipboardItem Item = itemList.get(position);
-	     
-	            //itemLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.listitem, parent, false);
-	     
+	            
+	            // Select our text view from our view row
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
-	            tvListItem.setText(Item.getText());
+	            tvListItem.setText(Item.getText()); // assign the items text to the TextView
 	            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 	            	Linkify.addLinks(tvListItem, Linkify.ALL); //TODO Find way to linkify without f*cking up the context menu
 	            }
-	           
-	     
 	     
 	            return view;
 	        }
@@ -415,8 +413,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				Item.copyToClipboard(clipboard);
 		    	Context context = getSherlockActivity().getApplicationContext();
 		    	CharSequence text = getString(R.string.item_copied);
-		    	int duration = Toast.LENGTH_LONG;
-		    	Toast toast = Toast.makeText(context, text, duration);
+		    	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
 		    	toast.show();
 		    	toast = null;
 		    	context = null;
