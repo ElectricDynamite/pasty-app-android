@@ -290,7 +290,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 					wrapper = (Wrapper) view.getTag();
 				}
 				//view.setClickable(true);
-			    //view.setFocusable(true);
 				
 	            // get the item associated with this position
 	            ClipboardItem Item = itemList.get(position);
@@ -435,6 +434,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      return true;
 	    }
 	    
+	    /** handles PastyExceptions within this Fragment
+	     */
 	    protected void handleException(PastyException mException) {
 	    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
@@ -470,6 +471,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			}
 
 			mHelpTextBig = null;
+			mHelpTextSmall = null;
 	    }
 	    
 }
