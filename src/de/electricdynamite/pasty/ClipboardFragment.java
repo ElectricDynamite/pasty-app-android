@@ -212,7 +212,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    					    //getSherlockActivity().finish();
 	    					}
 	    				});
-
 	    				registerForContextMenu(listView);
 	    				/*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 	    					public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
@@ -296,12 +295,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				} else {
 					wrapper = (Wrapper) view.getTag();
 				}
+				//view.setClickable(true);
 				
-	            //LinearLayout itemLayout;
+	            // get the item associated with this position
 	            ClipboardItem Item = itemList.get(position);
-	     
-	            //itemLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.listitem, parent, false);
-	     
+	            
+	            // Select our text view from our view row
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
 	            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
@@ -420,8 +419,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				Item.copyToClipboard(clipboard);
 		    	Context context = getSherlockActivity().getApplicationContext();
 		    	CharSequence text = getString(R.string.item_copied);
-		    	int duration = Toast.LENGTH_LONG;
-		    	Toast toast = Toast.makeText(context, text, duration);
+		    	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
 		    	toast.show();
 		    	toast = null;
 		    	context = null;
@@ -443,6 +441,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      return true;
 	    }
 	    
+	    /** handles PastyExceptions within this Fragment
+	     */
 	    protected void handleException(PastyException mException) {
 	    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
@@ -478,6 +478,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			}
 
 			mHelpTextBig = null;
+			mHelpTextSmall = null;
 	    }
 	
 	    public class LinkTextView extends TextView {
