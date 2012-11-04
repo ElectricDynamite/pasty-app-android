@@ -18,10 +18,16 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.ClipboardManager;
+import android.text.Layout;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -61,7 +67,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// configuration changes for example
 		setRetainInstance(true);
 
-		 LoaderManager.enableDebugLogging(true);
+		//LoaderManager.enableDebugLogging(true);
 
 		mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
@@ -190,7 +196,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    					@Override
 	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-	    	    				Log.d(TAG, "listView.onItemClick() called");
+	    	    				Log.d(TAG, "listView.onItemClick() called for position "+position);
 	    				    	ClipboardItem Item = mItems.get(position);
 	    						ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 	    						Item.copyToClipboard(sysClipboard);
@@ -203,7 +209,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				    	context = null;
 	    				    	sysClipboard = null;
 	    				    	text = null;
-	    					    getSherlockActivity().finish();
+	    					    //getSherlockActivity().finish();
 	    					}
 	    				});
 
@@ -298,12 +304,11 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	     
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
-	            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+	            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
 	            	Linkify.addLinks(tvListItem, Linkify.ALL); //TODO Find way to linkify without f*cking up the context menu
 	            }
-	           
-	     
-	     
+	            tvListItem.setMovementMethod(null);
+	            
 	            return view;
 	        }
 	    }
@@ -474,5 +479,56 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 			mHelpTextBig = null;
 	    }
-	    
+	
+	    public class LinkTextView extends TextView {
+
+			public LinkTextView(Context context) {
+				super(context);
+			}
+	    	
+			@Override
+			public boolean onTouchEvent(MotionEvent event) {
+			        TextView widget = (TextView) this;
+			        Object text = widget.getText();
+			        if (text instanceof Spanned) {
+			            Spannable buffer = (Spannable) text;
+
+			            int action = event.getAction();
+
+			            if (action == MotionEvent.ACTION_UP
+			                    || action == MotionEvent.ACTION_DOWN) {
+			                int x = (int) event.getX();
+			                int y = (int) event.getY();
+
+			                x -= widget.getTotalPaddingLeft();
+			                y -= widget.getTotalPaddingTop();
+
+			                x += widget.getScrollX();
+			                y += widget.getScrollY();
+
+			                Layout layout = widget.getLayout();
+			                int line = layout.getLineForVertical(y);
+			                int off = layout.getOffsetForHorizontal(line, x);
+
+			                ClickableSpan[] link = buffer.getSpans(off, off,
+			                        ClickableSpan.class);
+
+			                if (link.length != 0) {
+			                    if (action == MotionEvent.ACTION_UP) {
+			                        link[0].onClick(widget);
+			                    } else if (action == MotionEvent.ACTION_DOWN) {
+			                         Selection.setSelection(buffer,
+			                                 buffer.getSpanStart(link[0]),
+			                                 buffer.getSpanEnd(link[0]));
+			                    }
+			                    return true;
+			                }
+			            }
+
+			        }
+
+			        return false;
+			    }
+			
+	    }
 }
