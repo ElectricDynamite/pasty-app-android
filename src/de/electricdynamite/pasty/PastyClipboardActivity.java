@@ -76,6 +76,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     		        	ft.remove(prev);
     		        }
    			        // Create and show the dialog.
+    		        // TODO do not add to Stack
    			        mAddItemFragment.show(ft, "dialog");
     			} else {
     				if(!mClipboardFragment.isAdded()) {
