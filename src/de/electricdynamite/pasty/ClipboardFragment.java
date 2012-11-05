@@ -202,6 +202,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				    	if(Item.isLinkified()) {
 	    				    		/* If the clicked item was originally linkified, we manually 
 	    				    		 * fire an ACTION_VIEW intent to simulate Linkify() behavior
+	    				    		 * TODO fix URLs if they are without http://, or we will FC
 	    				    		 */
 	    				    		String url = Item.getText();
 	    				    		Intent i = new Intent(Intent.ACTION_VIEW);
