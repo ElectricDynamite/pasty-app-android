@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -195,34 +198,35 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				listView.setOnItemClickListener(new OnItemClickListener() { 
 	    					@Override
 	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-	    	    				Log.d(TAG, "listView.onItemClick() called for position "+position);
-	    				    	ClipboardItem Item = mItems.get(position);
-	    						ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-	    						Item.copyToClipboard(sysClipboard);
-	    				    	Context context = getSherlockActivity().getApplicationContext();
-	    				    	CharSequence text = getString(R.string.item_copied);
-	    				    	int duration = Toast.LENGTH_LONG;
-	    				    	Toast toast = Toast.makeText(context, text, duration);
-	    				    	toast.show();
-	    				    	toast = null;
-	    				    	context = null;
-	    				    	sysClipboard = null;
-	    				    	text = null;
-	    					    //getSherlockActivity().finish();
+	    				    	ClipboardItem Item = mItems.get(position); // get a ClipboardItem from the clicked position
+	    				    	if(Item.isLinkified()) {
+	    				    		/* If the clicked item was originally linkified, we manually 
+	    				    		 * fire an ACTION_VIEW intent to simulate Linkify() behavior
+	    				    		 */
+	    				    		String url = Item.getText();
+	    				    		Intent i = new Intent(Intent.ACTION_VIEW);
+	    				    		i.setData(Uri.parse(url));
+	    				    		startActivity(i);
+	    				    	} else {
+	    				    		/* Else we copy the item to the systems clipboard,
+	    				    		 * show a Toast and finish() the activity
+	    				    		 */
+		    						ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+		    						Item.copyToClipboard(sysClipboard);
+		    				    	Context context = getSherlockActivity().getApplicationContext();
+		    				    	CharSequence text = getString(R.string.item_copied);
+		    				    	int duration = Toast.LENGTH_LONG;
+		    				    	Toast toast = Toast.makeText(context, text, duration);
+		    				    	toast.show();
+		    				    	toast = null;
+		    				    	context = null;
+		    				    	sysClipboard = null;
+		    				    	text = null;
+		    					    getSherlockActivity().finish();
+	    				    	}
 	    					}
 	    				});
 	    				registerForContextMenu(listView);
-	    				/*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-	    					public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
-	    						Log.d(TAG,"onItemLongClick called for position "+ position + " ");
-	    						//registerForContextMenu(v);
-	    						v.cancelLongPress();
-	    						//v.showContextMenu();
-	    						//unregisterForContextMenu(v);
-								return true;
-	    					}
-	    				});*/
 	    		    }
 	    		} catch (Exception e) {
 	    			e.printStackTrace();
@@ -237,7 +241,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	@Override
 	public void onLoaderReset(Loader<PastyResponse> arg0) {
 		// TODO Auto-generated method stub
-		Log.d(TAG, "onLoaderReset() called");
 		
 	}
 	
@@ -259,12 +262,21 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            return itemList.get(position);
 	        }
 	        
+	        
 	        public long getItemId(int position) {
 	            return position;
 	        }
 	        
 	        public String getClipboardItemId(int position) {
 	        	return itemList.get(position).getId();
+	        }
+	        
+	        public void linkified(int position) {
+	        	this.itemList.get(position).linkfied();
+	        }
+	        
+	        public Boolean isLinkified(int position) {
+	        	return this.itemList.get(position).isLinkified();
 	        }
 	        
 	        public void remove(int position) {
@@ -295,18 +307,31 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				} else {
 					wrapper = (Wrapper) view.getTag();
 				}
-				//view.setClickable(true);
-				
 	            // get the item associated with this position
 	            ClipboardItem Item = itemList.get(position);
 	            
 	            // Select our text view from our view row
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
-	            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-	            	Linkify.addLinks(tvListItem, Linkify.ALL); //TODO Find way to linkify without f*cking up the context menu
-	            }
-	            tvListItem.setMovementMethod(null);
+	            /* Linkify/ListView / JB problem work around:
+	             * 1. Linkify the item
+	             * 2. If the item was linkified, write it into the ClipboardItem
+	             * 3. Delete the MovementMethod
+	             * 4. (in the onClick callback) check if the clicked ClipboardItem was linkified
+	             * 5. (in the onClick callback) if it was, fire a manual ACTIEN_VIEW intent
+	             * 6. ????
+	             * 7. PROFIT!!!11 (and dirty, dirty code!)
+	             * (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN)
+	             */
+	            Boolean linkified = Linkify.addLinks(tvListItem, Linkify.WEB_URLS);
+	            if(linkified) {
+	    	        linkified(position); // Tell the ClipboardItem that it was linkified.
+	            } 
+	            /* Delete the MovementMethod to prevent linkified items from firing an intent
+	             * at onItemClick() or onItemLongClick()
+	             */
+            	tvListItem.setMovementMethod(null); 
+	            linkified = null;
 	            
 	            return view;
 	        }
