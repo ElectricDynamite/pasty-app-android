@@ -90,10 +90,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// loader (after screen configuration changes for e.g!)
 		LoaderManager lm = getLoaderManager();
 		if (lm.getLoader(PastyLoader.TASK_CLIPBOARD_FETCH) != null) {
-			Log.d(TAG, "onActivityCreated(): Loader already exists, reconnecting");
+			//Log.d(TAG, "onActivityCreated(): Loader already exists, reconnecting");
 			lm.initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, null, this);
 		} else { 
-			Log.d(TAG, "onActivityCreated(): No PastyLoader found");
+			//Log.d(TAG, "onActivityCreated(): No PastyLoader found");
 			startLoading();
 		}
 		// ----- end magic lines -----
@@ -105,8 +105,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	}
 
 	protected void startLoading() {
-		Log.d(TAG,"startLoading()");
-		//showDialog();
+		//Log.d(TAG,"startLoading()");
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		TextView mHelpTextBig			= (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 		ProgressBar pbLoading			= (ProgressBar) getSherlockActivity().findViewById(R.id.progressbar_downloading);

@@ -71,13 +71,13 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
     				AddItemFragment mAddItemFragment = new AddItemFragment();
     		        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    		        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+    		        Fragment prev = getSupportFragmentManager().findFragmentByTag("AddItemDialog");
     		        if (prev != null) {
     		        	ft.remove(prev);
     		        }
    			        // Create and show the dialog.
     		        // TODO do not add to Stack
-   			        mAddItemFragment.show(ft, "dialog");
+   			        mAddItemFragment.show(ft, "AddItemDialog");
     			} else {
     				if(!mClipboardFragment.isAdded()) {
     					Log.d(TAG, "onResume(): Adding ClipboardFragment");
@@ -122,13 +122,13 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         case R.id.menu_add:
         	AddItemFragment mAddItemFragment = new AddItemFragment();
         	FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        	Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        	Fragment prev = getSupportFragmentManager().findFragmentByTag("AddItemDialog");
         	if (prev != null) {
         		ft.remove(prev);
         	}
 
 	        // Create and show the dialog.
-	        mAddItemFragment.show(ft, "dialog");
+	        mAddItemFragment.show(ft, "AddItemDialog");
 	        return true;
         case R.id.menu_reload:
         	mClipboardFragment.restartLoading();
