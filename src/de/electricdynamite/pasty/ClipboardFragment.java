@@ -71,7 +71,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		setRetainInstance(true);
 
 		//LoaderManager.enableDebugLogging(true);
-
+	
 		mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
 		activity = (PastyClipboardFragmentListener) getSherlockActivity();
@@ -122,14 +122,11 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	}
 	
 	protected void restartLoading() {
-		//showDialog();
-
-
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		// --------- the other magic lines ----------
 		// call restart because we want the background work to be executed
 		// again
-		Log.d(TAG, "restartLoading(): re-starting loader");
+//		Log.d(TAG, "restartLoading(): re-starting loader");
 		Bundle b = new Bundle();
 		// TODO Make sure this does not get called before startLoading was called, or NULL PE
 		getLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
@@ -140,7 +137,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	
 	@Override
 	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
-		Log.d(TAG, "onCreateLoader(): New PastyLoader created");
+//		Log.d(TAG, "onCreateLoader(): New PastyLoader created");
 		return new PastyLoader(getSherlockActivity(), id);
 	}
 
@@ -157,14 +154,14 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
 	    if(response.hasException) {
-	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
+//	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
 	    	// an error occured
 	    	PastyException mException = response.getException();
 	    	handleException(mException);
 	    } else {
 	    	switch(loader.getId()) {
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
-	    		Log.d(TAG, "Loader delivered TASK_CLIPBOARD_FETCH without exception");
+//	    		Log.d(TAG, "Loader delivered TASK_CLIPBOARD_FETCH without exception");
 	    		JSONArray Clipboard = response.getClipboard();
 	    		mItems.clear();
 	    		mAdapter.notifyDataSetChanged();
@@ -473,20 +470,20 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 	    	switch(mException.errorId) {
     		case PastyException.ERROR_AUTHORIZATION_FAILED:
-    			Log.d(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
+//    			Log.i(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_login_failed_title);
 				mHelpTextSmall.setText(R.string.error_login_failed);
 				return;
 			case PastyException.ERROR_IO_EXCEPTION:
-    			Log.d(TAG, "ERROR_IO_EXCEPTION");
+//    			Log.i(TAG, "ERROR_IO_EXCEPTION");
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_io_title);
 				mHelpTextSmall.setText(R.string.error_io);
 			case PastyException.ERROR_ILLEGAL_RESPONSE:
-				Log.d(TAG, "ERROR_ILLEGAL_RESPONSE EXCEPTION");
+//				Log.i(TAG, "ERROR_ILLEGAL_RESPONSE EXCEPTION");
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_badanswer_title);
@@ -497,6 +494,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_unknown_title);
 				mHelpTextSmall.setText(R.string.error_unknown);
+				Log.e(TAG,mException.getMessage());
 				return;
 			default:
 				break;
@@ -506,7 +504,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			mHelpTextSmall = null;
 	    }
 	
-	    public class LinkTextView extends TextView {
+/*	    public class LinkTextView extends TextView {
 
 			public LinkTextView(Context context) {
 				super(context);
@@ -556,5 +554,5 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			        return false;
 			    }
 			
-	    }
+	    }*/
 }

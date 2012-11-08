@@ -79,7 +79,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 
 	@Override
     public PastyResponse loadInBackground() {
-		Log.d(TAG, "loadInBackground() called");
+//		Log.d(TAG, "loadInBackground() called");
         try {
             // At the very least we always need an action.
             if (taskId == 0x0) {

@@ -24,7 +24,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	 */
 	
 	public PastyPreferencesProvider(Context context) {
-		Log.d(TAG, "New PastyPreferencesProvider created");
+//		Log.d(TAG, "New PastyPreferencesProvider created");
 		this.context = context;
 		reload();
 	}
@@ -58,7 +58,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	}
 	
 	public void reload() {
-		Log.d(TAG, "reload(): Reloading SharedPreferences");
+//		Log.d(TAG, "reload(): Reloading SharedPreferences");
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		this.username = prefs.getString(PastySharedStatics.PREF_USER,"");
 		this.password = prefs.getString(PastySharedStatics.PREF_PASSWORD,"");
