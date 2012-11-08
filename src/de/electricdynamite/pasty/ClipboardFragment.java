@@ -34,6 +34,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -201,6 +202,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				    		 * TODO fix URLs if they are without http://, or we will FC
 	    				    		 */
 	    				    		String url = Item.getText();
+	    				    		if(!URLUtil.isValidUrl(url)) url = "http://"+url;
 	    				    		Intent i = new Intent(Intent.ACTION_VIEW);
 	    				    		i.setData(Uri.parse(url));
 	    				    		startActivity(i);
