@@ -43,7 +43,6 @@
 	<string name="misc">Misc</string>
 	
 	<string name="pref_account_create_title">Create Account</string>
-	<string name="pref_account_create_sum">Use this if don\'t have an account</string>
 	
 	<string name="pref_username_title">Username</string>
 	<string name="pref_username_defsum">No username set</string>
@@ -59,10 +58,10 @@
 	
 	<string name="pref_usehttps_title">Transport Encryption</string>
 	<string name="pref_usehttps_sum">Uncheck if you have trouble connecting to server</string>
-	<string name="pref_username">Username</string>
 	
 	<string name="pref_server_title">Pasty Server</string>
 	<string name="pref_server_sum">Choose which Pasty Server to use (dev-setting)</string>
+	
 	<string name="itemContextMenuTitle">Clipboard Item</string>
 	<string-array name="itemContextMenu">
 	    <item>Copy without exiting</item>
@@ -70,12 +69,10 @@
 	    <item>Delete</item>
 	</string-array>
 	
-	
 	<string name="pref_tos_title">Terms of Service</string>
 	<string name="pref_privacy_title">Privacy Policy</string>
 	
 	<string name="pref_version_title">Version</string>
-	
 	
     <string name="error_badanswer_title">Problem talking to server</string>
     <string name="error_badanswer">Try again later (invalid answer)</string>
@@ -88,9 +85,8 @@
     <string name="error_login_failed">Please make sure you specified your account correctly</string>
     <string name="error_credentials_not_set_title">Welcome!</string>
     <string name="error_credentials_not_set">You need to provide the login data to your Pasty account</string>
-    <string name="error_unknown_title">Unknown error occured!</string>
+    <string name="error_unknown_title">Unknown error occurred!</string>
     <string name="error_unknown">Please try again later or check for an App update</string>
-    
-    <string name="error_adding">An error occured while adding your item</string>
+    <string name="error_adding">An error occurred while adding your item</string>
 	
 </resources>
