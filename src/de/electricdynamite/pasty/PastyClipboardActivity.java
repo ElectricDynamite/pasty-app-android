@@ -47,7 +47,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 		}
 		// Request features
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    	this.prefs = new PastyPreferencesProvider(getBaseContext());
+    	if(this.prefs == null)
+    		this.prefs = new PastyPreferencesProvider(getApplication());
         setContentView(R.layout.main);
 
 		if (savedInstanceState == null) {
@@ -147,6 +148,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 	        return true;
         default:
                 return super.onOptionsItemSelected(item);
+                
         }
     }
 	

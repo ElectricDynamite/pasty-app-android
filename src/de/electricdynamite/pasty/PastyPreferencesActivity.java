@@ -89,7 +89,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             
 
             // Setup the initial values
-        	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
         	String mKeyVal;
         	String mSumVal;
             mKeyVal = sharedPreferences.getString(KEY_PREF_USERNAME, "");

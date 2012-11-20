@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.electricdynamite.pasty"
-    android:versionCode="12103101"
+    android:versionCode="12112001"
     android:versionName="0.5.0-master" >
 
    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" /> 
@@ -33,30 +33,6 @@
             android:name=".PastyAboutActivity"
             android:label="@string/about" >
         </activity>
-        <!--  <receiver android:enabled="true" android:name="PastyAddItemReveiver">
-      		<intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-	            <data android:mimeType="text/plain" />
-      		</intent-filter>
-    	</receiver>
-    	<service android:name="PastyIntentService">
-      		<intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-	            <data android:mimeType="text/plain" />
-      		</intent-filter>
-      	</service> 
-        <activity
-            android:name=".PastyAddItemActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_share_via_pasty">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-	            <data android:mimeType="text/plain" />
-            </intent-filter>
-        </activity> -->
     </application>
 
 </manifest>

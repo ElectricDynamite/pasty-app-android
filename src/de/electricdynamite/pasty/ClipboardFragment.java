@@ -246,11 +246,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	public class ClipboardItemListAdapter extends BaseAdapter {
 			// List of stored ClipboardItems
 	        private List<ClipboardItem> itemList;
-	        private Context context;
 	     
 	        public ClipboardItemListAdapter(Context context, List<ClipboardItem> itemList) {
 	            this.itemList = itemList;
-	            this.context = context;
 	        }
 	     
 	        public int getCount() {
@@ -346,7 +344,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		@Override
 		protected PastyResponse doInBackground(ClipboardItem... item) {
 			if(context == null) {
-				context = getSherlockActivity().getBaseContext();
+				context = getSherlockActivity().getApplicationContext();
 			}
 			PastyPreferencesProvider prefs = new PastyPreferencesProvider(context);
 			PastyClient client = new PastyClient(prefs.getRESTBaseURL(), true);
@@ -373,7 +371,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	   		Toast toast = Toast.makeText(context, text, duration);
 	   		toast.show();
 	   		toast = null;
-	   		context = null;
 	       }
 	    }
 	}

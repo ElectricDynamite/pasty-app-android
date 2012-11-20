@@ -34,9 +34,11 @@ public class AddItemFragment extends SherlockDialogFragment {
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		this.inflater = inflater;
-		this.context = getSherlockActivity().getBaseContext();
+		if(this.context == null) {
+			this.context = getSherlockActivity().getApplication();
+		}
 		if(this.prefs == null) {
-			this.prefs = new PastyPreferencesProvider(getSherlockActivity().getBaseContext());
+			this.prefs = new PastyPreferencesProvider(getSherlockActivity().getApplication());
 		} else {
 			prefs.reload();
 		}
@@ -132,7 +134,6 @@ public class AddItemFragment extends SherlockDialogFragment {
 	   		Toast toast = Toast.makeText(context, text, duration);
 	   		toast.show();
 	   		toast = null;
-	   		context = null;
 	   		activity.onAddItemFragmentCallbackSignal(PastySharedStatics.SIGNAL_EXIT);
 	       }
 	    }
