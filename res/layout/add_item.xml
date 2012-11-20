@@ -11,13 +11,16 @@
 			android:textSize="18sp"
 			android:lines="4"
 			android:gravity="top"
-			android:inputType="textMultiLine" />
+       		android:imeOptions="actionDone"
+			android:inputType="textMultiLine">
+			<requestFocus />
+		</EditText>
 		<Button
-			android:id="@+id/PastyButton"
+			android:id="@+id/button_add_item_confirm"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingLeft="50dp"
 			android:paddingRight="50dp"
-			android:layout_gravity="center"
+			android:layout_gravity="center" 
 			android:text="@string/PastyButton_label" />
 </LinearLayout>

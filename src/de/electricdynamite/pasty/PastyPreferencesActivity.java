@@ -17,7 +17,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String URL_ACCOUNT_CREATE	= "https://pasty.cc/user/create/";
 		private static final String URL_TOS				= "https://pasty.cc/tos/";
-		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html"; 
+		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html";
 			
 	    public static final String KEY_PREF_USERNAME = "pref_username";
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
@@ -89,7 +89,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             
 
             // Setup the initial values
-        	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
         	String mKeyVal;
         	String mSumVal;
             mKeyVal = sharedPreferences.getString(KEY_PREF_USERNAME, "");
@@ -125,7 +125,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             super.onPause();
 
             // Unregister the listener whenever a key changes            
-            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);    
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         }
 
         
@@ -158,10 +158,14 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
         public boolean onOptionsItemSelected(MenuItem item) {
         	switch (item.getItemId()) {
     			case android.R.id.home:
-    				Intent intent = new Intent(this,
+    				/*
+    				 * We will not call Home using an intend, but instead will finish() this activity.
+    				 * Intent intent = new Intent(this,
             			PastyActivity.class);
     				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     				startActivity(intent);
+    				*/
+    				finish();
     				return true;
         		default:
         			return super.onOptionsItemSelected(item);

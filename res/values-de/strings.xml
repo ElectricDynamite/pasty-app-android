@@ -10,9 +10,11 @@
     <string name="copy">Kopieren</string>
     
     <string name="dialog_item_add_title">Neuer Eintrag</string>
+    <string name="dialog_item_add_title_running">Sende Eintrag in die Cloud&#8230;</string>
     
     <string name="helptext_PastyActivity_pasty">Neuen Eintrag einfügen.</string>
     <string name="helptext_PastyActivity_copy">Eintrag zum Kopieren berühren</string>
+    <string name="helptext_PastyActivity_options">Drücken und halten für Optionen</string>
     <string name="helptext_PastyActivity_loading">Lade dein Pasty Clipboard&#8230;</string>
     <string name="helptext_PastyActivity_clipboard_empty">Dein Clipboard ist leer!</string>
     <string name="helptext_PastyActivity_how_to_add">Drücke das Plus-Zeichen zum Hinzufügen</string>
@@ -32,6 +34,8 @@
     
     <string name="settings">Einstellungen</string>
 	<string name="about">Über Pasty</string>
+	<string name="add">Hinzufügen</string>
+	<string name="reload">Aktualisieren</string>
 	<string name="login">Login</string>
 	<string name="behaviour">Verhalten</string>
 	<string name="network">Netzwerk</string>

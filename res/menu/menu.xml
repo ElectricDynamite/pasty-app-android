@@ -4,6 +4,10 @@
           android:icon="@drawable/ic_menu_add_holo_dark"
           android:title="@string/add"
           android:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/menu_reload"
+          android:icon="@drawable/ic_reload_holo_dark"
+          android:title="@string/reload"
+          android:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_settings"
           android:icon="@android:drawable/ic_menu_preferences"
           android:title="@string/settings"/>

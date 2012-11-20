@@ -9,10 +9,15 @@ import android.text.ClipboardManager;
 public class ClipboardItem {
 	private String Id = "";
 	private String ItemText = "";
+	private Boolean isLinkified = false;
 	
 	public ClipboardItem(String Id, String ItemText) {
 		this.Id = Id;
 		this.ItemText = ItemText;
+	}
+	
+	public void linkfied() {
+		this.isLinkified = true;
 	}
 	
 	public String getId() {
@@ -21,6 +26,10 @@ public class ClipboardItem {
 	
 	public String getText() {
 		return this.ItemText;
+	}
+	
+	public Boolean isLinkified() {
+		return isLinkified;
 	}
 	
 	public JSONObject getJSON() throws JSONException {
