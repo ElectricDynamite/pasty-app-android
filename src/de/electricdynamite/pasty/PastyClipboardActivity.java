@@ -33,6 +33,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     public String versionName;
     public int versionCode;
 	protected PastyPreferencesProvider prefs;
+	protected FragmentManager mFragmentManager;
 	private static ClipboardFragment mClipboardFragment = new ClipboardFragment();
 	
     /** Called when the activity is first created. */
@@ -47,7 +48,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 		}
 		// Request features
     	requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    	if(this.prefs == null)
+    	if(mFragmentManager == null) mFragmentManager = getSupportFragmentManager();
+    	if(this.prefs == null) 
     		this.prefs = new PastyPreferencesProvider(getApplication());
         setContentView(R.layout.main);
 
@@ -59,8 +61,18 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     @Override
     public void onResume() {
     	super.onResume();
+    	Log.d(TAG,"onResume() called");
     	// Let's get preferences
 		reloadPreferences();
+		
+
+    	FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        Fragment mLivingAddItemDialogFragment = mFragmentManager.findFragmentByTag("AddItemDialog");
+        if (mLivingAddItemDialogFragment != null) {
+        	mFragmentTransaction.remove(mLivingAddItemDialogFragment);
+        	Log.d(TAG,"onResume(): removed Fragment");
+        	mFragmentTransaction = null;
+        }
 		
     	// Check for network connectivity
     	ConnectivityManager connMgr = (ConnectivityManager) 
@@ -71,14 +83,17 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     			// check for the Intent extras
     			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
     				AddItemFragment mAddItemFragment = new AddItemFragment();
-    		        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    		        Fragment prev = getSupportFragmentManager().findFragmentByTag("AddItemDialog");
+    		        FragmentTransaction ft = mFragmentManager.beginTransaction();
+    		        Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
     		        if (prev != null) {
     		        	ft.remove(prev);
     		        }
    			        // Create and show the dialog.
     		        // TODO do not add to Stack
    			        mAddItemFragment.show(ft, "AddItemDialog");
+   			        ft = null;
+   			        prev = null;
+   			     mAddItemFragment = null;
     			} else {
     				if(!mClipboardFragment.isAdded()) {
     					Log.d(TAG, "onResume(): Adding ClipboardFragment");
@@ -95,12 +110,24 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     	}
     }
     
+    @Override
+    public void onPause() {
+    	super.onPause();
+    	Log.d(TAG,"onPause() called");
+    	FragmentTransaction ft = mFragmentManager.beginTransaction();
+        Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
+        if (prev != null) {
+        	ft.remove(prev);
+        	Log.d(TAG,"onPause(): removed Fragment");
+        	ft = null;
+        	prev = null;
+        }
+    }
 
     protected void showAlertDialog(int id) {
-        FragmentManager fm = getSupportFragmentManager();
         PastyAlertDialogFragment AlertDialog = new PastyAlertDialogFragment(id);
         AlertDialog.setCancelable(false);
-        AlertDialog.show(fm, "fragment_alert_name");
+        AlertDialog.show(mFragmentManager, "fragment_alert_name");
     }
     
     public void reloadPreferences() {
@@ -122,14 +149,17 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         switch (item.getItemId()) {
         case R.id.menu_add:
         	AddItemFragment mAddItemFragment = new AddItemFragment();
-        	FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        	Fragment prev = getSupportFragmentManager().findFragmentByTag("AddItemDialog");
+        	FragmentTransaction ft = mFragmentManager.beginTransaction();
+        	Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
         	if (prev != null) {
         		ft.remove(prev);
         	}
 
 	        // Create and show the dialog.
 	        mAddItemFragment.show(ft, "AddItemDialog");
+	        ft = null;
+	        prev = null;
+	        mAddItemFragment = null;
 	        return true;
         case R.id.menu_reload:
         	mClipboardFragment.restartLoading();
