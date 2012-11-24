@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
@@ -174,6 +175,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         case R.id.menu_about:
         	Intent aboutActivity = new Intent(getBaseContext(),
         			PastyAboutActivity.class);
+        	aboutActivity.putExtra("versionName", this.versionName);
+        	aboutActivity.putExtra("versionCode", this.versionCode);
         	startActivity(aboutActivity);
 	        return true;
         default:
@@ -203,6 +206,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 			case PastySharedStatics.SIGNAL_ACTIVITY_ABOUT:
 	        	Intent aboutActivity = new Intent(getBaseContext(),
 	        			PastyAboutActivity.class);
+	        	aboutActivity.putExtra("versionName", this.versionName);
+	        	aboutActivity.putExtra("versionCode", this.versionCode);
 	        	startActivity(aboutActivity);
 				break;
 		}

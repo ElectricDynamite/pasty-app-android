@@ -7,6 +7,7 @@ import com.actionbarsherlock.view.MenuItem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 public class PastyAboutActivity extends SherlockActivity {
 
@@ -22,7 +23,11 @@ public class PastyAboutActivity extends SherlockActivity {
         ab.setDisplayHomeAsUpEnabled(true);
     	// Let's draw our layout
 	    setContentView(R.layout.about_activity);
-		
+		Intent mIntent = getIntent();
+        String mVersionName = mIntent.getStringExtra("versionName");
+        int mVersionCode = mIntent.getIntExtra("versionCode",0);
+        TextView mVersionText = (TextView) findViewById(R.id.about_version);
+        mVersionText.setText(getString(R.string.about_version,mVersionName,mVersionCode));
 	}
 
 	public void onClick(View view) {
