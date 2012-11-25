@@ -15,12 +15,8 @@
   <TextView
   android:id="@+id/myListitem" 
   android:layout_width="wrap_content"
-  android:layout_height="32dp"
+  android:layout_height="wrap_content"
   android:gravity="fill_vertical"
   android:layout_margin="10dp"
-  android:singleLine="true"
-  android:ellipsize="marquee"
-  android:marqueeRepeatLimit="marquee_forever"
-  android:scrollHorizontally="true"
-  android:textSize="22dp"/>
+  android:textSize="22sp"/>
 </LinearLayout>
