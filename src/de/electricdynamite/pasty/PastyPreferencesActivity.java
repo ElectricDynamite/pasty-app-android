@@ -4,11 +4,13 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -22,9 +24,11 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
 	    public static final String KEY_PREF_USERNAME = "pref_username";
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
 	    public static final String KEY_PREF_VERSION	 = "pref_version";
+	    public static final String KEY_PREF_CLICKABLE_LINKS	 = "pref_clickable_links";
 
 	    private EditTextPreference	prefUsername;
 	    private EditTextPreference	prefPassword;
+	    private CheckBoxPreference	prefClickableLinks;
 	    private Preference			prefVersion;
 	
 	
@@ -40,6 +44,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
                 
                 prefUsername = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_USERNAME);
                 prefPassword = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_PASSWORD);
+                prefClickableLinks  = (CheckBoxPreference)getPreferenceScreen().findPreference(KEY_PREF_CLICKABLE_LINKS);
                 prefVersion  = (Preference)getPreferenceScreen().findPreference(KEY_PREF_VERSION);
                 
                 Preference mPrefAccountCreate = findPreference("pref_account_create");
@@ -83,7 +88,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
                 
         }
         
-        @Override
+		@Override
         protected void onResume() {
             super.onResume();
             
@@ -108,6 +113,16 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             mKeyVal = null;
             mSumVal = null;
             
+        	Boolean mKeyValBool = sharedPreferences.getBoolean(KEY_PREF_CLICKABLE_LINKS, false);
+        	if(mKeyValBool == true) {
+        		mSumVal = getString(R.string.pref_clickable_links_sum_on);
+        	} else {
+        		mSumVal = getString(R.string.pref_clickable_links_sum_off);
+        	}
+        	prefClickableLinks.setSummary(mSumVal);
+        	mKeyValBool = null;
+            mSumVal = null;
+            
             Intent mIntent = getIntent();
             mKeyVal = sharedPreferences.getString(KEY_PREF_VERSION, "");
             mSumVal = mIntent.getStringExtra("versionName");
@@ -129,7 +144,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
         }
 
         
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             // Let's do something a preference value changes
         	String mKeyVal;
         	String mSumVal;
@@ -140,14 +155,22 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             		mSumVal = getString(R.string.pref_username_defsum);
             	} 
             	prefUsername.setSummary(mSumVal);
-            }
-            else if (key.equals(KEY_PREF_PASSWORD)) {
+            } else if (key.equals(KEY_PREF_PASSWORD)) {
             	mKeyVal = sharedPreferences.getString(KEY_PREF_PASSWORD, "");
             	mSumVal = getString(R.string.pref_password_defsum);
             	if(!mKeyVal.isEmpty()) {
             		mSumVal = getString(R.string.pref_password_sum_isset);
             	} 
             	prefPassword.setSummary(mSumVal);
+            } else if (key.equals(KEY_PREF_CLICKABLE_LINKS)) {
+            	Boolean mKeyValBool = sharedPreferences.getBoolean(KEY_PREF_CLICKABLE_LINKS, false);
+            	if(mKeyValBool == true) {
+            		mSumVal = getString(R.string.pref_clickable_links_sum_on);
+            	} else {
+            		mSumVal = getString(R.string.pref_clickable_links_sum_off);
+            	}
+            	prefClickableLinks.setSummary(mSumVal);
+            	mKeyValBool = null;
             }
             mKeyVal = null;
             mSumVal = null;

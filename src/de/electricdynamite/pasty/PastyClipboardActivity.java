@@ -14,6 +14,8 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -27,13 +29,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
+public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener, OnSharedPreferenceChangeListener {
 	
 
     private static final String TAG = PastyClipboardActivity.class.toString();
     public String versionName;
     public int versionCode;
 	protected PastyPreferencesProvider prefs;
+	private Boolean settingsUpdated = false;
 	protected FragmentManager mFragmentManager;
 	private static ClipboardFragment mClipboardFragment = new ClipboardFragment();
 	
@@ -80,17 +83,20 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     		        	ft.remove(prev);
     		        }
    			        // Create and show the dialog.
-    		        // TODO do not add to Stack
    			        mAddItemFragment.show(ft, "AddItemDialog");
    			        ft = null;
    			        prev = null;
    			     mAddItemFragment = null;
     			} else {
     				if(!mClipboardFragment.isAdded()) {
-    					Log.d(TAG, "onResume(): Adding ClipboardFragment");
     					getSupportFragmentManager().beginTransaction()
     					.replace(R.id.fragment_placeholder, mClipboardFragment)
     					.commit();
+    				} else {
+    					if(settingsUpdated) {
+    						mClipboardFragment.restartLoading();
+    						settingsUpdated = false;
+    					}
     				}
     			}
     		} else {
@@ -217,6 +223,14 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 	@Override
 	public void onAddItemFragmentCallbackSignal(int signal) {
 		actOnSignal(signal);			
+	}
+
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		Log.d(TAG, "settings were updated");
+		settingsUpdated = true;
 	}
 	
 	

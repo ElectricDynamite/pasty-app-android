@@ -11,31 +11,22 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.ClipboardManager;
-import android.text.Layout;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.webkit.URLUtil;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -58,6 +49,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	private final Handler mHandler = new Handler();
 	
 	private PastyClipboardFragmentListener activity;
+	private PastyPreferencesProvider prefs;
 
 	public interface PastyClipboardFragmentListener {
         void onPastyClipboardFragmentSignal(int signal);
@@ -86,6 +78,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		}
 		getListView().setAdapter(mAdapter);
 
+		if(this.prefs == null) {
+			this.prefs = new PastyPreferencesProvider(getSherlockActivity().getApplication());
+		} else {
+			prefs.reload();
+		}
+		
 		// ---- magic lines starting here -----
 		// call this to re-connect with an existing
 		// loader (after screen configuration changes for e.g!)
@@ -196,10 +194,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    					@Override
 	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	    				    	ClipboardItem Item = mItems.get(position); // get a ClipboardItem from the clicked position
-	    				    	if(Item.isLinkified()) {
-	    				    		/* If the clicked item was originally linkified, we manually 
+	    				    	if(Item.isLinkified() && prefs.getClickableLinks()) {
+	    				    		/* If the clicked item was originally linkified and prefs.getClickableLinks() is true, we manually 
 	    				    		 * fire an ACTION_VIEW intent to simulate Linkify() behavior
-	    				    		 * TODO fix URLs if they are without http://, or we will FC
 	    				    		 */
 	    				    		String url = Item.getText();
 	    				    		if(!URLUtil.isValidUrl(url)) url = "http://"+url;
@@ -258,7 +255,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	        public ClipboardItem getItem(int position) {
 	            return itemList.get(position);
 	        }
-	        
 	        
 	        public long getItemId(int position) {
 	            return position;
@@ -420,9 +416,18 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		@Override
 	    public void onCreateContextMenu(ContextMenu menu, View v,
 	        ContextMenuInfo menuInfo) {
+		  AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 	      if (v.getId()==R.id.listItems || v.getId() == R.id.myListimage) {
 	        menu.setHeaderTitle(getString(R.string.itemContextMenuTitle));
 	        String[] menuItems = getResources().getStringArray(R.array.itemContextMenu);
+	        ClipboardItem mItem = mAdapter.getItem(info.position);
+	        if(mItem.isLinkified()) {
+	        	/* Item was Linkified.
+	        	 * Let's add a "open in browser" menuItem
+	        	 */
+	        	menu.add(Menu.NONE,	PastySharedStatics.ITEM_CONTEXTMENU_OPEN_ID,
+	        			0, R.string.itemContextMenu_open);
+	        }
 	        for (int i = 0; i<menuItems.length; i++) {
 	          menu.add(Menu.NONE, i, i, menuItems[i]);
 	        }
@@ -458,6 +463,16 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      		// Delete selected
 	      		mAdapter.delete(info.position);
 	      		break;
+	      	case PastySharedStatics.ITEM_CONTEXTMENU_OPEN_ID:
+	      		/* If the clicked item was originally linkified, we
+	    		 * fire an ACTION_VIEW intent.
+	    		 */
+	    		String url = Item.getText();
+	    		if(!URLUtil.isValidUrl(url)) url = "http://"+url;
+	    		Intent i = new Intent(Intent.ACTION_VIEW);
+	    		i.setData(Uri.parse(url));
+	    		startActivity(i);
+	    		break;
 	      }
 	      return true;
 	    }
@@ -502,56 +517,4 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			mHelpTextBig = null;
 			mHelpTextSmall = null;
 	    }
-	
-/*	    public class LinkTextView extends TextView {
-
-			public LinkTextView(Context context) {
-				super(context);
-			}
-	    	
-			@Override
-			public boolean onTouchEvent(MotionEvent event) {
-			        TextView widget = (TextView) this;
-			        Object text = widget.getText();
-			        if (text instanceof Spanned) {
-			            Spannable buffer = (Spannable) text;
-
-			            int action = event.getAction();
-
-			            if (action == MotionEvent.ACTION_UP
-			                    || action == MotionEvent.ACTION_DOWN) {
-			                int x = (int) event.getX();
-			                int y = (int) event.getY();
-
-			                x -= widget.getTotalPaddingLeft();
-			                y -= widget.getTotalPaddingTop();
-
-			                x += widget.getScrollX();
-			                y += widget.getScrollY();
-
-			                Layout layout = widget.getLayout();
-			                int line = layout.getLineForVertical(y);
-			                int off = layout.getOffsetForHorizontal(line, x);
-
-			                ClickableSpan[] link = buffer.getSpans(off, off,
-			                        ClickableSpan.class);
-
-			                if (link.length != 0) {
-			                    if (action == MotionEvent.ACTION_UP) {
-			                        link[0].onClick(widget);
-			                    } else if (action == MotionEvent.ACTION_DOWN) {
-			                         Selection.setSelection(buffer,
-			                                 buffer.getSpanStart(link[0]),
-			                                 buffer.getSpanEnd(link[0]));
-			                    }
-			                    return true;
-			                }
-			            }
-
-			        }
-
-			        return false;
-			    }
-			
-	    }*/
 }

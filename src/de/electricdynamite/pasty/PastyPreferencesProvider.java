@@ -17,6 +17,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	private String restServerScheme;
 	private Boolean useTLS;
 	private Boolean pasteCurrClip;
+	private Boolean clickableLinks;
 	private Context context;
 	
 	/*
@@ -57,6 +58,10 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		return this.pasteCurrClip;
 	}
 	
+	public Boolean getClickableLinks() {
+		return clickableLinks;
+	}
+	
 	public void reload() {
 //		Log.d(TAG, "reload(): Reloading SharedPreferences");
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -83,6 +88,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 			}
 		}
 		this.pasteCurrClip = prefs.getBoolean(PastySharedStatics.PREF_PASTE_CLIPBOARD, true);
+		this.clickableLinks = prefs.getBoolean(PastySharedStatics.PREF_CLICKABLE_LINKS, false);
 	}
 
 	@Override

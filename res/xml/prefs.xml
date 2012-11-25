@@ -26,7 +26,12 @@
                         android:title="@string/pref_paste_clipboard_title"
                         android:defaultValue="true"
                         android:summary="@string/pref_paste_clipboard_sum"
-                        android:key="pref_paste_clipboard" />
+                        android:key="pref_paste_clipboard" />    
+                <CheckBoxPreference
+                        android:title="@string/pref_clickable_links_title"
+                        android:defaultValue="false"
+                        android:summary="@string/pref_clickable_links_sum_off"
+                        android:key="pref_clickable_links" />
         </PreferenceCategory>
         <PreferenceCategory
                 android:title="@string/network">

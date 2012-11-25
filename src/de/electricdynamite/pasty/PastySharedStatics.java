@@ -19,12 +19,14 @@ public class PastySharedStatics {
     static final int ITEM_CONTEXTMENU_COPY_ID	= 0;
     static final int ITEM_CONTEXTMENU_SHARE_ID	= 1;
     static final int ITEM_CONTEXTMENU_DELETE_ID	= 2;
+    static final int ITEM_CONTEXTMENU_OPEN_ID	= 3;
     
     static final String PREF_USER				= "pref_username";  
     static final String PREF_PASSWORD			= "pref_password"; 
     static final String PREF_HTTPS				= "pref_usehttps";
     static final String PREF_SERVER				= "pref_server";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
+    static final String PREF_CLICKABLE_LINKS	= "pref_clickable_links";
     
     /*static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
     static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";*/
