@@ -62,18 +62,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     @Override
     public void onResume() {
     	super.onResume();
-    	Log.d(TAG,"onResume() called");
     	// Let's get preferences
 		reloadPreferences();
-		
-
-    	FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
-        Fragment mLivingAddItemDialogFragment = mFragmentManager.findFragmentByTag("AddItemDialog");
-        if (mLivingAddItemDialogFragment != null) {
-        	mFragmentTransaction.remove(mLivingAddItemDialogFragment);
-        	Log.d(TAG,"onResume(): removed Fragment");
-        	mFragmentTransaction = null;
-        }
 		
     	// Check for network connectivity
     	ConnectivityManager connMgr = (ConnectivityManager) 
@@ -114,12 +104,11 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     @Override
     public void onPause() {
     	super.onPause();
-    	Log.d(TAG,"onPause() called");
     	FragmentTransaction ft = mFragmentManager.beginTransaction();
         Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
         if (prev != null) {
         	ft.remove(prev);
-        	Log.d(TAG,"onPause(): removed Fragment");
+        	ft.commit();
         	ft = null;
         	prev = null;
         }
@@ -149,19 +138,18 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.menu_add:
-        	AddItemFragment mAddItemFragment = new AddItemFragment();
         	FragmentTransaction ft = mFragmentManager.beginTransaction();
         	Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
         	if (prev != null) {
         		ft.remove(prev);
-        	}
-
-	        // Create and show the dialog.
-	        mAddItemFragment.show(ft, "AddItemDialog");
-	        ft = null;
+        	} 
+        	// Create and show the dialog.
+            AddItemFragment mAddItemFragment = new AddItemFragment();
+		    mAddItemFragment.show(ft, "AddItemDialog");
+		    mAddItemFragment = null;
+        	ft = null;
 	        prev = null;
-	        mAddItemFragment = null;
-	        return true;
+		    return true;
         case R.id.menu_reload:
         	mClipboardFragment.restartLoading();
 	        return true;
