@@ -18,6 +18,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	private Boolean useTLS;
 	private Boolean pasteCurrClip;
 	private Boolean clickableLinks;
+	private Boolean mWasUpdated = false;
 	private Context context;
 	
 	/*
@@ -27,6 +28,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	public PastyPreferencesProvider(Context context) {
 //		Log.d(TAG, "New PastyPreferencesProvider created");
 		this.context = context;
+		
 		reload();
 	}
 	
@@ -40,7 +42,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	
 	String getRESTServer() {
 		return this.restServerHost;
-	}
+	}		
 	
 	String getRESTServerScheme() {
 		return this.restServerScheme;
@@ -62,9 +64,20 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		return clickableLinks;
 	}
 	
+	public Boolean wasUpdated() {
+		if(this.mWasUpdated) {
+			this.mWasUpdated = false;
+			return true;
+		}
+		return false;
+	}
+	
 	public void reload() {
-//		Log.d(TAG, "reload(): Reloading SharedPreferences");
+//		Log.d(TAG, "reload(): Reloading SharedPreferences");  
+        if(prefs != null) prefs.unregisterOnSharedPreferenceChangeListener(this);
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // Set up a listener whenever a key changes            
+        prefs.registerOnSharedPreferenceChangeListener(this);
 		this.username = prefs.getString(PastySharedStatics.PREF_USER,"");
 		this.password = prefs.getString(PastySharedStatics.PREF_PASSWORD,"");
 		this.useTLS = prefs.getBoolean(PastySharedStatics.PREF_HTTPS, true);
@@ -94,7 +107,8 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		// TODO Auto-generated method stub
+		this.reload();
+		this.mWasUpdated = true;
 		
 	}	
 }

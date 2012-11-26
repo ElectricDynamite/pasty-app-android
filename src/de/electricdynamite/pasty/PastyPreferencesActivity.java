@@ -15,6 +15,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.util.Log;
  
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String URL_ACCOUNT_CREATE	= "https://pasty.cc/user/create/";
@@ -146,6 +147,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
         
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             // Let's do something a preference value changes
+			Log.d("PreferenceActivity","settings updated");
         	String mKeyVal;
         	String mSumVal;
             if (key.equals(KEY_PREF_USERNAME)) {
