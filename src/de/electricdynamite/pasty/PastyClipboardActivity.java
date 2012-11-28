@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
 	
@@ -87,7 +86,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     					.commit();
     				} else {
     					if(prefs.wasUpdated()) {
-    						Log.d(TAG,"settings were updated, restarting loader");
+    						//Log.d(TAG,"settings were updated, restarting loader");
     						mClipboardFragment.restartLoading();
     					}
     				}

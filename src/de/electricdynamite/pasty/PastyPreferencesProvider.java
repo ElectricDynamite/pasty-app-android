@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class PastyPreferencesProvider implements OnSharedPreferenceChangeListener {
 	private static final String TAG = PastyPreferencesProvider.class.toString();
