@@ -10,17 +10,19 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class PastyAlertDialogFragment extends SherlockDialogFragment {
 	
-	protected final int id;
+	protected int id;
 	
 	public interface PastyAlertDialogListener {
         void onFinishPastyAlertDialog(int signal);
     }
-	
-	public PastyAlertDialogFragment(int id) {
-		this.id = id;
+
+	public PastyAlertDialogFragment() {
     }
 	
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		if(savedInstanceState != null) {
+			this.id = savedInstanceState.getInt("id");
+		}
     	AlertDialog.Builder	mBuilder = null;
 		AlertDialog mDialog = null;
 		final PastyAlertDialogListener activity = (PastyAlertDialogListener) getSherlockActivity();
@@ -127,5 +129,15 @@ public class PastyAlertDialogFragment extends SherlockDialogFragment {
         }
         return mDialog;
     }
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+	    outState.putInt("id", this.id);
+	    super.onSaveInstanceState(outState);
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 }
 

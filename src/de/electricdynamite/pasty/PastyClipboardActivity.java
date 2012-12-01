@@ -113,9 +113,13 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     }
 
     protected void showAlertDialog(int id) {
-        PastyAlertDialogFragment AlertDialog = new PastyAlertDialogFragment(id);
-        AlertDialog.setCancelable(false);
-        AlertDialog.show(mFragmentManager, "fragment_alert_name");
+    	Fragment prev = mFragmentManager.findFragmentByTag("AlertFragment"+id);
+    	if(prev == null) {
+    		PastyAlertDialogFragment AlertDialog = new PastyAlertDialogFragment();
+    		AlertDialog.setId(id);
+    		AlertDialog.setCancelable(false);
+    		AlertDialog.show(mFragmentManager, "AlertFragment"+id);
+    	}
     }
     
     public void reloadPreferences() {
