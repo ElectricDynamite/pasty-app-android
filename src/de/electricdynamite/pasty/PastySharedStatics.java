@@ -28,10 +28,10 @@ public class PastySharedStatics {
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     static final String PREF_CLICKABLE_LINKS	= "pref_clickable_links";
     
-    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
-    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";
-    //static final String DEFAULT_REST_URI_HTTP	= "http://mario.blafaselblub.net:8080/";
-    //static final String DEFAULT_REST_URI_HTTPS	= "https://mario.blafaselblub.net:4444/";
+    //static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
+    //static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";
+    static final String DEFAULT_REST_URI_HTTP	= "http://mario.blafaselblub.net:8080/";
+    static final String DEFAULT_REST_URI_HTTPS	= "https://mario.blafaselblub.net:4444/";
     //static final String DEFAULT_REST_URI_HTTP 	= "http://10.10.10.10:8888";
     
     // Dialog Signal
