@@ -306,25 +306,33 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            // Select our text view from our view row
 	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
 	            tvListItem.setText(Item.getText());
-	            /* Linkify/ListView / JB problem work around:
-	             * 1. Linkify the item
-	             * 2. If the item was linkified, write it into the ClipboardItem
-	             * 3. Delete the MovementMethod
-	             * 4. (in the onClick callback) check if the clicked ClipboardItem was linkified
-	             * 5. (in the onClick callback) if it was, fire a manual ACTIEN_VIEW intent
-	             * 6. ????
-	             * 7. PROFIT!!!11 (and dirty, dirty code!)
-	             * (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN)
-	             */
-	            Boolean linkified = Linkify.addLinks(tvListItem, Linkify.WEB_URLS);
-	            if(linkified) {
-	    	        linkified(position); // Tell the ClipboardItem that it was linkified.
-	            } 
-	            /* Delete the MovementMethod to prevent linkified items from firing an intent
-	             * at onItemClick() or onItemLongClick()
-	             */
-            	tvListItem.setMovementMethod(null); 
-	            linkified = null;
+	            
+	            if(prefs.getClickableLinks()) {
+		            /* Linkify/ListView / JB problem work around:
+		             * 1. Linkify the item
+		             * 2. If the item was linkified, write it into the ClipboardItem
+		             * 3. Delete the MovementMethod
+		             * 4. (in the onClick callback) check if the clicked ClipboardItem was linkified
+		             * 5. (in the onClick callback) if it was, fire a manual ACTIEN_VIEW intent
+		             * 6. ????
+		             * 7. PROFIT!!!11 (and dirty, dirty code!)
+		             * (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN)
+		             */
+		            Boolean linkified = Linkify.addLinks(tvListItem, Linkify.WEB_URLS);
+		            if(linkified) {
+		    	        linkified(position); // Tell the ClipboardItem that it was linkified.
+		            } 
+		            /* Delete the MovementMethod to prevent linkified items from firing an intent
+		             * at onItemClick() or onItemLongClick()
+		             */
+	            	tvListItem.setMovementMethod(null); 
+		            linkified = null;
+	            } else {
+	            	if(URLUtil.isValidUrl(Item.getText())) {
+	            		linkified(position);
+	            	}
+	            		
+	            }
 	            
 	            return view;
 	        }
