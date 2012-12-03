@@ -64,7 +64,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     	ConnectivityManager connMgr = (ConnectivityManager) 
     			getSystemService(Context.CONNECTIVITY_SERVICE);
     	NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-    	if (networkInfo != null && networkInfo.isConnected()) {
+    	//if (networkInfo != null && networkInfo.isConnected()) {
+    	if(true) {
     		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
     			// check for the Intent extras
     			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {

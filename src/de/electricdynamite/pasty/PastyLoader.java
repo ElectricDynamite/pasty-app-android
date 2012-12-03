@@ -1,6 +1,15 @@
 package de.electricdynamite.pasty;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
@@ -14,6 +23,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
+	private Context context;
     
     public static final int TASK_CLIPBOARD_FETCH = 0xA1;
     public static final int TASK_ITEM_ADD = 0xB1;
@@ -56,6 +66,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         
     public PastyLoader(Context context, int taskId) {
         super(context);
+        this.context = context;
     	// Restore preferences
    	 	this.prefs = new PastyPreferencesProvider(context);
         // Create a PastyClient
@@ -68,7 +79,11 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     public PastyLoader(Context context, int taskId, ClipboardItem item) {
         super(context);
     	// Restore preferences
-   	 	this.prefs = new PastyPreferencesProvider(context);
+        if(this.prefs == null) {
+   	 		this.prefs = new PastyPreferencesProvider(context);
+        } else {
+        	prefs.reload();
+        }
         // Create a PastyClient
     	client = new PastyClient(prefs.getRESTBaseURL(), true);
     	client.setUsername(prefs.getUsername());
@@ -89,6 +104,20 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             switch(taskId) {
             case TASK_CLIPBOARD_FETCH:
             	JSONArray clipboard = client.getClipboard();
+            	File mDeviceCacheFile = new File(
+                        context.getCacheDir(), "ClipboardCache.json");
+
+                try {
+               	 mDeviceCacheFile.createNewFile();
+                    FileWriter fw = new FileWriter(mDeviceCacheFile);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(clipboard.toString());
+                    bw.newLine();
+                    bw.close();
+
+                } catch (IOException e) {
+                	e.printStackTrace();
+                }
             	return new PastyResponse(clipboard);
             case TASK_ITEM_ADD:
             	break;
@@ -117,6 +146,31 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     	if (mCachePastyResponse != null) {
     		// Instantly return a cached version
     		super.deliverResult(mCachePastyResponse);
+    	} else {
+    		File mDeviceCacheFile = new File(
+                    context.getCacheDir(), "ClipboardCache.json");
+
+            try {
+            	BufferedReader reader = new BufferedReader(new FileReader(mDeviceCacheFile));
+                String line, results = "";
+                while( ( line = reader.readLine() ) != null)
+                {
+                    results += line;
+                }
+                reader.close();
+				JSONObject jsonCache;
+				try {
+					jsonCache = new JSONObject(results);
+					JSONArray jsonClipboard = jsonCache.getJSONArray("items");
+					super.deliverResult(new PastyResponse(jsonClipboard));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+            } catch (IOException e) {
+            	e.printStackTrace();
+            } 
     	}
     
     	// If we have not response or only an old response we will forceLoad();
