@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
 	
@@ -64,7 +65,16 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     	ConnectivityManager connMgr = (ConnectivityManager) 
     			getSystemService(Context.CONNECTIVITY_SERVICE);
     	NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-    	//if (networkInfo != null && networkInfo.isConnected()) {
+    	if (networkInfo == null || !networkInfo.isConnected()) {
+    		Context context = getBaseContext();
+	    	CharSequence text = getString(R.string.warning_no_network);
+	    	int duration = Toast.LENGTH_LONG;
+	    	Toast toast = Toast.makeText(context, text, duration);
+	    	toast.show();
+	    	toast = null;
+	    	context = null;
+	    	text = null;
+    	}
     	if(true) {
     		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
     			// check for the Intent extras
@@ -95,8 +105,6 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     		} else {
     			showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
     		}
-    	} else {
-    		showAlertDialog(PastySharedStatics.DIALOG_NO_NETWORK);
     	}
     }
     

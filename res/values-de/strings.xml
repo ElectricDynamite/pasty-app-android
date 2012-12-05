@@ -93,5 +93,6 @@
     <string name="error_unknown_title">Unbekannter Fehler ist aufgetreten</string>
     <string name="error_unknown">Versuch es später noch mal, oder prüfe nach einem App-Update</string>
     <string name="error_adding">Beim Hinzufügen ist ein Fehler aufgetreten</string>
+    <string name="warning_no_network">Kein Netzwerk, zeige zwischengespeichertes Cliboard</string>
     
 </resources>
