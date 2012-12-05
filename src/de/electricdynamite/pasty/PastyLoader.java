@@ -20,6 +20,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
     // Delta to determine if our cached response is old
 	private static final long STALE_DELTA = 60000;
+	private static final String CACHEFILE = "ClipboardCache.json";
 
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
@@ -37,13 +38,18 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     public static class PastyResponse {
         private JSONArray mClipboard;
         private PastyException mException;
+        private int resultSource;
+        public static final int SOURCE_MEM = 0x1;
+        public static final int SOURCE_CACHE = 0x2;
+        public static final int SOURCE_NETWORK = 0x3;
 		public boolean hasException = false;
 
 		public PastyResponse() {
         }
         
-        public PastyResponse(JSONArray clipboard) {
+        public PastyResponse(JSONArray clipboard, int resultSource) {
         	this.mClipboard = clipboard;
+        	this.resultSource = resultSource;
         }
         
         public PastyResponse(PastyException e) {
@@ -53,6 +59,10 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         
         public JSONArray getClipboard() {
             return mClipboard;
+        }
+        
+        public int getResultSource() {
+            return resultSource;
         }
         
         public PastyException getException() {
@@ -104,21 +114,9 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             switch(taskId) {
             case TASK_CLIPBOARD_FETCH:
             	JSONArray clipboard = client.getClipboard();
-            	File mDeviceCacheFile = new File(
-                        context.getCacheDir(), "ClipboardCache.json");
-
-                try {
-               	 mDeviceCacheFile.createNewFile();
-                    FileWriter fw = new FileWriter(mDeviceCacheFile);
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    bw.write(clipboard.toString());
-                    bw.newLine();
-                    bw.close();
-
-                } catch (IOException e) {
-                	e.printStackTrace();
-                }
-            	return new PastyResponse(clipboard);
+            	cacheClipboard(clipboard);
+        		Log.d(TAG, "Delivered result from network");
+            	return new PastyResponse(clipboard, PastyResponse.SOURCE_NETWORK);
             case TASK_ITEM_ADD:
             	break;
             case TASK_ITEM_DELETE:
@@ -145,32 +143,15 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     protected void onStartLoading() {
     	if (mCachePastyResponse != null) {
     		// Instantly return a cached version
+    		Log.d(TAG, "Delivered result from memory");
     		super.deliverResult(mCachePastyResponse);
     	} else {
-    		File mDeviceCacheFile = new File(
-                    context.getCacheDir(), "ClipboardCache.json");
-
-            try {
-            	BufferedReader reader = new BufferedReader(new FileReader(mDeviceCacheFile));
-                String line, results = "";
-                while( ( line = reader.readLine() ) != null)
-                {
-                    results += line;
-                }
-                reader.close();
-				JSONObject jsonCache;
-				try {
-					jsonCache = new JSONObject(results);
-					JSONArray jsonClipboard = jsonCache.getJSONArray("items");
-					super.deliverResult(new PastyResponse(jsonClipboard));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-            } catch (IOException e) {
-            	e.printStackTrace();
-            } 
+    		JSONArray jsonCache = getCachedClipboard();
+    		if(jsonCache != null) {
+    			// Got clipboard from device cache
+        		Log.d(TAG, "Delivered result from cache");
+    			super.deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
+    		}
     	}
     
     	// If we have not response or only an old response we will forceLoad();
@@ -198,5 +179,49 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         // Reset our stale timer.
         mLastLoad = 0;
     }
+    
+    protected JSONArray getCachedClipboard() {
+    	File mDeviceCacheFile = new File(
+                context.getCacheDir(), CACHEFILE);
 
+        try {
+        	BufferedReader reader = new BufferedReader(new FileReader(mDeviceCacheFile));
+            String line, results = "";
+            while( ( line = reader.readLine() ) != null)
+            {
+                results += line;
+            }
+            reader.close();
+			JSONArray jsonCache;
+			try {
+				jsonCache = new JSONArray(results);
+				return jsonCache;
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+        } catch (IOException e) {
+        	e.printStackTrace();
+        } 
+        return null;
+    }
+    
+    private void cacheClipboard(JSONArray clipboard) {
+    	File mDeviceCacheFile = new File(
+                context.getCacheDir(), CACHEFILE);
+
+        try {
+        	mDeviceCacheFile.createNewFile();
+            FileWriter fw = new FileWriter(mDeviceCacheFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(clipboard.toString());
+            bw.newLine();
+            bw.close();
+    		Log.d(TAG, "Saved result to cache");
+
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
+    }
 }

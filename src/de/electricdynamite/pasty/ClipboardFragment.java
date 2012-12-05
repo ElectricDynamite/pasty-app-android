@@ -142,17 +142,20 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 	@Override
 	public void onLoadFinished(Loader<PastyLoader.PastyResponse> loader, PastyLoader.PastyResponse response) {
+		
 		ProgressBar pbLoading			= (ProgressBar) getSherlockActivity().findViewById(R.id.progressbar_downloading);
 		pbLoading.setVisibility(View.GONE);
 		pbLoading = null;
-
+		
     	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
     	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 		mHelpTextBig.setTextColor(getResources().getColor(R.color.abs__primary_text_holo_light));
 		mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.abs__background_holo_light));
 		
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
-	    if(response.hasException) {
+		if(response.getResultSource() == PastyResponse.SOURCE_NETWORK) {
+			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
+		}
+		if(response.hasException) {
 //	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
 	    	// an error occured
 	    	PastyException mException = response.getException();
