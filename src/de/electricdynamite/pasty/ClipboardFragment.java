@@ -152,8 +152,18 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		mHelpTextBig.setTextColor(getResources().getColor(R.color.abs__primary_text_holo_light));
 		mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.abs__background_holo_light));
 		
-		if(response.getResultSource() == PastyResponse.SOURCE_NETWORK) {
-			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE); 
+		if(response.isFinal) {
+			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+			if(response.getResultSource() == PastyResponse.SOURCE_CACHE) {
+		    	Context context = getSherlockActivity().getApplicationContext();
+		    	CharSequence text = getString(R.string.warning_no_network_short);
+		    	int duration = Toast.LENGTH_SHORT;
+		    	Toast toast = Toast.makeText(context, text, duration);
+		    	toast.show();
+		    	toast = null;
+		    	context = null;
+		    	text = null;				
+			}
 		}
 		if(response.hasException) {
 //	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");

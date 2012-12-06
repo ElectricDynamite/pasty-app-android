@@ -93,6 +93,8 @@
     <string name="error_unknown_title">Unknown error occurred!</string>
     <string name="error_unknown">Please try again later or check for an App update</string>
     <string name="error_adding">An error occurred while adding your item</string>
+    <string name="error_adding_offline">Sorry, you need to be online to add something</string>
     <string name="warning_no_network">No network available, showing cached clipboard</string>
+	<string name="warning_no_network_short">No network, cannot refresh</string>
 	
 </resources>

@@ -30,6 +30,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 	private ConnectivityManager mConnMgr;
 	
 	private boolean isOnline = false;
+	private boolean firstLoad = true;
     
     public static final int TASK_CLIPBOARD_FETCH = 0xA1;
     public static final int TASK_ITEM_ADD = 0xB1;
@@ -44,7 +45,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         private JSONArray mClipboard;
         private PastyException mException;
         private int resultSource;
-        private boolean isFinal = false;
+        public boolean isFinal = false;
         public static final int SOURCE_MEM = 0x1;
         public static final int SOURCE_CACHE = 0x2;
         public static final int SOURCE_NETWORK = 0x3;
@@ -128,7 +129,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             	JSONArray clipboard = client.getClipboard();
             	cacheClipboard(clipboard);
         		Log.d(TAG, "Delivered result from network");
-            	return new PastyResponse(clipboard, PastyResponse.SOURCE_NETWORK);
+            	return new PastyResponse(clipboard, PastyResponse.SOURCE_NETWORK, true);
             case TASK_ITEM_ADD:
             	break;
             case TASK_ITEM_DELETE:
@@ -160,19 +161,24 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     	if (networkInfo != null && networkInfo.isConnected()) {
     		this.isOnline = true;
     		Log.d(TAG, "onStartLoading(): working online");
+    	} else {
+    		this.isOnline = false;
     	}
     	networkInfo = null;
     	if (mCachePastyResponse != null) {
     		// Instantly return a cached version
     		Log.d(TAG, "Delivered result from memory");
     		super.deliverResult(mCachePastyResponse);
-    	} else {
+    	} else if(firstLoad) {
     		JSONArray jsonCache = getCachedClipboard();
     		if(jsonCache != null) {
     			// Got clipboard from device cache
         		Log.d(TAG, "Delivered result from cache");
-        		// TODO give different result depending on online/offline state. 
-    			super.deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
+        		if(!isOnline) {
+        			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE, true));
+        		}
+    			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
+    			firstLoad = false;
     		}
     	}
     	

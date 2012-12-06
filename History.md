@@ -1,8 +1,9 @@
 pasty-app-android history
 ========================
 
-Version master
+Version master 
 --------------
+  * Using device cache to provide offline clipboard (#9)
   * Added license, putting the PastyAndroidApp unter Apache 2.0 License
   * Fixed bug with Uncaught Exception when changing orientation while showing a PastyAlertDialogFragment (#17)
   * Fixed layout of TextViews when ClickableLinks are not enabled (do not linkify) (#18)

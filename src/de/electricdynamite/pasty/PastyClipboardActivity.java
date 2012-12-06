@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.widget.Toast;
 
 public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
@@ -28,9 +29,10 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     public String versionName;
     public int versionCode;
 	protected PastyPreferencesProvider prefs;
-	private Boolean settingsUpdated = false;
 	protected FragmentManager mFragmentManager;
 	private static ClipboardFragment mClipboardFragment = new ClipboardFragment();
+	private ConnectivityManager mConnMgr;
+	protected boolean isOnline = false;
 	
     /** Called when the activity is first created. */
     @Override
@@ -61,50 +63,48 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     	// Let's get preferences
 		reloadPreferences();
 		
-    	// Check for network connectivity
-    	ConnectivityManager connMgr = (ConnectivityManager) 
-    			getSystemService(Context.CONNECTIVITY_SERVICE);
-    	NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-    	if (networkInfo == null || !networkInfo.isConnected()) {
-    		Context context = getBaseContext();
-	    	CharSequence text = getString(R.string.warning_no_network);
-	    	int duration = Toast.LENGTH_LONG;
-	    	Toast toast = Toast.makeText(context, text, duration);
-	    	toast.show();
-	    	toast = null;
-	    	context = null;
-	    	text = null;
-    	}
-    	if(true) {
-    		if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
-    			// check for the Intent extras
-    			if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
+		checkOnlineState();
+		
+    	if(!prefs.getUsername().isEmpty() && !prefs.getPassword().isEmpty()) {
+    		// check for the Intent extras
+    		if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
+    			if(isOnline) {
     				AddItemFragment mAddItemFragment = new AddItemFragment();
-    		        FragmentTransaction ft = mFragmentManager.beginTransaction();
-    		        Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
-    		        if (prev != null) {
-    		        	ft.remove(prev);
-    		        }
-   			        // Create and show the dialog.
-   			        mAddItemFragment.show(ft, "AddItemDialog");
-   			        ft = null;
-   			        prev = null;
-   			     mAddItemFragment = null;
-    			} else {
-    				if(!mClipboardFragment.isAdded()) {
-    					getSupportFragmentManager().beginTransaction()
-    					.replace(R.id.fragment_placeholder, mClipboardFragment)
-    					.commit();
-    				} else {
-    					if(prefs.wasUpdated()) {
-    						//Log.d(TAG,"settings were updated, restarting loader");
-    						mClipboardFragment.restartLoading();
-    					}
+    				FragmentTransaction ft = mFragmentManager.beginTransaction();
+    				Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
+    				if (prev != null) {
+    					ft.remove(prev);
     				}
+    				// Create and show the dialog.
+    				mAddItemFragment.show(ft, "AddItemDialog");
+    				ft = null;
+    				prev = null;
+    				mAddItemFragment = null;
+    			} else {
+    				Context context = getApplicationContext();
+    		    	CharSequence text = getString(R.string.error_adding_offline);
+    		    	int duration = Toast.LENGTH_LONG;
+    		    	Toast toast = Toast.makeText(context, text, duration);
+    		    	toast.show();
+    		    	toast = null;
+    		    	context = null;
+    		    	text = null;
+    		    	this.finish();
     			}
     		} else {
-    			showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
+    			if(!mClipboardFragment.isAdded()) {
+    				getSupportFragmentManager().beginTransaction()
+    				.replace(R.id.fragment_placeholder, mClipboardFragment)
+    				.commit();
+    			} else {
+    				if(prefs.wasUpdated()) {
+    					//Log.d(TAG,"settings were updated, restarting loader");
+    					mClipboardFragment.restartLoading();
+    				}
+    			}
     		}
+    	} else {
+    		showAlertDialog(PastySharedStatics.DIALOG_CREDENTIALS_NOT_SET);
     	}
     }
     
@@ -136,6 +136,30 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     	prefs.reload();
     }
     
+    protected void checkOnlineState() {    	
+    	// Check for network connectivity
+    	if(mConnMgr == null)
+    		mConnMgr = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE); 
+
+    	NetworkInfo networkInfo = mConnMgr.getActiveNetworkInfo();
+    	if (networkInfo != null && networkInfo.isConnected()) {
+    		setOnline();
+    	} else {
+    		setOffline();
+    	}
+    	networkInfo = null;
+    }
+    
+    private void setOnline() {
+    	this.isOnline = true;
+    	invalidateOptionsMenu();
+    }
+    
+    private void setOffline() {
+    	this.isOnline = false;
+    	invalidateOptionsMenu();
+    }
+    
    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	
@@ -143,25 +167,48 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+   
+   @Override
+   public boolean onPrepareOptionsMenu (Menu menu) {
+	   if (!isOnline) {
+		   menu.getItem(0).setVisible(false);
+	   } else {
+		   menu.getItem(0).setVisible(true);
+	   }
+       return true;
+   }
     
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.menu_add:
-        	FragmentTransaction ft = mFragmentManager.beginTransaction();
-        	Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
-        	if (prev != null) {
-        		ft.remove(prev);
-        	} 
-        	// Create and show the dialog.
-            AddItemFragment mAddItemFragment = new AddItemFragment();
-		    mAddItemFragment.show(ft, "AddItemDialog");
-		    mAddItemFragment = null;
-        	ft = null;
-	        prev = null;
+        	checkOnlineState();
+        	if(isOnline) {
+	        	FragmentTransaction ft = mFragmentManager.beginTransaction();
+	        	Fragment prev = mFragmentManager.findFragmentByTag("AddItemDialog");
+	        	if (prev != null) {
+	        		ft.remove(prev);
+	        	} 
+	        	// Create and show the dialog.
+	            AddItemFragment mAddItemFragment = new AddItemFragment();
+			    mAddItemFragment.show(ft, "AddItemDialog");
+			    mAddItemFragment = null;
+	        	ft = null;
+		        prev = null;
+        	} else {
+				Context context = getApplicationContext();
+		    	CharSequence text = getString(R.string.error_adding_offline);
+		    	int duration = Toast.LENGTH_LONG;
+		    	Toast toast = Toast.makeText(context, text, duration);
+		    	toast.show();
+		    	toast = null;
+		    	context = null;
+		    	text = null;
+        	}
 		    return true;
         case R.id.menu_reload:
+        	checkOnlineState();
         	mClipboardFragment.restartLoading();
 	        return true;
         case R.id.menu_settings:

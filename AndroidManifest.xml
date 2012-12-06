@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.electricdynamite.pasty"
-    android:versionCode="12112802"
+    android:versionCode="12120601"
     android:versionName="0.6.0-master" >
 
    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" /> 
