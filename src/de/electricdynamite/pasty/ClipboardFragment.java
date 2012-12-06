@@ -65,7 +65,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 
 		//LoaderManager.enableDebugLogging(true);
 	
-		mRes = getResources();
+		//mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
 		activity = (PastyClipboardFragmentListener) getSherlockActivity();
 
@@ -137,7 +137,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	@Override
 	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
 //		Log.d(TAG, "onCreateLoader(): New PastyLoader created");
-		return new PastyLoader(getSherlockActivity(), id);
+		return new PastyLoader(getSherlockActivity().getApplicationContext(), id);
 	}
 
 	@Override

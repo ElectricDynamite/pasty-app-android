@@ -12,6 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
@@ -25,6 +27,9 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
 	private Context context;
+	private ConnectivityManager mConnMgr;
+	
+	private boolean isOnline = false;
     
     public static final int TASK_CLIPBOARD_FETCH = 0xA1;
     public static final int TASK_ITEM_ADD = 0xB1;
@@ -39,12 +44,19 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         private JSONArray mClipboard;
         private PastyException mException;
         private int resultSource;
+        private boolean isFinal = false;
         public static final int SOURCE_MEM = 0x1;
         public static final int SOURCE_CACHE = 0x2;
         public static final int SOURCE_NETWORK = 0x3;
 		public boolean hasException = false;
 
 		public PastyResponse() {
+        }
+        
+        public PastyResponse(JSONArray clipboard, int resultSource, boolean isFinal) {
+        	this.mClipboard = clipboard;
+        	this.resultSource = resultSource;
+        	this.isFinal = isFinal;
         }
         
         public PastyResponse(JSONArray clipboard, int resultSource) {
@@ -141,6 +153,15 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
     @Override
     protected void onStartLoading() {
+    	if(mConnMgr == null) {
+    		mConnMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE); 
+    	}		
+    	NetworkInfo networkInfo = mConnMgr.getActiveNetworkInfo();
+    	if (networkInfo != null && networkInfo.isConnected()) {
+    		this.isOnline = true;
+    		Log.d(TAG, "onStartLoading(): working online");
+    	}
+    	networkInfo = null;
     	if (mCachePastyResponse != null) {
     		// Instantly return a cached version
     		Log.d(TAG, "Delivered result from memory");
@@ -150,13 +171,15 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     		if(jsonCache != null) {
     			// Got clipboard from device cache
         		Log.d(TAG, "Delivered result from cache");
+        		// TODO give different result depending on online/offline state. 
     			super.deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
     		}
     	}
-    
-    	// If we have not response or only an old response we will forceLoad();
-    	if (mCachePastyResponse == null || System.currentTimeMillis() - mLastLoad >= STALE_DELTA) forceLoad();
-    	mLastLoad = System.currentTimeMillis();
+    	
+    	if(isOnline) {
+    		forceLoad();
+    		mLastLoad = System.currentTimeMillis();
+    	}
     }
     
     @Override
@@ -202,7 +225,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 			}
 
         } catch (IOException e) {
-        	e.printStackTrace();
+        	Log.i(TAG, "getCachedClipboard(): Cache file not existing");
         } 
         return null;
     }
@@ -221,7 +244,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     		Log.d(TAG, "Saved result to cache");
 
         } catch (IOException e) {
-        	e.printStackTrace();
+        	Log.e(TAG, "cacheClipboard(): Could not create cache file");
         }
     }
 }
