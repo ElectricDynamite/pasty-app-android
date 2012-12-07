@@ -160,7 +160,6 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     	NetworkInfo networkInfo = mConnMgr.getActiveNetworkInfo();
     	if (networkInfo != null && networkInfo.isConnected()) {
     		this.isOnline = true;
-    		Log.d(TAG, "onStartLoading(): working online");
     	} else {
     		this.isOnline = false;
     	}
@@ -179,6 +178,11 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         		}
     			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
     			firstLoad = false;
+    		} else {
+    			if(!isOnline) {
+    				PastyException e = new PastyException(PastyException.ERROR_NO_CACHE_EXCEPTION);
+        			deliverResult(new PastyResponse(e));    				
+    			}
     		}
     	}
     	

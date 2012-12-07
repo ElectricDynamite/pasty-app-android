@@ -168,6 +168,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		if(response.hasException) {
 //	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
 	    	// an error occured
+
+			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 	    	PastyException mException = response.getException();
 	    	handleException(mException);
 	    } else {
@@ -523,6 +525,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_badanswer_title);
 				mHelpTextSmall.setText(R.string.error_badanswer);
+				return;
+			case PastyException.ERROR_NO_CACHE_EXCEPTION:
+				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
+				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
+				mHelpTextBig.setText(R.string.error_no_network_title);
+				mHelpTextSmall.setText(R.string.error_no_network);
 				return;
 			case PastyException.ERROR_UNKNOWN:
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
