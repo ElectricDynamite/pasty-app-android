@@ -4,20 +4,17 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		xmlns:android="http://schemas.android.com/apk/res/android">
-	    <TextView android:id="@+id/about_text"
-	              android:layout_width="wrap_content"
-	              android:layout_height="wrap_content"
-	              android:singleLine="false"
-	              android:autoLink="all"
-                  android:layout_margin="10dp"
-			      android:text="@string/about_text" />
+	    <WebView  
+			android:id="@+id/about_webview"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
 	    <TextView android:id="@+id/about_version"
 	        	  android:layout_width="fill_parent"
 	        	  android:layout_height="wrap_content"
 	        	  android:text=""
 	        	  android:gravity="center"
 	        	  android:textStyle="italic"
-			      android:layout_below="@id/about_text" />
+			      android:layout_below="@id/about_webview" />
 	    <TextView android:id="@+id/dummy"
 	        	  android:layout_width="wrap_content"
 	        	  android:layout_height="wrap_content"

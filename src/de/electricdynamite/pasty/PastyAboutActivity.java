@@ -24,6 +24,7 @@ import com.actionbarsherlock.view.MenuItem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 public class PastyAboutActivity extends SherlockActivity {
@@ -34,26 +35,20 @@ public class PastyAboutActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-
+		
         ActionBar ab = getSherlock().getActionBar();
         ab.setHomeButtonEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
     	// Let's draw our layout
 	    setContentView(R.layout.about_activity);
+		WebView webView = (WebView) findViewById(R.id.about_webview);
+		String mFilename = "file:///android_asset/html-"+getString(R.string.lang)+"/about.html";
+		webView.loadUrl(mFilename);
 		Intent mIntent = getIntent();
         String mVersionName = mIntent.getStringExtra("versionName");
         int mVersionCode = mIntent.getIntExtra("versionCode",0);
         TextView mVersionText = (TextView) findViewById(R.id.about_version);
         mVersionText.setText(getString(R.string.about_version,mVersionName,mVersionCode));
-	}
-
-	public void onClick(View view) {
-		this.finish();
-	}
-
-	@Override
-	public void finish() {
-		super.finish();
 	}
 	
     @Override
