@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="lang">en</string>
+	<string formatted="false" name="about_version">Pasty Version %s (%d)</string>
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - the cloud clipboard</string>
 	<string name="app_logo">App Logo</string>
