@@ -1,4 +1,4 @@
-Pasty Android Application
+Pasty for Android.tm App
 =========================
 
 Part of the Pasty Project at http://www.pastyapp.org/
@@ -6,6 +6,11 @@ Part of the Pasty Project at http://www.pastyapp.org/
 You can download the compiled app from Google Play at https://play.google.com/store/apps/details?id=de.electricdynamite.pasty
 If you want to compile your own version you can use this sourcecode.
 
+![Screenshot](https://lh3.ggpht.com/3272fk0uKBLK6PZ36Tjl2xQzIcMjujL2KDwVp5qpPd7b42OG1a0FcPC-Lt63XXl6k88)
+
+Contact
+-------
+ Please direct your questions and suggestions to electricdynamite.apps@gmail.com or open an [Issue](https://github.com/ElectricDynamite/pasty-app-android/issues)
 
 License
 -------
@@ -23,3 +28,6 @@ License
  See the License for the specific language governing permissions and
  limitations under the License.
 
+Attribution
+-----------
+ Android and the Google Play store are trademarks of Google Inc.
