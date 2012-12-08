@@ -1,4 +1,4 @@
-Pasty for Android.tm App
+Pasty for Android&trade; App
 =========================
 
 Part of the Pasty Project at http://www.pastyapp.org/
@@ -30,4 +30,7 @@ License
 
 Attribution
 -----------
+ Pasty for Android&trade; uses the fantastic [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock/) Library by [Jake Wharton](http://jakewharton.com/)
+ ActionBarSherlock is licensed under [Apache 2.0 License](   http://www.apache.org/licenses/LICENSE-2.0)
+
  Android and the Google Play store are trademarks of Google Inc.
