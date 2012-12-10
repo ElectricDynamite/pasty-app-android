@@ -145,7 +145,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             case TASK_CLIPBOARD_FETCH:
             	JSONArray clipboard = client.getClipboard();
             	cacheClipboard(clipboard);
-        		Log.d(TAG, "Delivered result from network");
+        		//Log.d(TAG, "Delivered result from network");
             	return new PastyResponse(clipboard, PastyResponse.SOURCE_NETWORK, true);
             case TASK_ITEM_ADD:
             	break;
@@ -183,13 +183,13 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     	networkInfo = null;
     	if (mCachePastyResponse != null) {
     		// Instantly return a cached version
-    		Log.d(TAG, "Delivered result from memory");
+    		//Log.d(TAG, "Delivered result from memory");
     		super.deliverResult(mCachePastyResponse);
     	} else if(firstLoad) {
     		JSONArray jsonCache = getCachedClipboard();
     		if(jsonCache != null) {
     			// Got clipboard from device cache
-        		Log.d(TAG, "Delivered result from cache");
+        		//Log.d(TAG, "Delivered result from cache");
         		if(!isOnline) {
         			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE, true));
         		}
@@ -268,7 +268,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             bw.write(clipboard.toString());
             bw.newLine();
             bw.close();
-    		Log.d(TAG, "Saved result to cache");
+    		//Log.d(TAG, "Saved result to cache");
 
         } catch (IOException e) {
         	Log.e(TAG, "cacheClipboard(): Could not create cache file");
