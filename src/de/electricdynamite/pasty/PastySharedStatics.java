@@ -18,6 +18,9 @@ package de.electricdynamite.pasty;
 
 
 public class PastySharedStatics {
+	
+	// Development Mode
+	static final boolean devMode = true; 
 
 	// Error Dialog IDs
     static final int DIALOG_CONNECTION_ERROR_ID	= 1;
