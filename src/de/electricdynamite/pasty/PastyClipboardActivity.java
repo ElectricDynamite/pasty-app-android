@@ -98,14 +98,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     				prev = null;
     				mAddItemFragment = null;
     			} else {
-    				Context context = getApplicationContext();
-    		    	CharSequence text = getString(R.string.error_adding_offline);
-    		    	int duration = Toast.LENGTH_LONG;
-    		    	Toast toast = Toast.makeText(context, text, duration);
-    		    	toast.show();
-    		    	toast = null;
-    		    	context = null;
-    		    	text = null;
+    		    	Toast.makeText(getApplicationContext(), getString(R.string.error_adding_offline), Toast.LENGTH_LONG).show();
     		    	this.finish();
     			}
     		} else {
@@ -214,14 +207,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
 	        	ft = null;
 		        prev = null;
         	} else {
-				Context context = getApplicationContext();
-		    	CharSequence text = getString(R.string.error_adding_offline);
-		    	int duration = Toast.LENGTH_LONG;
-		    	Toast toast = Toast.makeText(context, text, duration);
-		    	toast.show();
-		    	toast = null;
-		    	context = null;
-		    	text = null;
+		    	Toast.makeText(getApplicationContext(), getString(R.string.error_adding_offline), Toast.LENGTH_LONG).show();
         	}
 		    return true;
         case R.id.menu_reload:

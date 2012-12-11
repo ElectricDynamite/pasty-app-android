@@ -171,14 +171,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		if(response.isFinal) {
 			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 			if(response.getResultSource() == PastyResponse.SOURCE_CACHE) {
-		    	Context context = getSherlockActivity().getApplicationContext();
-		    	CharSequence text = getString(R.string.warning_no_network_short);
-		    	int duration = Toast.LENGTH_SHORT;
-		    	Toast toast = Toast.makeText(context, text, duration);
-		    	toast.show();
-		    	toast = null;
-		    	context = null;
-		    	text = null;				
+		    	Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.warning_no_network_short), Toast.LENGTH_SHORT).show();
 			}
 		}
 		if(response.hasException) {
@@ -240,15 +233,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				    		 */
 		    						ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 		    						Item.copyToClipboard(sysClipboard);
-		    				    	Context context = getSherlockActivity().getApplicationContext();
-		    				    	CharSequence text = getString(R.string.item_copied);
-		    				    	int duration = Toast.LENGTH_LONG;
-		    				    	Toast toast = Toast.makeText(context, text, duration);
-		    				    	toast.show();
-		    				    	toast = null;
-		    				    	context = null;
+		    				    	Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
 		    				    	sysClipboard = null;
-		    				    	text = null;
 		    					    getSherlockActivity().finish();
 	    				    	}
 	    					}
@@ -401,11 +387,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	       if(result.hasException) {
 	    	   handleException(result.getException());
 	       } else {
-	    	int duration = Toast.LENGTH_LONG;
-	   		CharSequence text = getString(R.string.item_deleted);
-	   		Toast toast = Toast.makeText(context, text, duration);
-	   		toast.show();
-	   		toast = null;
+	    	   Toast.makeText(context, getString(R.string.item_deleted), Toast.LENGTH_LONG).show();
 	       }
 	    }
 	}
@@ -482,14 +464,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      		// Copy without exit selected
 	      		ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 				Item.copyToClipboard(clipboard);
-		    	Context context = getSherlockActivity().getApplicationContext();
-		    	CharSequence text = getString(R.string.item_copied);
-		    	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
-		    	toast.show();
-		    	toast = null;
-		    	context = null;
+		    	Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
 		    	clipboard = null;
-		    	text = null;
 	      		break;
 	      	case PastySharedStatics.ITEM_CONTEXTMENU_SHARE_ID:
 	      		// Share to another app
@@ -523,20 +499,17 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 	    	switch(mException.errorId) {
     		case PastyException.ERROR_AUTHORIZATION_FAILED:
-//    			Log.i(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_login_failed_title);
 				mHelpTextSmall.setText(R.string.error_login_failed);
 				return;
 			case PastyException.ERROR_IO_EXCEPTION:
-//    			Log.i(TAG, "ERROR_IO_EXCEPTION");
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_io_title);
 				mHelpTextSmall.setText(R.string.error_io);
 			case PastyException.ERROR_ILLEGAL_RESPONSE:
-//				Log.i(TAG, "ERROR_ILLEGAL_RESPONSE EXCEPTION");
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
 				mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.red));
 				mHelpTextBig.setText(R.string.error_badanswer_title);

@@ -80,9 +80,7 @@ public class AddItemFragment extends SherlockDialogFragment {
 					LinearLayout mDialogLayout = (LinearLayout) v.getParent();
 					String mItem = mNewItemET.getText().toString();
 			    	if(mItem != null && mItem.length() == 0) {
-					   	CharSequence text = getString(R.string.empty_item);
-					   	Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
-					   	toast.show();
+			    		Toast.makeText(context, getString(R.string.empty_item), Toast.LENGTH_LONG).show();
 			    		return;
 			    	}
 			    	ViewGroup container = (ViewGroup) mDialogLayout.getParent();
@@ -145,11 +143,7 @@ public class AddItemFragment extends SherlockDialogFragment {
 	    	   handleException(result.getException());
 	       } else {
 	   		final AddItemFragmentCallbackListener activity = (AddItemFragmentCallbackListener) getSherlockActivity();
-	    	int duration = Toast.LENGTH_LONG;
-	   		CharSequence text = getString(R.string.item_added);
-	   		Toast toast = Toast.makeText(context, text, duration);
-	   		toast.show();
-	   		toast = null;
+	   		Toast.makeText(context, getString(R.string.item_added), Toast.LENGTH_LONG).show();
 	   		activity.onAddItemFragmentCallbackSignal(PastySharedStatics.SIGNAL_EXIT);
 	       }
 	    }
