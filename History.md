@@ -1,16 +1,16 @@
 pasty-app-android history
 ========================
 
-Version master 
---------------
+Version 0.6.0 - 2012-12-12 
+--------------------------
   * Using device cache to provide offline clipboard (#9)
   * Added license, putting the PastyAndroidApp unter Apache 2.0 License
   * Fixed bug with Uncaught Exception when changing orientation while showing a PastyAlertDialogFragment (#17)
   * Fixed layout of TextViews when ClickableLinks are not enabled (do not linkify) (#18)
   * Created new HTML based About View
 
-Version 0.5.0
--------------
+Version 0.5.0 - 2012-11-28
+--------------------------
   * Switched to mostly use Fragments (#5)
   * Fixed context menu bug in Android 4.1 and 4.2
   * Created a layout in Pasty's colors
