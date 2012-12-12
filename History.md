@@ -1,6 +1,9 @@
 pasty-app-android history
 ========================
 
+Current master
+--------------
+
 Version 0.6.0 - 2012-12-12 
 --------------------------
   * Using device cache to provide offline clipboard (#9)
@@ -19,8 +22,8 @@ Version 0.5.0 - 2012-11-28
   * Retired PastyActivity and used more modern PastyClipboardActivity (#15)
   * Lots of smaller stuff
 
-Version 0.4.0
--------------
+Version 0.4.0 - 2012-08-09
+--------------------------
   * Switched to API Version 2
   * Enabled Sharing from App and to the App (#11)
   * Checking network availability before trying to connect (#8)
@@ -28,7 +31,7 @@ Version 0.4.0
   * Changed Intent Extras so that the version is correctly displayed when you open Settings for the first time (#13)
   * Some code cleanup
 
-Version 0.3.0
--------------
+Version 0.3.0 - 2012-05-01
+--------------------------
   * Initial release.
 
