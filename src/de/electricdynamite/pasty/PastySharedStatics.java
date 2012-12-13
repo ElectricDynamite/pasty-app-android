@@ -60,7 +60,4 @@ public class PastySharedStatics {
     static final int SIGNAL_ACTIVITY_ABOUT = 0xA2;
     static final int SIGNAL_ERROR = 0xB1;
     
-    // Unused? 
-    /*static final String PASTY_REST_URI_ITEM		= "/v1/clipboard/item/";
-    static final String PASTY_REST_URI_CLIPBOARD= "/v1/clipboard/list.json";*/
 }
