@@ -54,6 +54,9 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     public static final int TASK_ITEM_ADD = 0xB1;
     public static final int TASK_ITEM_DELETE = 0xB2;
     
+    public static final Boolean CACHE_PERMITTED = true;
+    public static final Boolean CACHE_DENIED = false;
+    
     private int taskId = 0x0;
     
     
@@ -113,6 +116,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     	client.setUsername(prefs.getUsername());
     	client.setPassword(prefs.getPassword());
         this.taskId = taskId;
+        this.permitCache = args.getBoolean("permitCache", PastyLoader.CACHE_PERMITTED);
     }
 
 	@Override

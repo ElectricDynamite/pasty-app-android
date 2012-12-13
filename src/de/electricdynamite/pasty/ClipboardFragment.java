@@ -400,6 +400,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	   handleException(result.getException());
 	       } else {
 	    	   Toast.makeText(context, getString(R.string.item_deleted), Toast.LENGTH_LONG).show();
+	    	   restartLoading(PastyLoader.CACHE_DENIED);
 	       }
 	    }
 	}

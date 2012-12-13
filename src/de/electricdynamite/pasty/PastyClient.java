@@ -149,7 +149,7 @@ public class PastyClient {
 	
 	public String addItem(final String Item) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
-		Log.d(PastyClient.class.toString(),"url is "+url);
+		if(PastySharedStatics.devMode) Log.d(PastyClient.class.toString(),"url is "+url);
 		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpPost httpPost		= new HttpPost(url);
