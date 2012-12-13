@@ -137,15 +137,27 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	}
 	
 	protected void restartLoading() {
+		Bundle args = new Bundle();
+		restartLoading(args);
+		args = null;
+	}
+	
+	protected void restartLoading(Boolean permitCache) {
+		Bundle args = new Bundle();
+		args.putBoolean("permitCache", permitCache);
+		restartLoading(args);
+		args = null;
+	}
+	
+	protected void restartLoading(Bundle args) {
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 		// --------- the other magic lines ----------
 		// call restart because we want the background work to be executed
 		// again
 //		Log.d(TAG, "restartLoading(): re-starting loader");
-		Bundle b = new Bundle();
 		// TODO Make sure this does not get called before startLoading was called, or NULL PE
-		getLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
-		b = null;
+		getLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, args, this);
+		args = null;
 		// --------- end the other magic lines --------
 	}
 
@@ -153,7 +165,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	@Override
 	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
 //		Log.d(TAG, "onCreateLoader(): New PastyLoader created");
-		return new PastyLoader(getSherlockActivity().getApplicationContext(), id);
+		return new PastyLoader(getSherlockActivity().getApplicationContext(), id, args);
 	}
 
 	@Override

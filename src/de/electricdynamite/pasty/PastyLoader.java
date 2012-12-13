@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
@@ -47,6 +48,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 	
 	private boolean isOnline = false;
 	private boolean firstLoad = true;
+	private boolean permitCache = true;
     
     public static final int TASK_CLIPBOARD_FETCH = 0xA1;
     public static final int TASK_ITEM_ADD = 0xB1;
@@ -101,7 +103,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 	private PastyResponse mCachePastyResponse;
     
         
-    public PastyLoader(Context context, int taskId) {
+    public PastyLoader(Context context, int taskId, Bundle args) {
         super(context);
         this.context = context;
     	// Restore preferences
@@ -162,11 +164,11 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     		this.isOnline = false;
     	}
     	networkInfo = null;
-    	if (mCachePastyResponse != null) {
+    	if (mCachePastyResponse != null && permitCache) {
     		// Instantly return a cached version
     		if (PastySharedStatics.devMode) Log.d(TAG, "Delivered result from memory");
     		super.deliverResult(mCachePastyResponse);
-    	} else if(firstLoad) {
+    	} else if(firstLoad && permitCache) {
     		JSONArray jsonCache = getCachedClipboard();
     		if(jsonCache != null) {
     			// Got clipboard from device cache
