@@ -3,7 +3,7 @@ pasty-app-android history
 
 Current master
 --------------
-  * Now reloading clipboard without cache after deleting an item ( #19 )
+  * Now reloading clipboard without cache after deleting an item (#19)
   * Added cache control switch for `PastyLoader`
   * Fixed typo in about view
 
