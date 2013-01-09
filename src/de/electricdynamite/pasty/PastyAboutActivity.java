@@ -36,9 +36,7 @@ public class PastyAboutActivity extends SherlockActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		
-        ActionBar ab = getSherlock().getActionBar();
-        ab.setHomeButtonEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
+        getSherlock().getActionBar().setHomeButtonEnabled(true).setDisplayHomeAsUpEnabled(true);
     	// Let's draw our layout
 	    setContentView(R.layout.about_activity);
 		WebView webView = (WebView) findViewById(R.id.about_webview);
