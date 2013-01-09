@@ -149,7 +149,7 @@ public class PastyClient {
 	
 	public String addItem(final String Item) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
-		if(LOCAL_LOG) Log.v(PastyClient.class.toString(),"Starting REST call to API endpoint "+url);
+		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint "+url);
 		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpPost httpPost		= new HttpPost(url);
