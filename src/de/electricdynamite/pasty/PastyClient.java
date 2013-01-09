@@ -45,6 +45,7 @@ public class PastyClient {
 	private static final int		REST_SERVER_DEFAULT_PORT_HTTP = 80;
 	private static final int 		REST_SERVER_DEFAULT_PORT_HTTPS = 443;
 	private static final boolean	REST_SERVER_DEFAULT_TLS_ENABLED = true;
+	private static final boolean LOCAL_LOG = false;
 	
 	private String 						REST_SERVER_BASE_URL;
 	private Boolean						REST_SERVER_TLS_ENABLE;
@@ -94,7 +95,7 @@ public class PastyClient {
 	
 	public JSONArray getClipboard() throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_CLIPBOARD;
-//		Log.d(TAG,"REST URL is "+url);
+		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint  "+url);
 		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpGet httpGet			= new HttpGet(url);
@@ -104,11 +105,10 @@ public class PastyClient {
 			httpGet.setHeader("Authorization", "Basic " + Base64.encodeToString(basicAuthInfo.getBytes(), Base64.NO_WRAP));
 		    httpGet.setHeader("Content-type", "application/json"); 
 		    System.setProperty("http.keepAlive", "false");
-//		    Log.d(TAG, "Starting REST CALL");
 		    HttpResponse response = client.execute(httpGet);
-//		    Log.d(TAG, "REST CALL finished");
 		    StatusLine statusLine = response.getStatusLine();
 		    int statusCode = statusLine.getStatusCode();
+		    if(LOCAL_LOG) Log.v(TAG, "REST CALL finished with status "+statusCode);
 		    if (statusCode == 200) {
 		    	HttpEntity entity = response.getEntity();
 		    	InputStream content = entity.getContent();
@@ -149,7 +149,7 @@ public class PastyClient {
 	
 	public String addItem(final String Item) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM;
-		if(PastySharedStatics.devMode) Log.d(PastyClient.class.toString(),"url is "+url);
+		if(LOCAL_LOG) Log.v(PastyClient.class.toString(),"Starting REST call to API endpoint "+url);
 		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpPost httpPost		= new HttpPost(url);
@@ -166,6 +166,7 @@ public class PastyClient {
 		    HttpResponse response = client.execute(httpPost);
 		    StatusLine statusLine = response.getStatusLine();
 		    int statusCode = statusLine.getStatusCode();
+		    if(LOCAL_LOG) Log.v(TAG,"REST call finished with status "+statusCode);
 		    if (statusCode == 201) {
 		    	HttpEntity entity = response.getEntity();
 		    	InputStream content = entity.getContent();
@@ -207,7 +208,7 @@ public class PastyClient {
 	
 	public void deleteItem(ClipboardItem Item) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_ITEM+Item.getId();
-		Log.d(PastyClient.class.toString(),"url is "+url);
+		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint "+url);
 		HttpClient client 		= new DefaultHttpClient();
 		HttpDelete httpDelete	= new HttpDelete(url);
 		String basicAuthInfo	= username+":"+password; 
@@ -219,6 +220,7 @@ public class PastyClient {
 		    HttpResponse response = client.execute(httpDelete);
 		    StatusLine statusLine = response.getStatusLine();
 		    int statusCode = statusLine.getStatusCode();
+		    if(LOCAL_LOG) Log.v(TAG,"REST call finished with status "+statusCode);
 		    if(statusCode == 200) {
 				client 		= null;
 				httpDelete	= null;
