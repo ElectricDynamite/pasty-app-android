@@ -17,13 +17,11 @@ package de.electricdynamite.pasty;
  */
 
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -36,7 +34,8 @@ public class PastyAboutActivity extends SherlockActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		
-        getSherlock().getActionBar().setHomeButtonEnabled(true).setDisplayHomeAsUpEnabled(true);
+        getSherlock().getActionBar().setHomeButtonEnabled(true);
+        getSherlock().getActionBar().setDisplayHomeAsUpEnabled(true);
     	// Let's draw our layout
 	    setContentView(R.layout.about_activity);
 		WebView webView = (WebView) findViewById(R.id.about_webview);
