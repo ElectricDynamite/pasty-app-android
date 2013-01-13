@@ -35,6 +35,7 @@ import android.util.Log;
 
 public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     private static final String TAG = PastyLoader.class.getName();
+    private boolean LOCAL_LOG = false;
     
     // Delta to determine if our cached response is old
 	private static final String CACHEFILE = "ClipboardCache.json";
@@ -106,6 +107,8 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         
     public PastyLoader(Context context, int taskId, Bundle args) {
         super(context);
+        if(PastySharedStatics.LOCAL_LOG == true) this.LOCAL_LOG = true;
+        if(args == null) args = new Bundle();
         this.context = context;
     	// Restore preferences
    	 	this.prefs = new PastyPreferencesProvider(context);
@@ -119,18 +122,18 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 
 	@Override
     public PastyResponse loadInBackground() {
-		if (PastySharedStatics.devMode) Log.d(TAG, "loadInBackground() called");
+		if (LOCAL_LOG) Log.v(TAG, "loadInBackground(): called");
         try {
             // At the very least we always need an action.
             if (taskId == 0x0) {
-                Log.e(TAG, "No taskId provided.");
+                Log.w(TAG, "loadinBackground(): No taskId provided.");
                 return new PastyResponse(); 
             }
             switch(taskId) {
             case TASK_CLIPBOARD_FETCH:
             	JSONArray clipboard = client.getClipboard();
             	cacheClipboard(clipboard);
-        		if (PastySharedStatics.devMode) Log.d(TAG, "Delivered result from network");
+        		if (LOCAL_LOG) Log.v(TAG, "loadInBackground(): Delivered result from network");
             	return new PastyResponse(clipboard, PastyResponse.SOURCE_NETWORK, true);
             case TASK_ITEM_ADD:
             	break;
@@ -168,13 +171,13 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     	networkInfo = null;
     	if (mCachePastyResponse != null && permitCache) {
     		// Instantly return a cached version
-    		if (PastySharedStatics.devMode) Log.d(TAG, "Delivered result from memory");
+    		if (LOCAL_LOG) Log.v(TAG, "onStartLoading(): Delivering result from memory");
     		super.deliverResult(mCachePastyResponse);
     	} else if(firstLoad && permitCache) {
     		JSONArray jsonCache = getCachedClipboard();
     		if(jsonCache != null) {
     			// Got clipboard from device cache
-    			if (PastySharedStatics.devMode) Log.d(TAG, "Delivered result from cache");
+    			if (LOCAL_LOG) Log.v(TAG, "onStartLoading(): Delivering result from cache");
         		if(!isOnline) {
         			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE, true));
         		}
@@ -228,7 +231,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
 				jsonCache = new JSONArray(results);
 				return jsonCache;
 			} catch (JSONException e) {
-				Log.e(TAG, "getCachedClipboard(): Invalid JSON in cache file");
+				Log.w(TAG, "getCachedClipboard(): Invalid JSON in cache file");
 			}
 
         } catch (IOException e) {
@@ -248,10 +251,10 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
             bw.write(clipboard.toString());
             bw.newLine();
             bw.close();
-            if (PastySharedStatics.devMode) Log.d(TAG, "Saved result to cache");
+            if (LOCAL_LOG) Log.v(TAG, "cacheClipboard(): Saved result to cache");
 
         } catch (IOException e) {
-        	Log.e(TAG, "cacheClipboard(): Could not create cache file");
+        	Log.w(TAG, "cacheClipboard(): Could not create cache file");
         }
     }
 }

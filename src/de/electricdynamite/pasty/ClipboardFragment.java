@@ -56,6 +56,7 @@ import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
 public class ClipboardFragment extends SherlockListFragment implements LoaderCallbacks<PastyLoader.PastyResponse> {
 	private static final String TAG = ClipboardFragment.class.toString();
+	private boolean LOCAL_LOG = false;
 	private LayoutInflater mInflater;
 	private Resources mRes;
 	private ClipboardItemListAdapter mAdapter;
@@ -79,6 +80,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// configuration changes for example
 		setRetainInstance(true);
 
+        if(PastySharedStatics.LOCAL_LOG == true) this.LOCAL_LOG = true; 
+		
 		//LoaderManager.enableDebugLogging(true);
 	
 		//mRes = getResources();
@@ -86,9 +89,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		activity = (PastyClipboardFragmentListener) getSherlockActivity();
 
 
-		// you only need to instantiate these the first time your fragment is
-		// created; then, the method above will do the rest
 		if (mAdapter == null) {
+			// Set up our ArrayList and ListAdapter
 			mItems = new ArrayList<ClipboardItem>();
 			mAdapter = new ClipboardItemListAdapter(getSherlockActivity(), mItems);
 		}
@@ -100,15 +102,12 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			prefs.reload();
 		}
 		
-		// ---- magic lines starting here -----
-		// call this to re-connect with an existing
-		// loader (after screen configuration changes for e.g!)
-		LoaderManager lm = getLoaderManager();
-		if (lm.getLoader(PastyLoader.TASK_CLIPBOARD_FETCH) != null) {
-			//Log.d(TAG, "onActivityCreated(): Loader already exists, reconnecting");
-			lm.initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, null, this);
+		// Try to reconnect with an existing loader
+		if (getSherlockActivity().getSupportLoaderManager().getLoader(PastyLoader.TASK_CLIPBOARD_FETCH) != null) {
+			if(LOCAL_LOG) Log.v(TAG, "onActivityCreated(): Loader already exists, reconnecting");
+			getSherlockActivity().getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, null, this);
 		} else { 
-			//Log.d(TAG, "onActivityCreated(): No PastyLoader found");
+			if(LOCAL_LOG) Log.v(TAG, "onActivityCreated(): No PastyLoader found");
 			startLoading();
 		}
 		// ----- end magic lines -----
@@ -131,7 +130,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		Bundle b = new Bundle();
 		
 		// first time we call this loader, so we need to create a new one
-		getLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
+		getSherlockActivity().getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
 		b = null;
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 	}
@@ -154,9 +153,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// --------- the other magic lines ----------
 		// call restart because we want the background work to be executed
 		// again
-//		Log.d(TAG, "restartLoading(): re-starting loader");
+		if(LOCAL_LOG) Log.v(TAG, "restartLoading(): re-starting loader");
 		// TODO Make sure this does not get called before startLoading was called, or NULL PE
-		getLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, args, this);
+		getSherlockActivity().getSupportLoaderManager().restartLoader(PastyLoader.TASK_CLIPBOARD_FETCH, args, this);
 		args = null;
 		// --------- end the other magic lines --------
 	}
@@ -164,7 +163,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	
 	@Override
 	public Loader<PastyLoader.PastyResponse> onCreateLoader(int id, Bundle args) {
-//		Log.d(TAG, "onCreateLoader(): New PastyLoader created");
+		if(LOCAL_LOG) Log.v(TAG, "onCreateLoader(): New PastyLoader created");
 		return new PastyLoader(getSherlockActivity().getApplicationContext(), id, args);
 	}
 
@@ -187,7 +186,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			}
 		}
 		if(response.hasException) {
-//	    	Log.d(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
+	    	if(LOCAL_LOG) Log.v(TAG, "onLoadFinished(): Loader delivered exception; calling handleException()");
 	    	// an error occured
 
 			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
@@ -196,7 +195,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    } else {
 	    	switch(loader.getId()) {
 	    	case PastyLoader.TASK_CLIPBOARD_FETCH:
-//	    		Log.d(TAG, "Loader delivered TASK_CLIPBOARD_FETCH without exception");
 	    		JSONArray Clipboard = response.getClipboard();
 	    		mItems.clear();
 	    		mAdapter.notifyDataSetChanged();
