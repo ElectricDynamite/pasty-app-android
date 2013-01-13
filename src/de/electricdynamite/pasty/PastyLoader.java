@@ -26,8 +26,6 @@ import java.io.IOException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

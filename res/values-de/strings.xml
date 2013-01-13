@@ -4,7 +4,7 @@
 	<string formatted="false" name="about_version">Pasty Version %s (%d)</string>
     <string name="app_name">Pasty</string>
     <string name="app_label">Pasty - das Cloud Clipboard</string>
-    
+	<string name="app_logo">App Logo</string>    
     
 	<string name="app_share_via_pasty">An Pasty schicken</string>
 	<string name="app_share_from_pasty">Teilen</string>
@@ -64,9 +64,9 @@
 	<string name="pref_usehttps_title">Sichere Übertragung</string>
 	<string name="pref_usehttps_sum">Verschlüsselte Netzwerkübertragung. Bei Problemen abschalten</string>
 	
-	
-	
-	
+	<string name="pref_server_title">Pasty Server</string>
+	<string name="pref_server_sum">Choose which Pasty Server to use (dev-setting)</string>
+		
 	<string name="itemContextMenuTitle">Clipboard Eintrag</string>
 	<string-array name="itemContextMenu">
 	    <item>Kopieren ohne zu beenden</item>
@@ -78,7 +78,7 @@
 	<string name="pref_tos_title">Nutzungsbedingungen</string>
 	<string name="pref_privacy_title">Datenschutzerklärung</string>
 	
-	
+	<string name="pref_version_title">Version</string>
 	
     <string name="error_badanswer_title">Fehler in der Serverkommunikation</string>
     <string name="error_badanswer">Versuche es später noch einmal (Ungültige Antwort)</string>
@@ -86,7 +86,7 @@
     <string name="error_io">Versuche es später noch einmal (Keine Verbindung)</string>
     <string name="error_no_network_title">Keine Datenverbindung</string>
     <string name="error_no_network">Bitte aktiviere eine Datenverbindung, um Pasty zu nutzen</string>
-    <string name="error_notsupported">Diese Funktion steht noch nicht zur Verfügung.</string>
+    <string name="error_not_supported">Nicht unterstütztes Feature</string>
     <string name="error_login_failed_title">Login fehlgeschlagen</string>
     <string name="error_login_failed">Prüfe doch bitte, dass du deinen Account richtig angegeben hast</string>
     <string name="error_credentials_not_set_title">Willkommen!</string>
