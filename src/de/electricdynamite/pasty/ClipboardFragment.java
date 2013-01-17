@@ -22,11 +22,13 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -225,7 +227,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
 	    				listView.setAdapter(mAdapter);
 	    				listView.setOnItemClickListener(new OnItemClickListener() { 
-	    					@Override
+	    					@SuppressLint("NewApi")
+							@Override
 	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 	    				    	ClipboardItem Item = mItems.get(position); // get a ClipboardItem from the clicked position
 	    				    	if(Item.isLinkified() && prefs.getClickableLinks()) {
@@ -241,10 +244,16 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				    		/* Else we copy the item to the systems clipboard,
 	    				    		 * show a Toast and finish() the activity
 	    				    		 */
-		    						ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-		    						Item.copyToClipboard(sysClipboard);
+	    				    		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    				    			android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+	    				    			Item.copyToClipboard(sysClipboard);
+	    				    			sysClipboard = null;
+	    				    		} else {
+	    				    			ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+	    				    			Item.copyToClipboard(sysClipboard);
+	    				    			sysClipboard = null;
+	    				    		}
 		    				    	Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
-		    				    	sysClipboard = null;
 		    					    getSherlockActivity().finish();
 	    				    	}
 	    					}
@@ -466,17 +475,25 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	      }      
 	    }
 	    
-	    public boolean onContextItemSelected(android.view.MenuItem item) {
+	    @SuppressLint("NewApi")
+		public boolean onContextItemSelected(android.view.MenuItem item) {
 	      AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
 	      int menuItemIndex = item.getItemId();
 	      ClipboardItem Item = mItems.get(info.position);
 	      switch (menuItemIndex) {
 	      	case PastySharedStatics.ITEM_CONTEXTMENU_COPY_ID:
 	      		// Copy without exit selected
-	      		ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-				Item.copyToClipboard(clipboard);
+	    		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    			android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+	    			Item.copyToClipboard(clipboard);
+	    			clipboard = null;
+	    		} else {
+	    			ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+	    			Item.copyToClipboard(clipboard);
+			    	clipboard = null;
+	    		}
 		    	Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
-		    	clipboard = null;
+
 	      		break;
 	      	case PastySharedStatics.ITEM_CONTEXTMENU_SHARE_ID:
 	      		// Share to another app
