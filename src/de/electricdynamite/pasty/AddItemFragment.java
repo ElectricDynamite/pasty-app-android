@@ -16,10 +16,12 @@ package de.electricdynamite.pasty;
  *  limitations under the License.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.util.Log;
@@ -44,12 +46,13 @@ public class AddItemFragment extends SherlockDialogFragment {
 	protected PastyPreferencesProvider prefs;
 	protected Context context;
 	protected EditText mNewItemET;
-	private LayoutInflater inflater;
+	private boolean LOCAL_LOG;
 	
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		this.inflater = inflater;
+        if(PastySharedStatics.LOCAL_LOG == true) this.LOCAL_LOG = true;
 		if(this.context == null) {
 			this.context = getSherlockActivity().getApplication();
 		}
@@ -94,11 +97,22 @@ public class AddItemFragment extends SherlockDialogFragment {
 	        });
 	
 			if(prefs.getPasteCurrClip()) {
-				ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService("clipboard");
-				if(clipboard.hasText()) {
-					mNewItemET.setText(clipboard.getText());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService("clipboard");
+					if(clipboard.hasPrimaryClip()) {
+						if(LOCAL_LOG) Log.v(TAG, "onCreateView(): using modern clipboard API");
+						android.content.ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+						if(item != null) mNewItemET.setText(item.coerceToText(context));
+						item = null;
+					}
+					clipboard = null;
+				} else {
+					ClipboardManager clipboard = (ClipboardManager) getSherlockActivity().getSystemService("clipboard");
+					if(clipboard.hasText()) {
+						mNewItemET.setText(clipboard.getText());
+					}
+					clipboard = null;
 				}
-				clipboard = null;
 			}
 	    }
         return v;
