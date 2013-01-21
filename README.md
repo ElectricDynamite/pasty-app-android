@@ -6,7 +6,7 @@ Part of the Pasty Project at http://www.pastyapp.org/
 You can download the compiled app from [Google Play][1].  
 If you want to compile your own version you can use this sourcecode.
 
-![Screenshot](https://lh3.ggpht.com/3272fk0uKBLK6PZ36Tjl2xQzIcMjujL2KDwVp5qpPd7b42OG1a0FcPC-Lt63XXl6k88)
+![Screenshot](http://www.pastyapp.org/images/nex4-screen-300x501.png)
 
 Contact
 -------
