@@ -26,6 +26,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -59,6 +60,9 @@ import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 public class ClipboardFragment extends SherlockListFragment implements LoaderCallbacks<PastyLoader.PastyResponse> {
 	private static final String TAG = ClipboardFragment.class.toString();
 	private boolean LOCAL_LOG = false;
+	protected Drawable mBackground;
+	protected TextView mHelpTextBig;
+	protected TextView mHelpTextSmall;
 	private LayoutInflater mInflater;
 	private Resources mRes;
 	private ClipboardItemListAdapter mAdapter;
@@ -90,6 +94,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		mInflater = LayoutInflater.from(getSherlockActivity());
 		activity = (PastyClipboardFragmentListener) getSherlockActivity();
 
+		mHelpTextBig = (TextView) getActivity().findViewById(R.id.tvHelpTextBig);
+		mHelpTextSmall = (TextView) getActivity().findViewById(R.id.tvHelpTextSmall);
+
+		mBackground = mHelpTextSmall.getBackground();
 
 		if (mAdapter == null) {
 			// Set up our ArrayList and ListAdapter
@@ -123,11 +131,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	protected void startLoading() {
 		//Log.d(TAG,"startLoading()");
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
-		TextView mHelpTextBig			= (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 		ProgressBar pbLoading			= (ProgressBar) getSherlockActivity().findViewById(R.id.progressbar_downloading);
 		mHelpTextBig.setText(R.string.helptext_PastyActivity_loading);
 		pbLoading.setVisibility(View.VISIBLE);
-		mHelpTextBig = null;
 		pbLoading = null;
 		Bundle b = new Bundle();
 		
@@ -176,10 +182,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		pbLoading.setVisibility(View.GONE);
 		pbLoading = null;
 		
-    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
-    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
-		mHelpTextBig.setTextColor(getResources().getColor(R.color.abs__primary_text_holo_light));
-		mHelpTextBig.setBackgroundColor(getResources().getColor(R.color.abs__background_holo_light));
+    	mHelpTextBig.setTextColor(getResources().getColor(R.color.abs__primary_text_holo_light));
+		mHelpTextBig.setBackgroundDrawable(mBackground);
 		
 		if(response.isFinal) {
 			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
@@ -205,10 +209,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    		    if(Clipboard.length() == 0) {
 	    		       //Clipboard is empty
 	    	        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
-	    	        	mHelpTextBig = null;
 	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
-	    	        	mHelpTextSmall = null;
-	    	        } else {
+	    	        	} else {
 	    				if(Clipboard.length() > 15) {
 	    					throw new Exception();
 	    				}
@@ -220,9 +222,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    			
 	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
 	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_options);
-	    				mHelpTextBig = null;
-	    	        	mHelpTextSmall = null;
-	    			
+	    				
 	    				//Assign adapter to ListView
 	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
 	    				listView.setAdapter(mAdapter);
@@ -523,8 +523,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    /** handles PastyExceptions within this Fragment
 	     */
 	    protected void handleException(PastyException mException) {
-	    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
-	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
 	    	switch(mException.errorId) {
     		case PastyException.ERROR_AUTHORIZATION_FAILED:
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
@@ -559,8 +557,5 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 			default:
 				break;
 			}
-
-			mHelpTextBig = null;
-			mHelpTextSmall = null;
 	    }
 }
