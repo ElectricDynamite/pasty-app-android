@@ -5,7 +5,11 @@ Current master
 --------------
   * Now reloading clipboard without cache after deleting an item (#19)
   * Added cache control switch for `PastyLoader`
+  * Started using proguard
   * Fixed typo in about view
+  * Using modern ClipboardManager API on HC and above
+  * Code & logging cleanup
+  * layout fixes
 
 Version 0.6.0 - 2012-12-12 
 --------------------------
