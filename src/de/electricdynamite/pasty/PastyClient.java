@@ -54,7 +54,7 @@ public class PastyClient {
     private static final String 	REST_URI_CLIPBOARD		= "/v2/clipboard/list.json";
 	
 	public static final int			API_VERSION				= 2;
-	public static final String		VERSION = "0.1.0";
+	public static final String		VERSION = "0.2.0";
 	
 	private String username;
 	private String password;

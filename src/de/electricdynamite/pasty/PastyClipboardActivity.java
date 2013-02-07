@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.google.android.gcm.GCMRegistrar;
 
 import de.electricdynamite.pasty.AddItemFragment.AddItemFragmentCallbackListener;
 import de.electricdynamite.pasty.ClipboardFragment.PastyClipboardFragmentListener;
@@ -36,12 +37,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.widget.Toast;
 
 public class PastyClipboardActivity extends SherlockFragmentActivity implements PastyAlertDialogListener, PastyClipboardFragmentListener, AddItemFragmentCallbackListener {
 	
 
     private static final String TAG = PastyClipboardActivity.class.toString();
+	private boolean LOCAL_LOG = false;
     public String versionName;
     public int versionCode;
 	protected PastyPreferencesProvider prefs;
@@ -54,6 +57,9 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if(PastySharedStatics.LOCAL_LOG == true) this.LOCAL_LOG = true; 
+
     	try {
 			this.versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 			this.versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
@@ -65,8 +71,18 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     	if(mFragmentManager == null) mFragmentManager = getSupportFragmentManager();
     	if(this.prefs == null) 
     		this.prefs = new PastyPreferencesProvider(getApplication());
+    	
         setContentView(R.layout.main);
-
+        
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
+        final String regId = GCMRegistrar.getRegistrationId(this);
+        if (regId.equals("")) {
+          if(LOCAL_LOG) Log.v(TAG, "GCM: Registering");
+          GCMRegistrar.register(this, PastySharedStatics.GCM_SENDER_ID);
+        } else {
+          if(LOCAL_LOG) Log.v(TAG, "GCM: Already registered");
+        }
 		if (savedInstanceState == null) {
 		}
     }
