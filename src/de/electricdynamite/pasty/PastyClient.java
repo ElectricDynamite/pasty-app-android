@@ -254,7 +254,7 @@ public class PastyClient {
 		
 		try {
 			httpPost.setHeader("Authorization", getHTTPBasicAuth());
-		    params.put("regid", regid);
+		    params.put("regId", regid);
 		    httpPost.setEntity(new ByteArrayEntity(
 		        params.toString().getBytes("UTF8")));
 		    httpPost.setHeader("Content-type", "application/json");
