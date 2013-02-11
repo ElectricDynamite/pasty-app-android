@@ -76,6 +76,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
         
         GCMRegistrar.checkDevice(this);
         GCMRegistrar.checkManifest(this);
+        //GCMRegistrar.unregister(this);
         final String regId = GCMRegistrar.getRegistrationId(this);
         if (regId.equals("")) {
           if(LOCAL_LOG) Log.v(TAG, "GCM: Registering");

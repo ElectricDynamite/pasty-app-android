@@ -19,10 +19,17 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
+import com.google.android.gcm.GCMRegistrar;
 
 public class GCMIntentService extends GCMBaseIntentService {
 	public static final String TAG = GCMIntentService.class.toString();
 	public boolean LOCAL_LOG = true;
+	private PastyClient client;
+	private PastyPreferencesProvider prefs;
+
+	public GCMIntentService() {
+		super(PastySharedStatics.GCM_SENDER_ID);
+	}
 
 	@Override
 	protected void onError(Context context, String errorId) {
@@ -39,12 +46,35 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onRegistered(Context context, String regId) {
 		if(LOCAL_LOG) Log.v(TAG, "GCM: Registered as "+regId);
-
+		this.prefs = new PastyPreferencesProvider(context);
+        // Create a PastyClient
+    	client = new PastyClient(prefs.getRESTBaseURL(), true);
+    	client.setUsername(prefs.getUsername());
+    	client.setPassword(prefs.getPassword());
+    	try {
+			Boolean success = client.registerDevice(regId);
+		} catch (PastyException e) {
+			Log.w(TAG,"GCMIntentService.onRegistered(): Failed to submit regId to API server");
+			GCMRegistrar.unregister(context);
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void onUnregistered(Context context, String regId) {
-		// TODO Auto-generated method stub
+		if(LOCAL_LOG) Log.v(TAG, "GCM: Unregistered "+regId);
+		this.prefs = new PastyPreferencesProvider(context);
+        // Create a PastyClient
+    	client = new PastyClient(prefs.getRESTBaseURL(), true);
+    	client.setUsername(prefs.getUsername());
+    	client.setPassword(prefs.getPassword());
+    	try {
+			Boolean success = client.unregisterDevice(regId);
+		} catch (PastyException e) {
+			Log.w(TAG,"GCMIntentService.onUnregistered(): Failed to unregister from API server");
+			GCMRegistrar.unregister(context);
+			e.printStackTrace();
+		}
 
 	}
 
