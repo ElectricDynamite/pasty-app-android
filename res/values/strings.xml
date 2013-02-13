@@ -58,8 +58,20 @@
 	<string name="pref_paste_clipboard_sum">Automatically paste device clipboard contents into input box when adding a new item</string>
 	
 	<string name="pref_clickable_links_title">Clickable Links</string>
-	<string name="pref_clickable_links_sum_on">Touching Links opens a browser</string>
-	<string name="pref_clickable_links_sum_off">Touching Links copies to clipboard</string>
+	<string name="pref_clickable_links_sum">Touching Links opens a browser</string>
+	
+	<string name="pref_push_title">Clipboard Push</string>
+    <string name="pref_push_dialog_title">Choose Push Mode</string>
+    <string-array name="pref_push_entries">
+        <item>No Push</item>
+        <item>Push New Items to Device</item>
+        <item>Push and Copy to Clipboard</item>
+    </string-array>
+    <string-array name="pref_push_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 	
 	<string name="pref_usehttps_title">Transport Encryption</string>
 	<string name="pref_usehttps_sum">Uncheck if you have trouble connecting to server</string>

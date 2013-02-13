@@ -28,12 +28,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.util.Log;
  
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+		private static final String TAG = PastyPreferencesActivity.class.toString();
+	
 		private static final String URL_ACCOUNT_CREATE	= "https://pasty.cc/user/create/";
 		private static final String URL_TOS				= "https://pasty.cc/tos/";
 		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html";
@@ -42,10 +45,11 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
 	    public static final String KEY_PREF_VERSION	 = "pref_version";
 	    public static final String KEY_PREF_CLICKABLE_LINKS	 = "pref_clickable_links";
+	    public static final String KEY_PREF_PUSH = "pref_push";
 
 	    private EditTextPreference	prefUsername;
 	    private EditTextPreference	prefPassword;
-	    private CheckBoxPreference	prefClickableLinks;
+	    private ListPreference		prefPush;
 	    private Preference			prefVersion;
 	
 	
@@ -61,7 +65,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
                 
                 prefUsername = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_USERNAME);
                 prefPassword = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_PASSWORD);
-                prefClickableLinks  = (CheckBoxPreference)getPreferenceScreen().findPreference(KEY_PREF_CLICKABLE_LINKS);
+                prefPush  = (ListPreference)getPreferenceScreen().findPreference(KEY_PREF_PUSH);
                 prefVersion  = (Preference)getPreferenceScreen().findPreference(KEY_PREF_VERSION);
                 
                 Preference mPrefAccountCreate = findPreference("pref_account_create");
@@ -130,14 +134,17 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             mKeyVal = null;
             mSumVal = null;
             
-        	Boolean mKeyValBool = sharedPreferences.getBoolean(KEY_PREF_CLICKABLE_LINKS, false);
-        	if(mKeyValBool == true) {
-        		mSumVal = getString(R.string.pref_clickable_links_sum_on);
-        	} else {
-        		mSumVal = getString(R.string.pref_clickable_links_sum_off);
+            String mVal =  sharedPreferences.getString(KEY_PREF_PUSH, "0");
+            int mKeyValInt = 0;
+        	try {
+        		mKeyValInt = Integer.parseInt(mVal);
+        	} catch(NumberFormatException e) {
+        		Log.w(TAG, "Found non-parseble string while converting to int. This should not happen. The Beast: "+mVal);
         	}
-        	prefClickableLinks.setSummary(mSumVal);
-        	mKeyValBool = null;
+        	String[] mEntries = getResources().getStringArray(R.array.pref_push_entries);
+        	mSumVal = mEntries[mKeyValInt];
+        	prefPush.setSummary(mSumVal);
+        	mEntries = null;
             mSumVal = null;
             
             Intent mIntent = getIntent();
@@ -180,15 +187,19 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             		mSumVal = getString(R.string.pref_password_sum_isset);
             	} 
             	prefPassword.setSummary(mSumVal);
-            } else if (key.equals(KEY_PREF_CLICKABLE_LINKS)) {
-            	Boolean mKeyValBool = sharedPreferences.getBoolean(KEY_PREF_CLICKABLE_LINKS, false);
-            	if(mKeyValBool == true) {
-            		mSumVal = getString(R.string.pref_clickable_links_sum_on);
-            	} else {
-            		mSumVal = getString(R.string.pref_clickable_links_sum_off);
+            } else if (key.equals(KEY_PREF_PUSH)) {
+            	String mVal =  sharedPreferences.getString(KEY_PREF_PUSH, "0");
+            	int mKeyValInt = 0;
+            	try {
+            		mKeyValInt = Integer.parseInt(mVal);
+            	} catch(NumberFormatException e) {
+            		Log.w(TAG, "Found non-parseble string while converting to int. This should not happen. The Beast: "+mVal);
             	}
-            	prefClickableLinks.setSummary(mSumVal);
-            	mKeyValBool = null;
+            	String[] mEntries = getResources().getStringArray(R.array.pref_push_entries);
+            	mSumVal = mEntries[mKeyValInt];
+            	prefPush.setSummary(mSumVal);
+            	mSumVal = null;
+                mEntries = null;
             }
             mKeyVal = null;
             mSumVal = null;
