@@ -60,14 +60,12 @@ public class PastyClient {
 	private String username;
 	private String password;
 	private String basicAuthInfo;
-	private final String httpUserAgent = "PastyClient for Android/"+PastyClient.VERSION;
-	private DefaultedHttpParams defaultHttpParams;
+	private final static String httpUserAgent = "PastyClient for Android/"+PastyClient.VERSION;
 	
 
 	public PastyClient(String restServerBaseURL, Boolean tls) {
 		this.REST_SERVER_BASE_URL = restServerBaseURL;
 		this.REST_SERVER_TLS_ENABLE = tls;
-		initializeEnvironment();
 	}
 	
 	public PastyClient() {
@@ -80,12 +78,8 @@ public class PastyClient {
 		url = url+PastyClient.REST_SERVER_DEFAULT_BASE_HOST;
 		this.REST_SERVER_BASE_URL = url;
 		this.REST_SERVER_TLS_ENABLE = PastyClient.REST_SERVER_DEFAULT_TLS_ENABLED;
-		initializeEnvironment();
 	}
 	
-	private void initializeEnvironment() {
-		//this.defaultHttpParams.setParameter(CoreProtocolPNames.USER_AGENT, this.httpUserAgent);
-	}
 	
 	public void setUsername(String username) {
 		this.username = username;
@@ -107,7 +101,7 @@ public class PastyClient {
 		try {
 			httpGet.setHeader("Authorization", getHTTPBasicAuth());
 		    httpGet.setHeader("Content-type", "application/json"); 
-		    httpGet.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
+		    httpGet.setHeader("User-Agent", httpUserAgent);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpGet);
 		    StatusLine statusLine = response.getStatusLine();
@@ -165,7 +159,7 @@ public class PastyClient {
 		    httpPost.setEntity(new ByteArrayEntity(
 		        params.toString().getBytes("UTF8")));
 		    httpPost.setHeader("Content-type", "application/json");
-		    httpPost.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
+		    httpPost.setHeader("User-Agent", httpUserAgent);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpPost);
 		    StatusLine statusLine = response.getStatusLine();
@@ -219,7 +213,7 @@ public class PastyClient {
 		try {
 			httpDelete.setHeader("Authorization", getHTTPBasicAuth());
 		    httpDelete.setHeader("Content-type", "application/json");
-		    httpDelete.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
+		    httpDelete.setHeader("User-Agent", httpUserAgent);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpDelete);
 		    StatusLine statusLine = response.getStatusLine();
@@ -244,7 +238,7 @@ public class PastyClient {
 		}
 	}	
 	
-	public boolean registerDevice(String regid) throws PastyException {
+	public void registerDevice(String regid) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_DEVICE;
 		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint "+url);
 		StringBuilder builder	= new StringBuilder();
@@ -258,7 +252,7 @@ public class PastyClient {
 		    httpPost.setEntity(new ByteArrayEntity(
 		        params.toString().getBytes("UTF8")));
 		    httpPost.setHeader("Content-type", "application/json");
-		    httpPost.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
+		    httpPost.setHeader("User-Agent", httpUserAgent);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpPost);
 		    StatusLine statusLine = response.getStatusLine();
@@ -285,7 +279,6 @@ public class PastyClient {
 				params		= null;
 				response	= null;
 				statusLine	= null;
-				return success;
 			} else if(statusCode == 401) {
 				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
 			} else {
@@ -303,7 +296,7 @@ public class PastyClient {
 		}
 	}
 	
-	public boolean unregisterDevice(String regId) throws PastyException {
+	public void unregisterDevice(String regId) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_DEVICE+"/"+regId;
 		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint "+url);
 		HttpClient client 		= new DefaultHttpClient();
@@ -312,7 +305,7 @@ public class PastyClient {
 		try {
 			httpDelete.setHeader("Authorization", getHTTPBasicAuth());
 		    httpDelete.setHeader("Content-type", "application/json");
-		    httpDelete.setHeader("User-Agent", "PastyClient for Android/"+PastyClient.VERSION);
+		    httpDelete.setHeader("User-Agent", httpUserAgent);
 		    System.setProperty("http.keepAlive", "false");
 		    HttpResponse response = client.execute(httpDelete);
 		    StatusLine statusLine = response.getStatusLine();
@@ -323,7 +316,6 @@ public class PastyClient {
 				httpDelete	= null;
 				response	= null;
 				statusLine	= null;
-				return true;
 			} else if(statusCode == 401) {
 				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
 			} else {

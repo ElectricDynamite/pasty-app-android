@@ -52,10 +52,10 @@ public class GCMIntentService extends GCMBaseIntentService {
     	client.setUsername(prefs.getUsername());
     	client.setPassword(prefs.getPassword());
     	try {
-			Boolean success = client.registerDevice(regId);
+			client.registerDevice(regId);
 		} catch (PastyException e) {
 			Log.w(TAG,"GCMIntentService.onRegistered(): Failed to submit regId to API server");
-			GCMRegistrar.unregister(context);
+			//GCMRegistrar.unregister(context);
 			e.printStackTrace();
 		}
 	}
@@ -69,7 +69,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     	client.setUsername(prefs.getUsername());
     	client.setPassword(prefs.getPassword());
     	try {
-			Boolean success = client.unregisterDevice(regId);
+			 client.unregisterDevice(regId);
 		} catch (PastyException e) {
 			Log.w(TAG,"GCMIntentService.onUnregistered(): Failed to unregister from API server");
 			GCMRegistrar.unregister(context);
