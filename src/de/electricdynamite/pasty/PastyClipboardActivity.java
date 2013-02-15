@@ -73,17 +73,7 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     		this.prefs = new PastyPreferencesProvider(getApplication());
     	
         setContentView(R.layout.main);
-        
-        GCMRegistrar.checkDevice(this);
-        GCMRegistrar.checkManifest(this);
-        //GCMRegistrar.unregister(this);
-        final String regId = GCMRegistrar.getRegistrationId(this);
-        if (regId.equals("")) {
-          if(LOCAL_LOG) Log.v(TAG, "GCM: Registering");
-          GCMRegistrar.register(this, PastySharedStatics.GCM_SENDER_ID);
-        } else {
-          if(LOCAL_LOG) Log.v(TAG, "GCM: Already registered");
-        }
+                
 		if (savedInstanceState == null) {
 		}
     }
@@ -118,13 +108,30 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     		    	this.finish();
     			}
     		} else {
+    			/* Check GCM registration status and register if needed.
+    			 * GCM will call GCMIntentServer.onRegister() and .onUnregister 
+    			 * whenever the registration status changes.
+    			 * 
+    			 * TODO what happens when the server is unavailable?
+    			 */
+    			if(isOnline) {
+	    			GCMRegistrar.checkDevice(this);
+	    	        GCMRegistrar.checkManifest(this); // only while developing
+	    	        final String regId = GCMRegistrar.getRegistrationId(this);
+	    	        if (regId.equals("")) {
+	    	          if(LOCAL_LOG) Log.v(TAG, "GCM: Registering");
+	    	          GCMRegistrar.register(this, PastySharedStatics.GCM_SENDER_ID);
+	    	        } else {
+	    	          if(LOCAL_LOG) Log.v(TAG, "GCM: Already registered");
+	    	        }
+    			}
     			if(!mClipboardFragment.isAdded()) {
     				getSupportFragmentManager().beginTransaction()
     				.replace(R.id.fragment_placeholder, mClipboardFragment)
     				.commit();
     			} else {
     				if(prefs.wasUpdated()) {
-    					//Log.d(TAG,"settings were updated, restarting loader");
+    					if(LOCAL_LOG) Log.v(TAG,"onResume(): settings were updated, restarting loader");
     					mClipboardFragment.restartLoading();
     				}
     			}
