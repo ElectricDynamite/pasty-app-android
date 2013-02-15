@@ -50,6 +50,7 @@ public class PastySharedStatics {
     static final String PREF_SERVER				= "pref_server";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     static final String PREF_CLICKABLE_LINKS	= "pref_clickable_links";
+    static final String PREF_PUSH				= "pref_push";
     
 //    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
 //    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";

@@ -22,8 +22,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class PastyPreferencesProvider implements OnSharedPreferenceChangeListener {
+	private static Boolean LOCAL_LOG = false;
 	private static final String TAG = PastyPreferencesProvider.class.toString();
 	private SharedPreferences prefs;	
 	private String username;	
@@ -34,15 +36,14 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	private Boolean useTLS;
 	private Boolean pasteCurrClip;
 	private Boolean clickableLinks;
+	private int push;
 	private Boolean mWasUpdated = false;
 	private Context context;
 	
-	/*
-	 * 
-	 */
 	
 	public PastyPreferencesProvider(Context context) {
-//		Log.d(TAG, "New PastyPreferencesProvider created");
+		if(PastySharedStatics.LOCAL_LOG == true) LOCAL_LOG = true;
+		if(LOCAL_LOG) Log.v(TAG, "New PastyPreferencesProvider created");
 		this.context = context;
 		
 		reload();
@@ -118,6 +119,14 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		}
 		this.pasteCurrClip = prefs.getBoolean(PastySharedStatics.PREF_PASTE_CLIPBOARD, true);
 		this.clickableLinks = prefs.getBoolean(PastySharedStatics.PREF_CLICKABLE_LINKS, false);
+		String mPushStr =  prefs.getString(PastySharedStatics.PREF_PUSH, "0");
+        int mPushInt = 0;
+    	try {
+    		mPushInt = Integer.parseInt(mPushStr);
+    	} catch(NumberFormatException e) {
+    		Log.w(TAG, "Found non-parseble string while converting to int. This should not happen. The Beast: "+mPushStr);
+    	}
+    	this.push = mPushInt;
 	}
 
 	@Override
