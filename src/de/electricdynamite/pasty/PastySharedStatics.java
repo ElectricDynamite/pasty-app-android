@@ -64,4 +64,5 @@ public class PastySharedStatics {
     static final int SIGNAL_ACTIVITY_ABOUT = 0xA2;
     static final int SIGNAL_ERROR = 0xB1;
     
+    static final String CACHEFILE = "ClipboardCache.json";
 }

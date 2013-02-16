@@ -38,7 +38,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     private boolean LOCAL_LOG = false;
     
     // Delta to determine if our cached response is old
-	private static final String CACHEFILE = "ClipboardCache.json";
+	private static final String CACHEFILE = PastySharedStatics.CACHEFILE;
 
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
