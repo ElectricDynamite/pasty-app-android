@@ -16,6 +16,9 @@ package de.electricdynamite.pasty;
  */
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -23,6 +26,7 @@ import com.google.android.gcm.GCMRegistrar;
 
 public class GCMIntentService extends GCMBaseIntentService {
 	public static final String TAG = GCMIntentService.class.toString();
+	public static final int EVENT_ITEM_ADDED = 1;
 	public boolean LOCAL_LOG = true;
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
@@ -39,8 +43,33 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
-		if(LOCAL_LOG) Log.v(TAG, "GCM: Received message");
-
+		final Bundle extras = intent.getExtras();
+		final int mEventId = extras.getInt("eventId");
+		if(LOCAL_LOG) Log.v(TAG, "GCM: Received message for event: "+mEventId);
+		switch(mEventId) {
+		case EVENT_ITEM_ADDED:
+			
+			if(client == null) {
+		    	client = new PastyClient(prefs.getRESTBaseURL(), true);
+		    	client.setUsername(prefs.getUsername());
+		    	client.setPassword(prefs.getPassword());
+			}
+			if(prefs.getPush() == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
+				Log.v(TAG, extras.getString("item"));
+				/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					Item.copyToClipboard(sysClipboard);
+					sysClipboard = null;
+				} else {
+					ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					Item.copyToClipboard(sysClipboard);
+					sysClipboard = null;
+				}*/
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -54,9 +83,11 @@ public class GCMIntentService extends GCMBaseIntentService {
     	try {
 			client.registerDevice(regId);
 		} catch (PastyException e) {
-			Log.w(TAG,"GCMIntentService.onRegistered(): Failed to submit regId to API server");
-			//GCMRegistrar.unregister(context);
-			e.printStackTrace();
+			if(e.errorId != PastyException.ERROR_DEVICE_ALREADY_REGISTERED) {
+				Log.w(TAG,"GCMIntentService.onRegistered(): Failed to submit regId to API server");
+				//GCMRegistrar.unregister(context);
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -68,13 +99,16 @@ public class GCMIntentService extends GCMBaseIntentService {
     	client = new PastyClient(prefs.getRESTBaseURL(), true);
     	client.setUsername(prefs.getUsername());
     	client.setPassword(prefs.getPassword());
-    	try {
-			 client.unregisterDevice(regId);
-		} catch (PastyException e) {
-			Log.w(TAG,"GCMIntentService.onUnregistered(): Failed to unregister from API server");
-			GCMRegistrar.unregister(context);
-			e.printStackTrace();
-		}
+    	if(regId != "") {
+    		try {
+    			client.unregisterDevice(regId);
+    		} catch (PastyException e) {
+    			if(e.errorId != PastyException.ERROR_DEVICE_NOT_REGISTERED) {
+    				Log.w(TAG,"GCMIntentService.onUnregistered(): Failed to unregister from API server");
+    				e.printStackTrace();
+    			}
+    		}
+    	}
 
 	}
 

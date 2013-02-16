@@ -241,7 +241,6 @@ public class PastyClient {
 	public void registerDevice(String regid) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_DEVICE;
 		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint "+url);
-		StringBuilder builder	= new StringBuilder();
 		HttpClient client 		= new DefaultHttpClient();
 		HttpPost httpPost		= new HttpPost(url);
 		JSONObject params		= new JSONObject();
@@ -259,21 +258,7 @@ public class PastyClient {
 		    int statusCode = statusLine.getStatusCode();
 		    if(LOCAL_LOG) Log.v(TAG,"REST call finished with status "+statusCode);
 		    if (statusCode == 201) {
-		    	HttpEntity entity = response.getEntity();
-		    	InputStream content = entity.getContent();
-		    	BufferedReader reader = new BufferedReader(
-				new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-				entity		= null;
-				content		= null;
-				reader		= null;
-				JSONObject jsonResponse = new JSONObject(builder.toString());
-				JSONObject jsonPayload = jsonResponse.getJSONObject("payload");
-				Boolean success = jsonPayload.getBoolean("success");
-				builder 	= null;
+		    	// successfully registered
 				client 		= null;
 				httpPost	= null;
 				params		= null;
@@ -281,6 +266,8 @@ public class PastyClient {
 				statusLine	= null;
 			} else if(statusCode == 401) {
 				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
+			} else if(statusCode == 409) {
+				throw new PastyException(PastyException.ERROR_DEVICE_ALREADY_REGISTERED);
 			} else {
 				throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 			}
@@ -318,6 +305,8 @@ public class PastyClient {
 				statusLine	= null;
 			} else if(statusCode == 401) {
 				throw new PastyException(PastyException.ERROR_AUTHORIZATION_FAILED);
+			} else if(statusCode == 409) {
+				throw new PastyException(PastyException.ERROR_DEVICE_NOT_REGISTERED);
 			} else {
 				throw new PastyException(PastyException.ERROR_ILLEGAL_RESPONSE);
 			}

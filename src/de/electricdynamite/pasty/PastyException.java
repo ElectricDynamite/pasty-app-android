@@ -29,6 +29,8 @@ public class PastyException extends Exception {
 	public static final short ERROR_ILLEGAL_RESPONSE = 4;
 	public static final short ERROR_IO_EXCEPTION = 5;
 	public static final short ERROR_NO_CACHE_EXCEPTION = 6;
+	public static final short ERROR_DEVICE_NOT_REGISTERED = 7;
+	public static final short ERROR_DEVICE_ALREADY_REGISTERED = 8;
 	
 	public short errorId;
 	

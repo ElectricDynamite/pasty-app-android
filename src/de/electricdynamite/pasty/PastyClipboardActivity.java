@@ -115,15 +115,23 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     			 * TODO what happens when the server is unavailable?
     			 */
     			if(isOnline) {
-	    			GCMRegistrar.checkDevice(this);
-	    	        GCMRegistrar.checkManifest(this); // only while developing
-	    	        final String regId = GCMRegistrar.getRegistrationId(this);
-	    	        if (regId.equals("")) {
-	    	          if(LOCAL_LOG) Log.v(TAG, "GCM: Registering");
-	    	          GCMRegistrar.register(this, PastySharedStatics.GCM_SENDER_ID);
-	    	        } else {
-	    	          if(LOCAL_LOG) Log.v(TAG, "GCM: Already registered");
-	    	        }
+    				int mPush = prefs.getPush();
+    				if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE || mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
+    					GCMRegistrar.checkDevice(this);
+    	    	        final String regId = GCMRegistrar.getRegistrationId(this);
+    	    	        if (regId.equals("")) {
+    	    	          if(LOCAL_LOG) Log.v(TAG, "GCM: Registering");
+    	    	          GCMRegistrar.register(this, PastySharedStatics.GCM_SENDER_ID);
+    	    	        } else {
+    	    	          if(LOCAL_LOG) Log.v(TAG, "GCM: Already registered");
+    	    	        }	
+    				} else {
+    					GCMRegistrar.checkDevice(this);
+    	    	        final String regId = GCMRegistrar.getRegistrationId(this);
+    	    	        if (!regId.equals("")) {
+    	    	        	GCMRegistrar.unregister(this);
+    	    	        }
+    				}
     			}
     			if(!mClipboardFragment.isAdded()) {
     				getSupportFragmentManager().beginTransaction()
