@@ -58,8 +58,20 @@
 	<string name="pref_paste_clipboard_sum">Der Inhalt der Geräte-Zwischenablage wird automatisch beim Hinzufügen eingefügt</string>
 	
 	<string name="pref_clickable_links_title">Klickbare Links</string>
-	<string name="pref_clickable_links_sum_on">Links berühren öffnet den Browser</string>
-	<string name="pref_clickable_links_sum_off">Links berühren kopiert in die Zwischenablage</string>
+	<string name="pref_clickable_links_sum">Links berühren öffnet den Browser</string>
+	
+	<string name="pref_push_title">Push Zwischenablage</string>
+    <string name="pref_push_dialog_title">Wähle den Push-Modus</string>
+    <string-array name="pref_push_entries">
+        <item>Kein Push</item>
+        <item>Neue Einträge ans Gerät pushen</item>
+        <item>Pushen und in die Zwischenablage kopieren</item>
+    </string-array>
+    <string-array name="pref_push_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 	
 	<string name="pref_usehttps_title">Sichere Übertragung</string>
 	<string name="pref_usehttps_sum">Verschlüsselte Netzwerkübertragung. Bei Problemen abschalten</string>
