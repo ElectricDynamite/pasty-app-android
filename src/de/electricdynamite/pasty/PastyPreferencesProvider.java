@@ -27,8 +27,13 @@ import android.util.Log;
 public class PastyPreferencesProvider implements OnSharedPreferenceChangeListener {
 	private static Boolean LOCAL_LOG = false;
 	private static final String TAG = PastyPreferencesProvider.class.toString();
-	private SharedPreferences prefs;	
-	private String username;	
+	
+	public static final int PUSH_DISABLED = 0;
+	public static final int PUSH_TO_DEVICE = 1;
+	public static final int PUSH_TO_CLIPBOARD = 2;
+	
+	private SharedPreferences prefs;
+	private String username;
 	private String password;
 	private String restServerHost;
 	private int restServerPort;
@@ -79,6 +84,10 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	
 	public Boolean getClickableLinks() {
 		return clickableLinks;
+	}
+	
+	public int getPush() {
+		return push;
 	}
 	
 	public Boolean wasUpdated() {
