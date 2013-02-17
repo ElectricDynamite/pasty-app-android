@@ -36,12 +36,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 	public static final String TAG = GCMIntentService.class.toString();
 	public static final int EVENT_ITEM_ADDED = 1;
 	protected static final String CACHEFILE = PastySharedStatics.CACHEFILE;
-	public boolean LOCAL_LOG = true;
+	public boolean LOCAL_LOG = false;
 	private PastyClient client;
 	private PastyPreferencesProvider prefs;
 
 	public GCMIntentService() {
 		super(PastySharedStatics.GCM_SENDER_ID);
+		if(PastySharedStatics.LOCAL_LOG == true) LOCAL_LOG = true;
 	}
 
 	@Override
@@ -68,16 +69,17 @@ public class GCMIntentService extends GCMBaseIntentService {
 			final int mPush = prefs.getPush();
 			if(mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
 				ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
-				
-				if(LOCAL_LOG) Log.v(TAG, "Message item: "+mItem.getText());
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-					mItem.copyToClipboard(sysClipboard);
-					sysClipboard = null;
-				} else {
-					ClipboardManager sysClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-					mItem.copyToClipboard(sysClipboard);
-					sysClipboard = null;
+				if(mItem.getText() != "") {
+					if(LOCAL_LOG) Log.v(TAG, "Message item: "+mItem.getText());
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+						mItem.copyToClipboard(sysClipboard);
+						sysClipboard = null;
+					} else {
+						ClipboardManager sysClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+						mItem.copyToClipboard(sysClipboard);
+						sysClipboard = null;
+					}
 				}
 			}
 			if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE || mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
@@ -93,6 +95,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		default:
 			break;
 		}
+		/* TODO Make ClipboardFragment react to changes from GCMIntentService */
 	}
 
 	@Override
