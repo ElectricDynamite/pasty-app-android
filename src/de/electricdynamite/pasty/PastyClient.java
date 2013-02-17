@@ -45,7 +45,7 @@ public class PastyClient {
 	private static final int		REST_SERVER_DEFAULT_PORT_HTTP = 80;
 	private static final int 		REST_SERVER_DEFAULT_PORT_HTTPS = 443;
 	private static final boolean	REST_SERVER_DEFAULT_TLS_ENABLED = true;
-	private static final boolean LOCAL_LOG = true;
+	private static final boolean LOCAL_LOG = false;
 	
 	private String 						REST_SERVER_BASE_URL;
 	private Boolean						REST_SERVER_TLS_ENABLE;
