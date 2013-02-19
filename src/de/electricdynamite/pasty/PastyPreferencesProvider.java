@@ -17,8 +17,6 @@ package de.electricdynamite.pasty;
  */
 
 
-import com.google.android.gcm.GCMRegistrar;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
