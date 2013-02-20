@@ -180,8 +180,9 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     			if (LOCAL_LOG) Log.v(TAG, "onStartLoading(): Delivering result from cache");
         		if(!isOnline) {
         			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE, true));
-        		}
-    			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
+        		} else {
+        			deliverResult(new PastyResponse(jsonCache, PastyResponse.SOURCE_CACHE));	
+        		}	
     			firstLoad = false;
     		} else {
     			if(!isOnline) {

@@ -67,7 +67,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	private ClipboardItemListAdapter mAdapter;
 	private ArrayList<ClipboardItem> mItems;
 
-	private boolean mFirstRun = true;
+//	private boolean mFirstRun = true;
 	private final Handler mHandler = new Handler();
 	
 	private PastyClipboardFragmentListener activity;
@@ -121,10 +121,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		}
 		// ----- end magic lines -----
 
-		if(mFirstRun) {
-			startLoading();
-			mFirstRun = false;
-		}
+//		if(mFirstRun) {
+//			startLoading();
+//			mFirstRun = false;
+//		}
 	}
 
 	protected void startLoading() {
@@ -139,7 +139,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		// first time we call this loader, so we need to create a new one
 		getSherlockActivity().getSupportLoaderManager().initLoader(PastyLoader.TASK_CLIPBOARD_FETCH, b, this);
 		b = null;
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(Boolean.TRUE);
 	}
 	
 	protected void restartLoading() {
