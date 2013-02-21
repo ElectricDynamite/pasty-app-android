@@ -25,13 +25,11 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.ClipboardManager;
@@ -56,6 +54,7 @@ import com.actionbarsherlock.view.Menu;
 
 import de.electricdynamite.pasty.PastyLoader.PastyResponse;
 
+@SuppressWarnings("deprecation")
 public class ClipboardFragment extends SherlockListFragment implements LoaderCallbacks<PastyLoader.PastyResponse> {
 	private static final String TAG = ClipboardFragment.class.toString();
 	private boolean LOCAL_LOG = false;
@@ -63,12 +62,8 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	protected TextView mHelpTextBig;
 	protected TextView mHelpTextSmall;
 	private LayoutInflater mInflater;
-	private Resources mRes;
 	private ClipboardItemListAdapter mAdapter;
 	private ArrayList<ClipboardItem> mItems;
-
-//	private boolean mFirstRun = true;
-	private final Handler mHandler = new Handler();
 	
 	private PastyClipboardFragmentListener activity;
 	private PastyPreferencesProvider prefs;
@@ -121,10 +116,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		}
 		// ----- end magic lines -----
 
-//		if(mFirstRun) {
-//			startLoading();
-//			mFirstRun = false;
-//		}
 	}
 
 	protected void startLoading() {
@@ -325,14 +316,9 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	        public View getView(int position, View convertView, ViewGroup parent) {
 				
 				View view = convertView;
-				Wrapper wrapper;
 
 				if (view == null) {
 					view = mInflater.inflate(R.layout.listitem, parent, false);
-					wrapper = new Wrapper(view);
-					view.setTag(wrapper);
-				} else {
-					wrapper = (Wrapper) view.getTag();
 				}
 	            // get the item associated with this position
 	            ClipboardItem Item = itemList.get(position);
@@ -410,48 +396,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    }
 	}
 	
-		// use an wrapper (or view holder) object to limit calling the
-		// findViewById() method, which parses the entire structure of your
-		// XML in search for the ID of your view
-		private static class Wrapper {
-			private final View mRoot;
-			private TextView tvHelpTextBig;
-			private TextView tvHelpTextSmall;
-			private ProgressBar pbLoading;
-			
-			public static final int VIEW_HELPTEXT_BIG = 0x1;
-			public static final int VIEW_HELPTEXT_SMALL = 0x2;
-			public static final int VIEW_PROGRESS_LOADING = 0x3;
-
-			public Wrapper(View root) {
-				mRoot = root;
-			}
-
-			public TextView getTextView(int tv) {
-				switch (tv) {
-				case VIEW_HELPTEXT_BIG:
-					if (tvHelpTextBig == null) {
-						tvHelpTextBig = (TextView) mRoot.findViewById(R.id.tvHelpTextBig);
-					}
-					return tvHelpTextBig;
-				case VIEW_HELPTEXT_SMALL:
-					if (tvHelpTextSmall == null) {
-						tvHelpTextSmall = (TextView) mRoot.findViewById(R.id.tvHelpTextSmall);
-					}
-					return tvHelpTextBig;
-				default:
-					return null;
-				}
-			}
-
-			public View getBar() {
-				if (pbLoading == null) {
-					pbLoading = (ProgressBar) mRoot.findViewById(R.id.progressbar_downloading);
-				}
-				return pbLoading;
-			}
-		}
-		
 		@Override
 	    public void onCreateContextMenu(ContextMenu menu, View v,
 	        ContextMenuInfo menuInfo) {
