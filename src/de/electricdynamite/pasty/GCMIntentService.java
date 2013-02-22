@@ -22,10 +22,14 @@ import java.io.IOException;
 import org.json.JSONArray;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.ClipboardManager;
 import android.util.Log;
 
@@ -66,9 +70,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 		    	client.setUsername(prefs.getUsername());
 		    	client.setPassword(prefs.getPassword());
 			}
+
+			ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
 			final int mPush = prefs.getPush();
 			if(mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
-				ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
 				if(mItem.getText() != "") {
 					if(LOCAL_LOG) Log.v(TAG, "Message item: "+mItem.getText());
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -82,14 +87,44 @@ public class GCMIntentService extends GCMBaseIntentService {
 					}
 				}
 			}
+			if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE) {
+				NotificationCompat.Builder mBuilder =
+				        new NotificationCompat.Builder(this)
+				        .setSmallIcon(R.drawable.ic_stat_pasty)
+				        .setContentTitle("New Item available")
+				        .setContentText("Copy "+mItem.getText().substring(0, 30)+ "to clipboard")
+				        .setAutoCancel(Boolean.TRUE);
+				// Creates an explicit intent for an Activity in your app
+				Intent resultIntent = new Intent(this, PastyClipboardActivity.class);
+
+				// The stack builder object will contain an artificial back stack for the
+				// started Activity.
+				// This ensures that navigating backward from the Activity leads out of
+				// your application to the Home screen.
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+				// Adds the back stack for the Intent (but not the Intent itself)
+				stackBuilder.addParentStack(PastyClipboardActivity.class);
+				// Adds the Intent that starts the Activity to the top of the stack
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent resultPendingIntent =
+				        stackBuilder.getPendingIntent(
+				            0,
+				            PendingIntent.FLAG_UPDATE_CURRENT
+				        );
+				mBuilder.setContentIntent(resultPendingIntent);
+				NotificationManager mNotificationManager =
+				    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				// mId allows you to update the notification later on.
+				mNotificationManager.notify(PastySharedStatics.NOTIFICATION_ID, mBuilder.build());
+			}
 			if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE || mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
 				JSONArray clipboard = null;
 				try {
 					clipboard = client.getClipboard();
+					cacheClipboard(clipboard);
 				} catch (PastyException e) {
 					if(LOCAL_LOG) Log.v(TAG, "Could not get clipboard: "+e.getMessage());
 				}
-				cacheClipboard(clipboard);
 			}
 			break;
 		default:
