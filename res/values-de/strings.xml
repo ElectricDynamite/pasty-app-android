@@ -23,7 +23,7 @@
     <string name="helptext_PastyActivity_error_occured">Ein Fehler ist aufgetreten. Versuche es später erneut.</string>
     <string name="NewItem_hint">Hier einfügen oder schreiben</string>
     <string name="PastyButton_label">Ab in die Cloud damit!</string>
-    <string name="item_copied">Text in die Zwischneablage kopiert</string>
+    <string name="item_copied">Text in die Zwischenablage kopiert</string>
     <string name="item_adding">Lade Text ins Pasty Clipboard&#8230;</string>
     <string name="item_added">Text ins Pasty Clipboard kopiert</string>
     <string name="item_deleted">Text aus dem Pasty Clipboard gelöscht</string>
