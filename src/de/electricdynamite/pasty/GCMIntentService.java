@@ -26,11 +26,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.text.ClipboardManager;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -71,46 +68,30 @@ public class GCMIntentService extends GCMBaseIntentService {
 		    	client.setPassword(prefs.getPassword());
 			}
 
-			ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
+			final ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
 			final int mPush = prefs.getPush();
 			if(mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
 				if(mItem.getText() != "") {
-					if(LOCAL_LOG) Log.v(TAG, "Message item: "+mItem.getText());
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-						mItem.copyToClipboard(sysClipboard);
-						sysClipboard = null;
-					} else {
-						ClipboardManager sysClipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-						mItem.copyToClipboard(sysClipboard);
-						sysClipboard = null;
-					}
+					Intent resultIntent = new Intent(this, CopyService.class);
+					resultIntent.putExtra("de.electricdynamite.pasty.itemId", mItem.getId());
+					resultIntent.putExtra("de.electricdynamite.pasty.item", mItem.getText());
+					startService(resultIntent);
+					resultIntent = null;
 				}
 			}
 			if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE) {
+				String contentText = String.format(getString(R.string.notification_event_add_text), mItem.getText());
 				NotificationCompat.Builder mBuilder =
 				        new NotificationCompat.Builder(this)
 				        .setSmallIcon(R.drawable.ic_stat_pasty)
-				        .setContentTitle("New Item available")
-				        .setContentText("Copy "+mItem.getText().substring(0, 30)+ "to clipboard")
+				        .setContentTitle(getString(R.string.notification_event_add_title))
+				        .setContentText(contentText)
 				        .setAutoCancel(Boolean.TRUE);
 				// Creates an explicit intent for an Activity in your app
-				Intent resultIntent = new Intent(this, PastyClipboardActivity.class);
-
-				// The stack builder object will contain an artificial back stack for the
-				// started Activity.
-				// This ensures that navigating backward from the Activity leads out of
-				// your application to the Home screen.
-				TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-				// Adds the back stack for the Intent (but not the Intent itself)
-				stackBuilder.addParentStack(PastyClipboardActivity.class);
-				// Adds the Intent that starts the Activity to the top of the stack
-				stackBuilder.addNextIntent(resultIntent);
-				PendingIntent resultPendingIntent =
-				        stackBuilder.getPendingIntent(
-				            0,
-				            PendingIntent.FLAG_UPDATE_CURRENT
-				        );
+				Intent resultIntent = new Intent(this, CopyService.class);
+				resultIntent.putExtra("de.electricdynamite.pasty.itemId", mItem.getId());
+				resultIntent.putExtra("de.electricdynamite.pasty.item", mItem.getText());
+				PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 				mBuilder.setContentIntent(resultPendingIntent);
 				NotificationManager mNotificationManager =
 				    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
