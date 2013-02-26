@@ -110,4 +110,6 @@
     <string name="warning_no_network">No network available, showing cached clipboard</string>
 	<string name="warning_no_network_short">No network, cannot refresh</string>
 	
+	<string name="notification_event_add_title">New Item Available</string>
+	<string name="notification_event_add_text">Copy \"%s\" to clipboard</string>
 </resources>

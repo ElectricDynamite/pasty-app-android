@@ -110,4 +110,6 @@
     <string name="warning_no_network">Kein Netzwerk, zeige zwischengespeichertes Clipboard</string>
     <string name="warning_no_network_short">Kein Netzwerk, kann nicht aktualisieren</string>
     
+    <string name="notification_event_add_title">Neuer Eintrag verfügbar</string>
+    <string name="notification_event_add_text">Kopiere \"%s\" in die Zwischenablage</string>
 </resources>
