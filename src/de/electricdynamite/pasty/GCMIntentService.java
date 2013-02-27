@@ -69,36 +69,41 @@ public class GCMIntentService extends GCMBaseIntentService {
 			}
 
 			final ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
-			final int mPush = prefs.getPush();
-			if(mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
-				if(mItem.getText() != "") {
-					Intent resultIntent = new Intent(this, CopyService.class);
-					resultIntent.putExtra("de.electricdynamite.pasty.itemId", mItem.getId());
-					resultIntent.putExtra("de.electricdynamite.pasty.item", mItem.getText());
-					startService(resultIntent);
-					resultIntent = null;
+			final Boolean mPush = prefs.getPush();
+			final Boolean mCopyToClipboard = prefs.getPushCopyToClipboard();
+			final Boolean mNotify = prefs.getPushNotify();
+			if(mPush == true) {
+				if(mCopyToClipboard == true) {
+					if(mItem.getText() != "") {
+						Intent resultIntent = new Intent(this, CopyService.class);
+						resultIntent.putExtra("de.electricdynamite.pasty.itemId", mItem.getId());
+						resultIntent.putExtra("de.electricdynamite.pasty.item", mItem.getText());
+						resultIntent.putExtra("de.electricdynamite.pasty.notify", mNotify);
+						startService(resultIntent);
+						resultIntent = null;
+					}
+				} else {
+					if(mNotify == true) {
+						String contentText = String.format(getString(R.string.notification_event_add_text), mItem.getText());
+						NotificationCompat.Builder mBuilder =
+						        new NotificationCompat.Builder(this)
+						        .setSmallIcon(R.drawable.ic_stat_pasty)
+						        .setContentTitle(getString(R.string.notification_event_add_title))
+						        .setContentText(contentText)
+						        .setAutoCancel(Boolean.TRUE);
+						// Creates an explicit intent for an Activity in your app
+						Intent resultIntent = new Intent(this, CopyService.class);
+						resultIntent.putExtra("de.electricdynamite.pasty.itemId", mItem.getId());
+						resultIntent.putExtra("de.electricdynamite.pasty.item", mItem.getText());
+						resultIntent.putExtra("de.electricdynamite.pasty.notify", mNotify);
+						PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+						mBuilder.setContentIntent(resultPendingIntent);
+						NotificationManager mNotificationManager =
+						    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+						// mId allows you to update the notification later on.
+						mNotificationManager.notify(PastySharedStatics.NOTIFICATION_ID, mBuilder.build());
+					}
 				}
-			}
-			if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE) {
-				String contentText = String.format(getString(R.string.notification_event_add_text), mItem.getText());
-				NotificationCompat.Builder mBuilder =
-				        new NotificationCompat.Builder(this)
-				        .setSmallIcon(R.drawable.ic_stat_pasty)
-				        .setContentTitle(getString(R.string.notification_event_add_title))
-				        .setContentText(contentText)
-				        .setAutoCancel(Boolean.TRUE);
-				// Creates an explicit intent for an Activity in your app
-				Intent resultIntent = new Intent(this, CopyService.class);
-				resultIntent.putExtra("de.electricdynamite.pasty.itemId", mItem.getId());
-				resultIntent.putExtra("de.electricdynamite.pasty.item", mItem.getText());
-				PendingIntent resultPendingIntent = PendingIntent.getService(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-				mBuilder.setContentIntent(resultPendingIntent);
-				NotificationManager mNotificationManager =
-				    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				// mId allows you to update the notification later on.
-				mNotificationManager.notify(PastySharedStatics.NOTIFICATION_ID, mBuilder.build());
-			}
-			if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE || mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
 				JSONArray clipboard = null;
 				try {
 					clipboard = client.getClipboard();
@@ -106,6 +111,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				} catch (PastyException e) {
 					if(LOCAL_LOG) Log.v(TAG, "Could not get clipboard: "+e.getMessage());
 				}
+				
 			}
 			break;
 		default:

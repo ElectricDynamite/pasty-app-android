@@ -39,6 +39,7 @@ public class CopyService extends IntentService {
 		}
 		String itemId = extras.getString("de.electricdynamite.pasty.itemId");
 		String item = extras.getString("de.electricdynamite.pasty.item");
+		Boolean notify = extras.getBoolean("de.electricdynamite.pasty.notify", false);
 		if(itemId == null || item == null) {
 			if(LOCAL_LOG) Log.w(TAG, "Invalid itemId or empty item. Exiting.");
 			return;
@@ -54,12 +55,14 @@ public class CopyService extends IntentService {
 			mItem.copyToClipboard(sysClipboard);
 			sysClipboard = null;
 		}
-		mHandler.post(new Runnable() {            
-			@Override
-		    public void run() {
-				Toast.makeText(CopyService.this, getString(R.string.item_copied), Toast.LENGTH_SHORT).show();         
-		    }
-		});
+		if(notify == true) {
+			mHandler.post(new Runnable() {            
+				@Override
+			    public void run() {
+					Toast.makeText(CopyService.this, getString(R.string.item_copied), Toast.LENGTH_SHORT).show();         
+			    }
+			});
+		}
 	}
 
 }

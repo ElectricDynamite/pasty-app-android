@@ -41,7 +41,9 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	private Boolean useTLS;
 	private Boolean pasteCurrClip;
 	private Boolean clickableLinks;
-	private int push;
+	private boolean push;
+	private boolean pushCopyToClipboard;
+	private boolean pushNotify;
 	private Boolean mWasUpdated = false;
 	private Context context;
 	
@@ -86,8 +88,16 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		return clickableLinks;
 	}
 	
-	public int getPush() {
+	public Boolean getPush() {
 		return push;
+	}
+	
+	public Boolean getPushCopyToClipboard() {
+		return pushCopyToClipboard;
+	}
+	
+	public Boolean getPushNotify() {
+		return pushNotify;
 	}
 	
 	public Boolean wasUpdated() {
@@ -128,14 +138,9 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		}
 		this.pasteCurrClip = prefs.getBoolean(PastySharedStatics.PREF_PASTE_CLIPBOARD, true);
 		this.clickableLinks = prefs.getBoolean(PastySharedStatics.PREF_CLICKABLE_LINKS, false);
-		String mPushStr =  prefs.getString(PastySharedStatics.PREF_PUSH, "0");
-        int mPushInt = 0;
-    	try {
-    		mPushInt = Integer.parseInt(mPushStr);
-    	} catch(NumberFormatException e) {
-    		Log.w(TAG, "Found non-parseble string while converting to int. This should not happen. The Beast: "+mPushStr);
-    	}
-    	this.push = mPushInt;
+    	this.push = prefs.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
+    	this.pushCopyToClipboard = prefs.getBoolean(PastySharedStatics.PREF_PUSH_COPY_TO_CLIPBOARD, false);
+    	this.pushNotify = prefs.getBoolean(PastySharedStatics.PREF_PUSH_NOTIFY, true);
 	}
 
 	@Override

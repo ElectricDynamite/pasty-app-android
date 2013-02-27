@@ -47,10 +47,12 @@ public class PastySharedStatics {
     static final String PREF_USER				= "pref_username";  
     static final String PREF_PASSWORD			= "pref_password"; 
     static final String PREF_HTTPS				= "pref_usehttps";
-    static final String PREF_SERVER				= "pref_server";
+    static final String PREF_SERVER			= "pref_server";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     static final String PREF_CLICKABLE_LINKS	= "pref_clickable_links";
-    static final String PREF_PUSH				= "pref_push";
+    static final String PREF_PUSH_GCM			= "pref_push_gcm";
+    static final String PREF_PUSH_COPY_TO_CLIPBOARD = "pref_push_copy_to_clipboard";
+    static final String PREF_PUSH_NOTIFY		= "pref_push_notify";
     
 //    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
 //    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";

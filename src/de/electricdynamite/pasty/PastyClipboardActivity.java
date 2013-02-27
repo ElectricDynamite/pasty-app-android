@@ -115,8 +115,8 @@ public class PastyClipboardActivity extends SherlockFragmentActivity implements 
     			 * TODO what happens when the server is unavailable?
     			 */
     			if(isOnline) {
-    				int mPush = prefs.getPush();
-    				if(mPush == PastyPreferencesProvider.PUSH_TO_DEVICE || mPush == PastyPreferencesProvider.PUSH_TO_CLIPBOARD) {
+    				Boolean mPush = prefs.getPush();
+    				if(mPush == true) {
     					GCMRegistrar.checkDevice(this);
     	    	        final String regId = GCMRegistrar.getRegistrationId(this);
     	    	        if (regId.equals("")) {

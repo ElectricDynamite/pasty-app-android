@@ -84,7 +84,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 		
 		//LoaderManager.enableDebugLogging(true);
 	
-		//mRes = getResources();
 		mInflater = LayoutInflater.from(getSherlockActivity());
 		activity = (PastyClipboardFragmentListener) getSherlockActivity();
 

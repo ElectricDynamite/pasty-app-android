@@ -5,7 +5,10 @@
                 <Preference
 		                android:key="pref_account_create"
                     	android:name="pref_account_create"
-                    	android:title="@string/pref_account_create_title" />
+                    	android:title="@string/pref_account_create_title">
+                    <intent android:action="android.intent.action.VIEW"
+                            android:data="https://pasty.cc/user/create/" />
+                </Preference>
 		        <EditTextPreference
 		                android:name="pref_username"
 		                android:defaultValue="@string/pref_username_default"
@@ -32,14 +35,28 @@
                         android:defaultValue="false"
                         android:summary="@string/pref_clickable_links_sum"
                         android:key="pref_clickable_links" />
-                <ListPreference
-				        android:defaultValue="0"
-				        android:numeric="integer"
-				        android:dialogTitle="@string/pref_push_dialog_title"
-				        android:entries="@array/pref_push_entries"
-				        android:entryValues="@array/pref_push_values"
-				        android:key="pref_push"
-				        android:title="@string/pref_push_title" />
+                <PreferenceScreen 
+				        android:key="pref_cat_push"
+				        android:title="@string/pref_push_title"
+				        android:persistent="false">
+                    <CheckBoxPreference
+                            android:title="@string/pref_push_title"
+                            android:defaultValue="false"
+                            android:summary="@string/pref_push_sum"
+                            android:key="pref_push_gcm" />
+                    <CheckBoxPreference
+                            android:title="@string/pref_push_copy_to_clipboard_title"
+                            android:defaultValue="false"
+                            android:summary="@string/pref_push_copy_to_clipboard_sum"
+                            android:key="pref_push_copy_to_clipboard"
+                            android:dependency="pref_push_gcm" />
+                    <CheckBoxPreference
+                            android:title="@string/pref_push_notify_title"
+                            android:defaultValue="true"
+                            android:summary="@string/pref_push_notify_sum"
+                            android:key="pref_push_notify"
+                            android:dependency="pref_push_gcm" />
+                </PreferenceScreen>
         </PreferenceCategory>
         <PreferenceCategory
                 android:title="@string/network">
@@ -53,10 +70,16 @@
                 android:title="@string/about">
                 <Preference 
 		                android:key="pref_tos"
-		                android:title="@string/pref_tos_title" />
+		                android:title="@string/pref_tos_title" >
+                    <intent android:action="android.intent.action.VIEW"
+                            android:data="https://pasty.cc/tos/" />
+                </Preference>
                 <Preference 
 		                android:key="pref_privacy"
-		                android:title="@string/pref_privacy_title" />
+		                android:title="@string/pref_privacy_title">
+                    <intent android:action="android.intent.action.VIEW"
+                            android:data="http://electricdynamite.de/privacy.html" />
+                </Preference>
                 <Preference 
 		                android:key="pref_version"
 		                android:title="@string/pref_version_title" />

@@ -35,10 +35,6 @@ import android.util.Log;
  
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String TAG = PastyPreferencesActivity.class.toString();
-	
-		private static final String URL_ACCOUNT_CREATE	= "https://pasty.cc/user/create/";
-		private static final String URL_TOS				= "https://pasty.cc/tos/";
-		private static final String URL_PRIVACY			= "http://electricdynamite.de/privacy.html";
 			
 	    public static final String KEY_PREF_USERNAME = "pref_username";
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
@@ -48,7 +44,6 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
 
 	    private EditTextPreference	prefUsername;
 	    private EditTextPreference	prefPassword;
-	    private ListPreference		prefPush;
 	    private Preference			prefVersion;
 	
 	
@@ -64,47 +59,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
                 
                 prefUsername = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_USERNAME);
                 prefPassword = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_PASSWORD);
-                prefPush  = (ListPreference)getPreferenceScreen().findPreference(KEY_PREF_PUSH);
                 prefVersion  = (Preference)getPreferenceScreen().findPreference(KEY_PREF_VERSION);
-                
-                Preference mPrefAccountCreate = findPreference("pref_account_create");
-                mPrefAccountCreate.setOnPreferenceClickListener(
-                	      new OnPreferenceClickListener() {
-                	    	    @Override
-                	    	    public boolean onPreferenceClick(Preference preference) {
-                	    	        Intent intent = new Intent(Intent.ACTION_VIEW);
-                	    	        intent.setData(Uri.parse(URL_ACCOUNT_CREATE));
-                	    	        startActivity(intent);
-                	    	        return true;
-                	    	    }
-                });
-                mPrefAccountCreate = null;
-                
-                Preference mPrefTos = findPreference("pref_tos");
-                mPrefTos.setOnPreferenceClickListener(
-                	      new OnPreferenceClickListener() {
-                	    	    @Override
-                	    	    public boolean onPreferenceClick(Preference preference) {
-                	    	        Intent intent = new Intent(Intent.ACTION_VIEW);
-                	    	        intent.setData(Uri.parse(URL_TOS));
-                	    	        startActivity(intent);
-                	    	        return true;
-                	    	    }
-                });
-                mPrefTos = null;
-                
-                Preference mPrefPrivacy = findPreference("pref_privacy");
-                mPrefPrivacy.setOnPreferenceClickListener(
-                	      new OnPreferenceClickListener() {
-                	    	    @Override
-                	    	    public boolean onPreferenceClick(Preference preference) {
-                	    	        Intent intent = new Intent(Intent.ACTION_VIEW);
-                	    	        intent.setData(Uri.parse(URL_PRIVACY));
-                	    	        startActivity(intent);
-                	    	        return true;
-                	    	    }
-                });
-                mPrefPrivacy = null;
                 
         }
         
@@ -132,20 +87,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             prefPassword.setSummary(mSumVal);
             mKeyVal = null;
             mSumVal = null;
-            
-            String mVal =  sharedPreferences.getString(KEY_PREF_PUSH, "0");
-            int mKeyValInt = 0;
-        	try {
-        		mKeyValInt = Integer.parseInt(mVal);
-        	} catch(NumberFormatException e) {
-        		Log.w(TAG, "Found non-parseble string while converting to int. This should not happen. The Beast: "+mVal);
-        	}
-        	String[] mEntries = getResources().getStringArray(R.array.pref_push_entries);
-        	mSumVal = mEntries[mKeyValInt];
-        	prefPush.setSummary(mSumVal);
-        	mEntries = null;
-            mSumVal = null;
-            
+                      
             Intent mIntent = getIntent();
             mKeyVal = sharedPreferences.getString(KEY_PREF_VERSION, "");
             mSumVal = mIntent.getStringExtra("versionName");
@@ -186,20 +128,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             		mSumVal = getString(R.string.pref_password_sum_isset);
             	} 
             	prefPassword.setSummary(mSumVal);
-            } else if (key.equals(KEY_PREF_PUSH)) {
-            	String mVal =  sharedPreferences.getString(KEY_PREF_PUSH, "0");
-            	int mKeyValInt = 0;
-            	try {
-            		mKeyValInt = Integer.parseInt(mVal);
-            	} catch(NumberFormatException e) {
-            		Log.w(TAG, "Found non-parseble string while converting to int. This should not happen. The Beast: "+mVal);
-            	}
-            	String[] mEntries = getResources().getStringArray(R.array.pref_push_entries);
-            	mSumVal = mEntries[mKeyValInt];
-            	prefPush.setSummary(mSumVal);
-            	mSumVal = null;
-                mEntries = null;
-            }
+            } 
             mKeyVal = null;
             mSumVal = null;
         }

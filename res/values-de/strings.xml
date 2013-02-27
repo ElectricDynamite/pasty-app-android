@@ -59,6 +59,13 @@
 	
 	<string name="pref_clickable_links_title">Klickbare Links</string>
 	<string name="pref_clickable_links_sum">Links berühren öffnet den Browser</string>
+    
+    <string name="pref_push_title">Clipboard Push</string>
+    <string name="pref_push_sum">Neue Einträge ans Gerät pushen</string>
+    <string name="pref_push_copy_to_clipboard_title">In die Zwischenablage kopieren</string>
+    <string name="pref_push_copy_to_clipboard_sum">Automatisch in die Geräte-Zwischenablage kopieren</string>
+    <string name="pref_push_notify_title">Benachrichtigen</string>
+    <string name="pref_push_notify_sum">Erstelle Benachrichtigung oder Pop-Up</string>
 	
 	<string name="pref_push_title">Clipboard Push</string>
     <string name="pref_push_dialog_title">Wähle den Push-Modus</string>
