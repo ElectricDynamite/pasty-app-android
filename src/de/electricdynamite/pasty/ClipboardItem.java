@@ -24,9 +24,10 @@ import android.os.Build;
 import android.text.ClipboardManager;
 
 
+@SuppressWarnings("deprecation")
 public class ClipboardItem {
 	private static final String CLIP_LABEL = "Pasty";
-	private final String TAG = ClipboardItem.class.toString();
+	private static final String TAG = ClipboardItem.class.toString();
 	private String Id = "";
 	private String ItemText = "";
 	private Boolean isLinkified = false;
@@ -36,8 +37,8 @@ public class ClipboardItem {
 		this.ItemText = ItemText;
 	}
 	
-	public void linkfied() {
-		this.isLinkified = true;
+	public void setLinkfied(Boolean bool) {
+		this.isLinkified = bool;
 	}
 	
 	public String getId() {
@@ -54,12 +55,11 @@ public class ClipboardItem {
 	
 	public JSONObject getJSON() throws JSONException {
 		JSONObject jsItem = new JSONObject();
-		jsItem.put("i", this.ItemText);
+		jsItem.put("item", this.ItemText);
 		jsItem.put("_id", this.Id);
 		return jsItem;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void copyToClipboard(ClipboardManager clipboard) {
     	clipboard.setText(this.getText());
 	}

@@ -290,7 +290,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	        }
 	        
 	        public void linkified(int position) {
-	        	this.itemList.get(position).linkfied();
+	        	this.itemList.get(position).setLinkfied(Boolean.TRUE);
 	        }
 	        
 	        public Boolean isLinkified(int position) {
