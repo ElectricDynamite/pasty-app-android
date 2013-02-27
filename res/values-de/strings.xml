@@ -67,19 +67,6 @@
     <string name="pref_push_notify_title">Benachrichtigen</string>
     <string name="pref_push_notify_sum">Erstelle Benachrichtigung oder Pop-Up</string>
 	
-	<string name="pref_push_title">Clipboard Push</string>
-    <string name="pref_push_dialog_title">Wähle den Push-Modus</string>
-    <string-array name="pref_push_entries">
-        <item>Kein Push</item>
-        <item>Neue Einträge ans Gerät pushen</item>
-        <item>Pushen und in die Zwischenablage kopieren</item>
-    </string-array>
-    <string-array name="pref_push_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-	
 	<string name="pref_usehttps_title">Sichere Übertragung</string>
 	<string name="pref_usehttps_sum">Verschlüsselte Netzwerkübertragung. Bei Problemen abschalten</string>
 	
