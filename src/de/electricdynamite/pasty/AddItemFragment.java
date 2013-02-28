@@ -167,6 +167,7 @@ public class AddItemFragment extends SherlockDialogFragment {
 	 protected void handleException(PastyException mException) {
 	    	TextView mHelpTextBig = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextBig);
 	    	TextView mHelpTextSmall = (TextView) getSherlockActivity().findViewById(R.id.tvHelpTextSmall);
+	    	if(mHelpTextSmall == null || mHelpTextBig == null) return;
 	    	switch(mException.errorId) {
  		case PastyException.ERROR_AUTHORIZATION_FAILED:
  			Log.d(TAG, "ERROR_AUTHORIZATION_FAILED EXCEPTION");
@@ -197,8 +198,6 @@ public class AddItemFragment extends SherlockDialogFragment {
 			default:
 				break;
 			}
-
-			mHelpTextBig = null;
 	    }
 	
 }

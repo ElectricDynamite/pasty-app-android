@@ -464,6 +464,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    /** handles PastyExceptions within this Fragment
 	     */
 	    protected void handleException(PastyException mException) {
+	    	if(mHelpTextBig == null || mHelpTextSmall == null) return;
 	    	switch(mException.errorId) {
     		case PastyException.ERROR_AUTHORIZATION_FAILED:
 				mHelpTextBig.setTextColor(getResources().getColor(R.color.white));
