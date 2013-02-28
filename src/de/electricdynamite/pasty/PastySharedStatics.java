@@ -48,6 +48,7 @@ public class PastySharedStatics {
     static final String PREF_PASSWORD			= "pref_password"; 
     static final String PREF_HTTPS				= "pref_usehttps";
     static final String PREF_SERVER			= "pref_server";
+    static final String PREF_LAST_ITEM			= "pref_last_item";
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     static final String PREF_CLICKABLE_LINKS	= "pref_clickable_links";
     static final String PREF_PUSH_GCM			= "pref_push_gcm";

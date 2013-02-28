@@ -57,18 +57,29 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onMessage(Context context, Intent intent) {
 		if(prefs == null) this.prefs = new PastyPreferencesProvider(context);
 		final Bundle extras = intent.getExtras();
+		if(extras == null) {
+			Log.i(TAG, "onMessage(): Empty intent received");
+			return;
+		}
+		final String mItemId = extras.getString("itemId");
+		final String mItemStr = extras.getString("item");
 		final int mEventId = Integer.parseInt(extras.getString("eventId"));
-		if(LOCAL_LOG) Log.v(TAG, "GCM: Received message for event: "+mEventId);
+		if(mItemId == null || mItemStr == null || mItemId == "" || mItemStr == "") {
+			Log.i(TAG, "onMessage(): Invalid intent received");
+			return;
+		}
+		if(LOCAL_LOG) Log.v(TAG, "onMessage(): Received message for event: "+mEventId);
 		switch(mEventId) {
 		case EVENT_ITEM_ADDED:
-			
+			final String lastItemId = prefs.getLastItem(); 
+			if(mItemId.equals(lastItemId)) return;
 			if(client == null) {
 		    	client = new PastyClient(prefs.getRESTBaseURL(), true);
 		    	client.setUsername(prefs.getUsername());
 		    	client.setPassword(prefs.getPassword());
 			}
 
-			final ClipboardItem mItem = new ClipboardItem(extras.getString("itemId"), extras.getString("item"));
+			final ClipboardItem mItem = new ClipboardItem(mItemId, mItemStr);
 			final Boolean mPush = prefs.getPush();
 			final Boolean mCopyToClipboard = prefs.getPushCopyToClipboard();
 			final Boolean mNotify = prefs.getPushNotify();
@@ -115,6 +126,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			}
 			break;
 		default:
+			Log.i(TAG,"onMessage(): Unsupported event: "+mEventId);
 			break;
 		}
 		/* TODO Make ClipboardFragment react to changes from GCMIntentService */

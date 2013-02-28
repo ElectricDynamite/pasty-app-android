@@ -142,8 +142,8 @@ public class AddItemFragment extends SherlockDialogFragment {
 			client.setPassword(prefs.getPassword());
 			PastyResponse result;
 			try {
-				client.addItem(item[0]);
-				result = new PastyResponse();
+				final String itemId = client.addItem(item[0]);
+				result = new PastyResponse(itemId);
 			} catch (PastyException e) {
 				result = new PastyResponse(e);
 			}
@@ -158,6 +158,7 @@ public class AddItemFragment extends SherlockDialogFragment {
 	       } else {
 	   		final AddItemFragmentCallbackListener activity = (AddItemFragmentCallbackListener) getSherlockActivity();
 	   		Toast.makeText(context, getString(R.string.item_added), Toast.LENGTH_LONG).show();
+	   		prefs.storeLastItem(result.getItemId());
 	   		activity.onAddItemFragmentCallbackSignal(PastySharedStatics.SIGNAL_EXIT);
 	       }
 	    }

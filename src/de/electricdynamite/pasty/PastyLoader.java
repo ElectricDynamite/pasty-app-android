@@ -62,6 +62,7 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
     
     public static class PastyResponse {
         private JSONArray mClipboard;
+		private String mItemId;
         private PastyException mException;
         private int resultSource;
         public boolean isFinal = false;
@@ -88,9 +89,17 @@ public class PastyLoader extends AsyncTaskLoader<PastyLoader.PastyResponse> {
         	this.mException = e;
         	this.hasException  = true;
         }
+
+        public PastyResponse(String itemId) {
+        	this.mItemId = itemId;
+        }
         
         public JSONArray getClipboard() {
             return mClipboard;
+        }
+        
+        public String getItemId() {
+        	return mItemId;
         }
         
         public int getResultSource() {

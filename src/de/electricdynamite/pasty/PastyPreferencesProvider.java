@@ -33,6 +33,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	public static final int PUSH_TO_CLIPBOARD = 2;
 	
 	private SharedPreferences prefs;
+	private String lastItem;
 	private String username;
 	private String password;
 	private String restServerHost;
@@ -100,6 +101,17 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		return pushNotify;
 	}
 	
+	public void storeLastItem(String itemId) {
+		if(itemId != null) {
+			this.lastItem = itemId;
+			this.prefs.edit().putString(PastySharedStatics.PREF_LAST_ITEM, itemId).commit();
+		}
+	}
+	
+	public String getLastItem() {
+		return this.lastItem;
+	}
+	
 	public Boolean wasUpdated() {
 		if(this.mWasUpdated) {
 			this.mWasUpdated = false;
@@ -136,6 +148,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 				this.restServerPort = 80;
 			}
 		}
+		this.lastItem = prefs.getString(PastySharedStatics.PREF_LAST_ITEM, "");
 		this.pasteCurrClip = prefs.getBoolean(PastySharedStatics.PREF_PASTE_CLIPBOARD, true);
 		this.clickableLinks = prefs.getBoolean(PastySharedStatics.PREF_CLICKABLE_LINKS, false);
     	this.push = prefs.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
