@@ -42,9 +42,10 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	private Boolean useTLS;
 	private Boolean pasteCurrClip;
 	private Boolean clickableLinks;
-	private boolean push;
-	private boolean pushCopyToClipboard;
-	private boolean pushNotify;
+	private Boolean push;
+	private Boolean pushCopyToClipboard;
+	private Boolean pushNotify;
+	private Boolean registerError;
 	private Boolean mWasUpdated = false;
 	private Context context;
 	
@@ -112,6 +113,20 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 		return this.lastItem;
 	}
 	
+	public void setRegisterError() {
+		setRegisterError(true);
+	}
+	
+	public void setRegisterError(Boolean state) {
+		if(state == null) state = true;
+		this.registerError = state;
+		this.prefs.edit().putBoolean(PastySharedStatics.PREF_REGISTER_ERROR, state).commit();
+	}
+	
+	public Boolean getRegisterError() {
+		return this.registerError;
+	}
+	
 	public Boolean wasUpdated() {
 		if(this.mWasUpdated) {
 			this.mWasUpdated = false;
@@ -154,6 +169,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
     	this.push = prefs.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
     	this.pushCopyToClipboard = prefs.getBoolean(PastySharedStatics.PREF_PUSH_COPY_TO_CLIPBOARD, false);
     	this.pushNotify = prefs.getBoolean(PastySharedStatics.PREF_PUSH_NOTIFY, true);
+    	this.registerError = prefs.getBoolean(PastySharedStatics.PREF_REGISTER_ERROR, false);
 	}
 
 	@Override

@@ -237,7 +237,7 @@ public class PastyClient {
 		}
 	}	
 	
-	public void registerDevice(String regid) throws PastyException {
+	public void registerDevice(String regId) throws PastyException {
 		String url 				= REST_SERVER_BASE_URL+REST_URI_DEVICE;
 		if(LOCAL_LOG) Log.v(TAG,"Starting REST call to API endpoint "+url);
 		HttpClient client 		= new DefaultHttpClient();
@@ -246,7 +246,7 @@ public class PastyClient {
 		
 		try {
 			httpPost.setHeader("Authorization", getHTTPBasicAuth());
-		    params.put("regId", regid);
+		    params.put("regId", regId);
 		    httpPost.setEntity(new ByteArrayEntity(
 		        params.toString().getBytes("UTF8")));
 		    httpPost.setHeader("Content-type", "application/json");

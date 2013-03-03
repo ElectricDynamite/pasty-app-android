@@ -54,6 +54,7 @@ public class PastySharedStatics {
     static final String PREF_PUSH_GCM			= "pref_push_gcm";
     static final String PREF_PUSH_COPY_TO_CLIPBOARD = "pref_push_copy_to_clipboard";
     static final String PREF_PUSH_NOTIFY		= "pref_push_notify";
+    static final String PREF_REGISTER_ERROR	= "pref_register_error";
     
 //    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
 //    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";

@@ -142,10 +142,12 @@ public class GCMIntentService extends GCMBaseIntentService {
     	client.setPassword(prefs.getPassword());
     	try {
 			client.registerDevice(regId);
+			prefs.setRegisterError(false);
 		} catch (PastyException e) {
 			if(e.errorId != PastyException.ERROR_DEVICE_ALREADY_REGISTERED) {
 				Log.w(TAG,"GCMIntentService.onRegistered(): Failed to submit regId to API server");
 				e.printStackTrace();
+				prefs.setRegisterError();
 			}
 		}
 	}
