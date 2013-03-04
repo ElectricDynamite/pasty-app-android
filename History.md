@@ -3,7 +3,9 @@ pasty-app-android history
 
 Current master
 --------------
-
+  * Added push notification feature (reason for new permissions)
+  * Fixed a bug where the indeterminate loader was not removed correctly (#25)
+  * Code cleanup
 
 Version 0.6.1 - 2013-02-06
 --------------------------
