@@ -61,7 +61,9 @@
 	<string name="pref_clickable_links_sum">Touching Links opens a browser</string>
 	
 	<string name="pref_push_title">Clipboard Push</string>
-	<string name="pref_push_sum">Push new Items to Device</string>
+    <string name="pref_push_sum">Push new Items to Device</string>
+    <string name="pref_push_enabled_sum">Push is activated</string>
+    <string name="pref_push_disabled_sum">Push is deactivated</string>
 	<string name="pref_push_copy_to_clipboard_title">Copy to Clipboard</string>
 	<string name="pref_push_copy_to_clipboard_sum">Automatically Copy to Device Clipboard</string>
     <string name="pref_push_notify_title">Notify on New Item</string>

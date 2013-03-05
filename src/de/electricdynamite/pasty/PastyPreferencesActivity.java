@@ -31,7 +31,9 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceScreen;
 import android.util.Log;
+import android.widget.BaseAdapter;
  
 public class PastyPreferencesActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 		private static final String TAG = PastyPreferencesActivity.class.toString();
@@ -42,14 +44,18 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
 	    public static final String KEY_PREF_CLICKABLE_LINKS	 = "pref_clickable_links";
 	    public static final String KEY_PREF_PUSH = "pref_push";
 
+	    private Boolean LOCAL_LOG = false;
 	    private EditTextPreference	prefUsername;
 	    private EditTextPreference	prefPassword;
 	    private Preference			prefVersion;
+	    private PreferenceScreen	prefPushScreen;
+	    private BaseAdapter			prefPushScreenAdapter;
 	
 	
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);	
+                super.onCreate(savedInstanceState);
+                if(PastySharedStatics.LOCAL_LOG == Boolean.TRUE) LOCAL_LOG = true;
                 ActionBar ab = getSherlock().getActionBar();
                 ab.setHomeButtonEnabled(true);
                 ab.setDisplayHomeAsUpEnabled(true);
@@ -59,14 +65,14 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
                 
                 prefUsername = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_USERNAME);
                 prefPassword = (EditTextPreference)getPreferenceScreen().findPreference(KEY_PREF_PASSWORD);
+                prefPushScreen = (PreferenceScreen)getPreferenceScreen().findPreference(PastySharedStatics.PREF_CAT_PUSH);
                 prefVersion  = (Preference)getPreferenceScreen().findPreference(KEY_PREF_VERSION);
-                
+                prefPushScreenAdapter = (BaseAdapter)getPreferenceScreen().getRootAdapter();
         }
         
 		@Override
         protected void onResume() {
             super.onResume();
-            
 
             // Setup the initial values
         	SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
@@ -87,7 +93,15 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             prefPassword.setSummary(mSumVal);
             mKeyVal = null;
             mSumVal = null;
-                      
+            
+            Boolean mKeyBool = sharedPreferences.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
+            mSumVal = getString(R.string.pref_push_disabled_sum);
+            if(mKeyBool == Boolean.TRUE) {
+            	mSumVal = getString(R.string.pref_push_enabled_sum);
+            } 
+            prefPushScreen.setSummary(mSumVal);
+            mKeyBool = null;
+             
             Intent mIntent = getIntent();
             mKeyVal = sharedPreferences.getString(KEY_PREF_VERSION, "");
             mSumVal = mIntent.getStringExtra("versionName");
@@ -111,7 +125,7 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
         
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             // Let's do something a preference value changes
-			Log.d("PreferenceActivity","settings updated");
+			if(LOCAL_LOG) Log.v(TAG,"onSharedPreferenceChanged(): setting updated: "+key);
         	String mKeyVal;
         	String mSumVal;
             if (key.equals(KEY_PREF_USERNAME)) {
@@ -128,6 +142,15 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             		mSumVal = getString(R.string.pref_password_sum_isset);
             	} 
             	prefPassword.setSummary(mSumVal);
+            } else if (key.equals(PastySharedStatics.PREF_PUSH_GCM)) {
+            	Boolean mKeyBool = sharedPreferences.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
+            	mSumVal = getString(R.string.pref_push_disabled_sum);
+            	if(mKeyBool == Boolean.TRUE) {
+            		mSumVal = getString(R.string.pref_push_enabled_sum);
+            	} 
+            	prefPushScreen.setSummary(mSumVal);
+            	prefPushScreenAdapter.notifyDataSetChanged();
+            	mKeyBool = null;
             } 
             mKeyVal = null;
             mSumVal = null;
