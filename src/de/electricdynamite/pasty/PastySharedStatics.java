@@ -20,7 +20,7 @@ package de.electricdynamite.pasty;
 public class PastySharedStatics {
 	
 	// Development Mode
-	static final boolean LOCAL_LOG = true; 
+	static final boolean LOCAL_LOG = false; 
 	
 	// GCM
 	static final String GCM_SENDER_ID = "677943136875";
@@ -57,10 +57,10 @@ public class PastySharedStatics {
     static final String PREF_PUSH_NOTIFY		= "pref_push_notify";
     static final String PREF_REGISTER_ERROR	= "pref_register_error";
     
-//    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
-//    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";
-    static final String DEFAULT_REST_URI_HTTP	= "http://mario.blafaselblub.net:8080/";
-    static final String DEFAULT_REST_URI_HTTPS	= "https://mario.blafaselblub.net:4444/";
+    static final String DEFAULT_REST_URI_HTTP	= "http://api.pastyapp.org/";
+    static final String DEFAULT_REST_URI_HTTPS	= "https://api.pastyapp.org/";
+//    static final String DEFAULT_REST_URI_HTTP	= "http://mario.blafaselblub.net:8080/";
+//    static final String DEFAULT_REST_URI_HTTPS	= "https://mario.blafaselblub.net:4444/";
     //static final String DEFAULT_REST_URI_HTTP 	= "http://10.10.10.10:8888";
     
     // Dialog Signal
