@@ -38,6 +38,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.webkit.URLUtil;
@@ -214,36 +215,40 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				//Assign adapter to ListView
 	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
 	    				listView.setAdapter(mAdapter);
-	    				listView.setOnItemClickListener(new OnItemClickListener() { 
+	    				listView.setItemsCanFocus(false);
+//	    				listView.setFocusable(false);
+//	    				listView.setFocusableInTouchMode(false);
+//	    				listView.setClickable(false);
+	    				listView.setOnItemClickListener(new OnItemClickListener() {
 	    					@SuppressLint("NewApi")
-							@Override
+	    					@Override
 	    					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	    				    	ClipboardItem Item = mItems.get(position); // get a ClipboardItem from the clicked position
-	    				    	if(Item.isLinkified() && prefs.getClickableLinks()) {
-	    				    		/* If the clicked item was originally linkified and prefs.getClickableLinks() is true, we manually 
-	    				    		 * fire an ACTION_VIEW intent to simulate Linkify() behavior
-	    				    		 */
-	    				    		String url = Item.getText();
-	    				    		if(!URLUtil.isValidUrl(url)) url = "http://"+url;
-	    				    		Intent i = new Intent(Intent.ACTION_VIEW);
-	    				    		i.setData(Uri.parse(url));
-	    				    		startActivity(i);
-	    				    	} else {
-	    				    		/* Else we copy the item to the systems clipboard,
-	    				    		 * show a Toast and finish() the activity
-	    				    		 */
-	    				    		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	    				    			android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-	    				    			Item.copyToClipboard(sysClipboard);
-	    				    			sysClipboard = null;
-	    				    		} else {
-	    				    			ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-	    				    			Item.copyToClipboard(sysClipboard);
-	    				    			sysClipboard = null;
-	    				    		}
-		    				    	Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
-		    					    getSherlockActivity().finish();
-	    				    	}
+	    						ClipboardItem Item = mItems.get(position); // get a ClipboardItem from the clicked position
+	    						if(Item.isLinkified() && prefs.getClickableLinks()) {
+	    							/* If the clicked item was originally linkified and prefs.getClickableLinks() is true, we manually
+	    							 * fire an ACTION_VIEW intent to simulate Linkify() behavior
+	    							 */
+	    							String url = Item.getText();
+	    							if(!URLUtil.isValidUrl(url)) url = "http://"+url;
+	    							Intent i = new Intent(Intent.ACTION_VIEW);
+	    							i.setData(Uri.parse(url));
+	    							startActivity(i);
+	    						} else {
+	    							/* Else we copy the item to the systems clipboard,
+	    							 * show a Toast and finish() the activity
+	    							 */
+	    							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    								android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+	    								Item.copyToClipboard(sysClipboard);
+	    								sysClipboard = null;
+	    							} else {
+	    								ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+	    								Item.copyToClipboard(sysClipboard);
+	    								sysClipboard = null;
+	    							}
+	    							Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
+	    							getSherlockActivity().finish();
+	    						}
 	    					}
 	    				});
 	    				registerForContextMenu(listView);
@@ -312,7 +317,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	        }
 
 			@Override
-	        public View getView(int position, View convertView, ViewGroup parent) {
+	        public View getView(final int position, View convertView, ViewGroup parent) {
 				
 				View view = convertView;
 
@@ -323,8 +328,10 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            ClipboardItem Item = itemList.get(position);
 	            
 	            // Select our text view from our view row
-	            TextView tvListItem = (TextView) view.findViewById(R.id.myListitem);
+	            TextView tvListItem = (TextView) view.findViewById(R.id.listItemText);
 	            tvListItem.setText(Item.getText());
+	            
+	            //view.setOnClickListener(new clipboardOnClickListener(position));
 	            
 	            if(prefs.getClickableLinks()) {
 		            /* Linkify/ListView / JB problem work around:
@@ -352,11 +359,55 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            	}
 	            		
 	            }
-	            
+	           // tvListItem.setOnClickListener(new ClipboardOnClickListener(position));
+	            View mSpinner = (View) view.findViewById(R.id.listItemSpinnerLayout);
+				mSpinner.setOnClickListener(new OnClickListener() { 
+					@Override
+					public void onClick(View v) {
+						v.showContextMenu();
+					}
+				});
 	            return view;
 	        }
 	    }
 		
+	public class ClipboardOnClickListener implements OnClickListener{
+		private int position;
+		public ClipboardOnClickListener(int position){
+			this.position=position;
+		}
+
+		@Override
+		public void onClick(View view) {
+			ClipboardItem Item = mItems.get(position); // get a ClipboardItem from the clicked position
+			if(Item.isLinkified() && prefs.getClickableLinks()) {
+				/* If the clicked item was originally linkified and prefs.getClickableLinks() is true, we manually 
+				 * fire an ACTION_VIEW intent to simulate Linkify() behavior
+				 */
+				String url = Item.getText();
+				if(!URLUtil.isValidUrl(url)) url = "http://"+url;
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			} else {
+				/* Else we copy the item to the systems clipboard,
+				 * show a Toast and finish() the activity
+				 */
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					android.content.ClipboardManager sysClipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					Item.copyToClipboard(sysClipboard);
+					sysClipboard = null;
+				} else {
+					ClipboardManager sysClipboard = (ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					Item.copyToClipboard(sysClipboard);
+					sysClipboard = null;
+				}
+				Toast.makeText(getSherlockActivity().getApplicationContext(), getString(R.string.item_copied), Toast.LENGTH_LONG).show();
+				getSherlockActivity().finish();
+			}
+		}
+	}
+
 
 	private class ItemDeleteTask extends AsyncTask<ClipboardItem, Void, PastyResponse > {
 		
@@ -399,7 +450,7 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    public void onCreateContextMenu(ContextMenu menu, View v,
 	        ContextMenuInfo menuInfo) {
 		  AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-	      if (v.getId()==R.id.listItems || v.getId() == R.id.myListimage) {
+	      if (v.getId()==R.id.listItems || v.getId() == R.id.listItemText) {
 	        menu.setHeaderTitle(getString(R.string.itemContextMenuTitle));
 	        String[] menuItems = getResources().getStringArray(R.array.itemContextMenu);
 	        ClipboardItem mItem = mAdapter.getItem(info.position);

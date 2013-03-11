@@ -1,22 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
- android:orientation="horizontal"
- android:layout_width="fill_parent"
- android:layout_height="fill_parent"
- android:layout_margin="30dp"
- android:id="@+id/listlayout">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listlayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="20dp"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
  <ImageView 
-    android:id="@+id/myListimage"
+    android:id="@+id/listItemImage"
  	android:contentDescription="@string/copy"
     android:layout_width="32dp"
-    android:layout_height="32dp"
+    android:layout_height="fill_parent"
     android:layout_margin="10dp"
+    android:layout_alignParentLeft="true"
+    android:layout_centerInParent="true"
+    android:gravity="center_vertical"
+    android:focusable="false"
     android:src="@drawable/ic_content_copy_holo_light" />
   <TextView
-  android:id="@+id/myListitem" 
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:gravity="fill_vertical"
-  android:layout_margin="10dp"
-  android:textSize="22sp"/>
-</LinearLayout>
+    android:id="@+id/listItemText" 
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:gravity="fill_vertical"
+    android:layout_margin="10dp"
+    android:focusable="false"
+    android:layout_toRightOf="@id/listItemImage"
+    android:textSize="22sp" />
+  <RelativeLayout
+    android:id="@+id/listItemSpinnerLayout"
+    android:layout_width="32dp"
+    android:layout_height="fill_parent"
+    android:minHeight="32dp"
+    android:baselineAligned="false"
+    android:gravity="right"
+    android:orientation="horizontal"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/listview_selectable">
+    <ImageView
+            android:id="@+id/listItemSpinner"
+            android:layout_width="24dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:focusable="false"
+            android:gravity="right"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_spinner_holo_light" />
+</RelativeLayout>
+  
+</RelativeLayout>
