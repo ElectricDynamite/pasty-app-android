@@ -1,6 +1,10 @@
 pasty-app-android history
 ========================
 
+Current master
+--------------
+  * Implemented Spinner icon to open context menu
+
 Version 0.7.0 - 2013-03-05
 --------------------------
   * Added push notification feature (reason for new permissions)
