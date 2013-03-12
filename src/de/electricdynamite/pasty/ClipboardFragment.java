@@ -216,9 +216,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    				ListView listView = (ListView) getSherlockActivity().findViewById(R.id.listItems);
 	    				listView.setAdapter(mAdapter);
 	    				listView.setItemsCanFocus(false);
-//	    				listView.setFocusable(false);
-//	    				listView.setFocusableInTouchMode(false);
-//	    				listView.setClickable(false);
 	    				listView.setOnItemClickListener(new OnItemClickListener() {
 	    					@SuppressLint("NewApi")
 	    					@Override
@@ -359,7 +356,6 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	            	}
 	            		
 	            }
-	           // tvListItem.setOnClickListener(new ClipboardOnClickListener(position));
 	            View mSpinner = (View) view.findViewById(R.id.listItemSpinnerLayout);
 				mSpinner.setOnClickListener(new OnClickListener() { 
 					@Override
