@@ -33,22 +33,17 @@
     android:layout_width="32dp"
     android:layout_height="fill_parent"
     android:minHeight="32dp"
-    android:baselineAligned="false"
-    android:gravity="right"
-    android:orientation="horizontal"
     android:layout_alignParentBottom="true"
     android:layout_alignParentRight="true"
     android:layout_marginRight="10dp"
     android:background="@drawable/listview_selectable">
     <ImageView
             android:id="@+id/listItemSpinner"
-            android:layout_width="24dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:focusable="false"
-            android:gravity="right"
-            android:layout_marginBottom="10dp"
             android:src="@drawable/ic_spinner_holo_light" />
 </RelativeLayout>
   
