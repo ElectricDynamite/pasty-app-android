@@ -50,7 +50,7 @@
 	<string name="pref_username_default"></string>
 		
 	<string name="pref_password_title">Passwort</string>
-	<string name="pref_password_defsum">Kein Password angegeben</string>
+	<string name="pref_password_defsum">Kein Passwort angegeben</string>
 	<string name="pref_password_sum_isset">Passwort angegeben</string>
 	<string name="pref_password_default"></string>
 	
