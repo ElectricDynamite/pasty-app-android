@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.electricdynamite.pasty"
-    android:versionCode="13030801"
+    android:versionCode="13112401"
     android:versionName="0.8.0-master" >
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
     
     <permission android:name="de.electricdynamite.pasty.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     
