@@ -52,6 +52,7 @@ public class PastySharedStatics {
     static final String PREF_PASTE_CLIPBOARD	= "pref_paste_clipboard";
     static final String PREF_CLICKABLE_LINKS	= "pref_clickable_links";
     static final String PREF_CAT_PUSH			= "pref_cat_push";
+    static final String PREF_PUSH_AVAILABLE = "pref_push_available";
     static final String PREF_PUSH_GCM			= "pref_push_gcm";
     static final String PREF_PUSH_COPY_TO_CLIPBOARD = "pref_push_copy_to_clipboard";
     static final String PREF_PUSH_NOTIFY		= "pref_push_notify";

@@ -61,6 +61,7 @@
 	<string name="pref_clickable_links_sum">Links berühren öffnet den Browser</string>
     
     <string name="pref_push_title">Clipboard Push</string>
+    <string name="pref_push_not_available_sum">Push nur verfügbar auf Google Geräten</string>
     <string name="pref_push_sum">Neue Einträge ans Gerät pushen</string>
     <string name="pref_push_enabled_sum">Push ist aktiviert</string>
     <string name="pref_push_disabled_sum">Push ist deaktiviert</string>

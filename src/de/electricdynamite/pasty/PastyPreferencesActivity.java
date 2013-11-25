@@ -42,7 +42,8 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
 	    public static final String KEY_PREF_PASSWORD = "pref_password";
 	    public static final String KEY_PREF_VERSION	 = "pref_version";
 	    public static final String KEY_PREF_CLICKABLE_LINKS	 = "pref_clickable_links";
-	    public static final String KEY_PREF_PUSH = "pref_push";
+	    public static final String KEY_PREF_PUSH = "pref_cat_push";
+	    public static final String KEY_PREF_PUSH_AVAILABLE = "pref_push_available";
 
 	    private Boolean LOCAL_LOG = false;
 	    private EditTextPreference	prefUsername;
@@ -94,14 +95,20 @@ public class PastyPreferencesActivity extends SherlockPreferenceActivity impleme
             mKeyVal = null;
             mSumVal = null;
             
-            Boolean mKeyBool = sharedPreferences.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
-            mSumVal = getString(R.string.pref_push_disabled_sum);
-            if(mKeyBool == Boolean.TRUE) {
-            	mSumVal = getString(R.string.pref_push_enabled_sum);
-            } 
-            prefPushScreen.setSummary(mSumVal);
-            mKeyBool = null;
-             
+            if(sharedPreferences.getBoolean(PastySharedStatics.PREF_PUSH_AVAILABLE, false)) {
+            	getPreferenceScreen().findPreference(KEY_PREF_PUSH).setEnabled(true);
+	            Boolean mKeyBool = sharedPreferences.getBoolean(PastySharedStatics.PREF_PUSH_GCM, false);
+	            mSumVal = getString(R.string.pref_push_disabled_sum);
+	            if(mKeyBool == Boolean.TRUE) {
+	            	mSumVal = getString(R.string.pref_push_enabled_sum);
+	            } 
+	            prefPushScreen.setSummary(mSumVal);
+	            mKeyBool = null;
+            } else {
+            	getPreferenceScreen().findPreference(KEY_PREF_PUSH).setEnabled(false);
+            	if(sharedPreferences.getString(KEY_PREF_USERNAME, "") != "" && sharedPreferences.getString(KEY_PREF_PASSWORD, "") != "")
+            		getPreferenceScreen().findPreference(KEY_PREF_PUSH).setSummary(getString(R.string.pref_push_not_available_sum));
+            }
             Intent mIntent = getIntent();
             mKeyVal = sharedPreferences.getString(KEY_PREF_VERSION, "");
             mSumVal = mIntent.getStringExtra("versionName");

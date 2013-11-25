@@ -42,6 +42,7 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	private Boolean useTLS;
 	private Boolean pasteCurrClip;
 	private Boolean clickableLinks;
+	private Boolean pushAvailable;
 	private Boolean push;
 	private Boolean pushCopyToClipboard;
 	private Boolean pushNotify;
@@ -88,6 +89,14 @@ public class PastyPreferencesProvider implements OnSharedPreferenceChangeListene
 	
 	public Boolean getClickableLinks() {
 		return clickableLinks;
+	}
+	
+	public Boolean getPushAvailable() {
+		return pushAvailable;
+	}
+	
+	public void setPushAvailable(Boolean available) {
+		this.prefs.edit().putBoolean(PastySharedStatics.PREF_PUSH_AVAILABLE, available).commit();
 	}
 	
 	public Boolean getPush() {
