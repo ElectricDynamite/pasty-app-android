@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.electricdynamite.pasty"
-    android:versionCode="13112401"
-    android:versionName="0.8.0-master" >
+    android:versionCode="14021601"
+    android:versionName="0.8.0" >
 
     <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
     

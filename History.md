@@ -1,8 +1,8 @@
 pasty-app-android history
 ========================
 
-Current master
---------------
+Version 0.8.0 - 2014-02-16
+--------------------------
   * Implemented Spinner icon to open context menu
   * xxhdpi resources and xxxhdpi launcher icon
   * Now not dependend on Google APIs anymore, should work on pure Android
