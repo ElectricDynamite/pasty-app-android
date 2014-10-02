@@ -200,14 +200,11 @@ public class ClipboardFragment extends SherlockListFragment implements LoaderCal
 	    	        	mHelpTextBig.setText(R.string.helptext_PastyActivity_clipboard_empty);
 	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_how_to_add);
 	    	        	} else {
-	    				if(Clipboard.length() > 15) {
-	    					throw new Exception();
-	    				}
-	    				for (int i = 0; i < Clipboard.length(); i++) {
-	    					JSONObject Item = Clipboard.getJSONObject(i);
-	    					ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
-	    					this.mItems.add(cbItem);
-	    				}
+	    				    for (int i = 0; i < Clipboard.length(); i++) {
+	    					    JSONObject Item = Clipboard.getJSONObject(i);
+	    					    ClipboardItem cbItem = new ClipboardItem(Item.getString("_id"), Item.getString("item"));
+	    					    this.mItems.add(cbItem);
+	    				    }
 	    			
 	    				mHelpTextBig.setText(R.string.helptext_PastyActivity_copy);
 	    	        	mHelpTextSmall.setText(R.string.helptext_PastyActivity_options);
