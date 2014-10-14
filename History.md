@@ -1,6 +1,10 @@
 pasty-app-android history
 ========================
 
+Version 0.8.1 - 2014-10-14
+--------------------------
+  * Fixed a bug where the app would not show the clipboard when more than 15 items are present (Thanks Chew Chee Keng)
+
 Version 0.8.0 - 2014-02-16
 --------------------------
   * Implemented Spinner icon to open context menu
